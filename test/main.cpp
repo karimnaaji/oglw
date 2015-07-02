@@ -2,7 +2,7 @@
 #include <vector>
 #include <memory>
 
-#include "oglw/oglw.h"
+#include "oglw.h"
 
 class TestApp : public OGLW::App {
     public:
@@ -45,9 +45,9 @@ void TestApp::init() {
 
     m_shader = std::unique_ptr<OGLW::Shader>(new OGLW::Shader("default.frag", "default.vert"));
 
-    m_meshes = OGLW::loadOBJ(rsrcPath + "suzanne.obj");
+    m_meshes = OGLW::loadOBJ("suzanne.obj");
     m_camera.setPosition({0.0, -0.5, 14.0});
-    m_texture = std::unique_ptr<OGLW::Texture>(new OGLW::Texture(rsrcPath + "uffizi_probe.jpg"));
+    m_texture = std::unique_ptr<OGLW::Texture>(new OGLW::Texture("uffizi_probe.jpg"));
 }
 
 void TestApp::render(float _dt) {

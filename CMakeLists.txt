@@ -5,6 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -stdlib=libc++")
 set(EXECUTABLE_NAME test_app)
 
 find_package(PkgConfig REQUIRED)
+pkg_search_module(GLFW REQUIRED glfw3)
 find_package(GLEW REQUIRED)
 
 if(NOT GLFW_FOUND)
@@ -20,14 +21,18 @@ endif()
 message(STATUS "Found GLFW ${GLFW_PREFIX}")
 message(STATUS "Found GLEW ${GLEW_PREFIX}")
 
-
 include_directories(${GLFW_INCLUDE_DIRS})
 include_directories(${GLEW_INCLUDE_DIRS})
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/../oglw/)
+add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/)
 include_directories(${OGLW_INCLUDE_DIRS})
 
-add_executable(${EXECUTABLE_NAME} src/main.cpp)
+add_executable(${EXECUTABLE_NAME} test/main.cpp)
 
 target_link_libraries(${EXECUTABLE_NAME} OGLW ${GLFW_LDFLAGS} ${GLEW_LIBRARY} "-framework OpenGL")
+
+file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/test/resources/*)
+foreach(_resource ${RESOURCES})
+    file(COPY ${_resource} DESTINATION ${PROJECT_SOURCE_DIR}/build/)
+endforeach()
 
