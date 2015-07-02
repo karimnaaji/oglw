@@ -47,7 +47,7 @@ void TestApp::init() {
 
     m_meshes = OGLW::loadOBJ("suzanne.obj");
     m_camera.setPosition({0.0, -0.5, 14.0});
-    m_texture = std::unique_ptr<OGLW::Texture>(new OGLW::Texture("uffizi_probe.jpg"));
+    m_texture = std::unique_ptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
 }
 
 void TestApp::render(float _dt) {
