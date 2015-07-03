@@ -7,6 +7,7 @@ out vec4 outColour;
 
 in vec3 incident;
 in vec3 n;
+in vec2 uvs;
 
 void main(void) {
     vec3 r = reflect(incident, normalize(normalmat * n));

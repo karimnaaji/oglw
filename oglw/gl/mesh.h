@@ -34,6 +34,7 @@ namespace OGLW {
         glm::vec3 position;
         glm::vec3 color;
         glm::vec3 normal;
+        glm::vec2 uvs;
     };
 
     typedef Mesh<Vertex> RawMesh;
@@ -52,6 +53,7 @@ namespace OGLW {
             {"position", 3, GL_FLOAT, false, 0},
             {"color", 3, GL_FLOAT, false, 0},
             {"normal", 3, GL_FLOAT, false, 0},
+            {"uv", 2, GL_FLOAT, false, 0},
         }));
 
         std::vector<std::unique_ptr<RawMesh>> meshes;
@@ -59,6 +61,9 @@ namespace OGLW {
         for (size_t i = 0; i < shapes.size(); i++) {
             std::vector<Vertex> vertices;
             std::vector<int> indices;
+            bool hasNormals;
+            bool hasUVs;
+
             auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_TRIANGLES));
             assert((shapes[i].mesh.indices.size() % 3) == 0);
             for (size_t f = 0; f < shapes[i].mesh.indices.size() / 3; f++) {
@@ -67,19 +72,55 @@ namespace OGLW {
                 indices.push_back(shapes[i].mesh.indices[3 * f + 2]);
             }
             assert((shapes[i].mesh.positions.size() % 3) == 0);
+
+            if (shapes[i].mesh.normals.size() == 0) {
+                hasNormals = false;
+            }
+
+            if (shapes[i].mesh.texcoords.size() == 0) {
+                hasUVs = false;
+            }
+
             for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
-                vertices.push_back({{ shapes[i].mesh.positions[3 * v + 0], -shapes[i].mesh.positions[3 * v + 1], shapes[i].mesh.positions[3 * v + 2] }, {}, {}});
+                glm::vec2 uv;
+                glm::vec3 normal;
+                glm::vec3 position;
+                glm::vec3 color;
+
+                if (hasUVs) {
+                    uv = { 
+                        shapes[i].mesh.texcoords[3 * v + 0],
+                        shapes[i].mesh.texcoords[3 * v + 1] 
+                    };
+                }
+
+                if (hasNormals) {
+                    normal = { 
+                        shapes[i].mesh.normals[3 * v + 0],
+                        shapes[i].mesh.normals[3 * v + 1],
+                        shapes[i].mesh.normals[3 * v + 2] 
+                    };
+                }
+
+                position = {
+                    shapes[i].mesh.positions[3 * v + 0], 
+                   -shapes[i].mesh.positions[3 * v + 1], 
+                    shapes[i].mesh.positions[3 * v + 2] 
+                };
+
+                vertices.push_back({ position, color, normal, uv });
             }
 
-            std::vector<glm::vec3> verts;
-            verts.resize(vertices.size());
-            for (int j = 0; j < vertices.size(); ++j) {
-                verts[j] = vertices[j].position;
-            }
-            auto normals = VboMesh::computeNormals(verts, indices);
-
-            for (int j = 0; j < vertices.size(); ++j) {
-                vertices[j].normal = normals[j];
+            if (!hasNormals) {
+                std::vector<glm::vec3> verts;
+                verts.resize(vertices.size());
+                for (int j = 0; j < vertices.size(); ++j) {
+                    verts[j] = vertices[j].position;
+                }
+                auto normals = VboMesh::computeNormals(verts, indices);
+                for (int j = 0; j < vertices.size(); ++j) {
+                    vertices[j].normal = normals[j];
+                }
             }
 
             mesh->addVertices(std::move(vertices), std::move(indices));
