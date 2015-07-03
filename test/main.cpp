@@ -41,7 +41,8 @@ void TestApp::init() {
     m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.frag", "background.vert"));
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
 
-    displayText(30.f, {10.f, 30.f}, "test App");
+    displayText(30.f, {10.f, 30.f}, "OGLW::TestApp");
+    //displayText(30.f, {10.f, 60.f}, "app");
 }
 
 void TestApp::update(float _dt) {

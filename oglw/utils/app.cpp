@@ -77,6 +77,13 @@ namespace OGLW {
 
     void App::clearText(fsuint _buffer) {
         glfonsBufferDelete(m_fontContext, _buffer);
+
+        for (int i = 0; i < m_texts.size(); ++i) {
+            if (m_texts[i].m_buffer == _buffer) {
+                m_texts.erase(m_texts.begin()+i);
+                break;
+            }
+        }
     }
 
     void App::run() {
