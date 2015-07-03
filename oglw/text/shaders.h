@@ -34,7 +34,7 @@ void main() {
     } else {
         gl_Position = vec4(0.0);
     }
-    
+
     uv = uvs;
     a = alpha;
 }
@@ -48,9 +48,9 @@ uniform sampler2D tex;
 uniform vec3 color;
 
 in vec2 uv;
-in float alpha;
+in float a;
 
-out vec3 outColor;
+out vec4 outColor;
 
 const float gamma = 2.2;
 const float tint = 1.8;
@@ -107,13 +107,13 @@ void main(void) {
     if (a == 0.0) {
         discard;
     }
-    
+
     vec4 texColor = texture(tex, uv);
     outColor = vec4(color.rgb, texColor.a * a);
 }
 
 )END";
-    
+
 }
 
 #endif

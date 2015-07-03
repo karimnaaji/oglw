@@ -51,7 +51,7 @@ namespace OGLW {
         GLFONSparams params;
         params.useGLBackend = true;
         m_fontContext = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT, params, nullptr);
-        
+
         fonsAddFont(m_fontContext, "Arial", "/Library/Fonts/Arial.ttf");
         glfonsScreenSize(m_fontContext, m_width * m_dpiRatio, m_height * m_dpiRatio);
         fonsSetBlur(m_fontContext, 2.5);
@@ -74,7 +74,7 @@ namespace OGLW {
         m_texts.push_back({textId, textBuffer});
         return textBuffer;
     }
-            
+
     void App::clearText(fsuint _buffer) {
         glfonsBufferDelete(m_fontContext, _buffer);
     }

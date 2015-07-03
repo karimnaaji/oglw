@@ -41,7 +41,7 @@ void TestApp::init() {
     m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.frag", "background.vert"));
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
 
-    displayText(30.f, {150.f, 150.f}, "test App");
+    displayText(30.f, {10.f, 30.f}, "test App");
 }
 
 void TestApp::update(float _dt) {
@@ -62,7 +62,7 @@ void TestApp::render(float _dt) {
     m_texture->bind(0);
 
     glDepthMask(GL_FALSE);
-    m_backgroundShader->setUniform("resolution", {m_width, m_height});
+    m_backgroundShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
     m_backgroundShader->setUniform("tex", 0);
 
     m_quad->draw(*m_backgroundShader);
