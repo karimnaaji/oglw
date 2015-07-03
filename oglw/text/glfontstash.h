@@ -172,7 +172,7 @@ static void glfons__renderDraw(void* userPtr, const float* verts, const float* t
 
 void glfons__createVertexLayout(GLFONScontext* gl) {
     GLFONSVertexLayout layout;
-    
+
     layout.attributes.push_back({"position", 2, false, 0, -1});
     layout.attributes.push_back({"uvs", 2, false, 0, -1});
     layout.attributes.push_back({"screenPosition", 2, false, 0, -1});
@@ -180,13 +180,13 @@ void glfons__createVertexLayout(GLFONScontext* gl) {
     layout.attributes.push_back({"rotation", 1, false, 0, -1});
     layout.nbComponents = 0;
     layout.stride = 0;
-    
+
     for(auto& attribute : layout.attributes) {
         attribute.offset = (GLvoid *) (layout.nbComponents * sizeof(float));
         layout.nbComponents += attribute.size;
         layout.stride += attribute.size * sizeof(float);
     }
-    
+
     gl->layout = layout;
 }
 
@@ -350,7 +350,7 @@ void glfons__setDirty(GLFONSbuffer* buffer, GLintptr start, GLsizei size) {
         long dBytes = std::abs((long double)byteOffset - buffer->dirtyOffset);
         long newEnd = byteOffset + byteSize;
         long oldEnd = buffer->dirtySize + buffer->dirtyOffset;
-        
+
         if(byteOffset < buffer->dirtyOffset) {
             buffer->dirtyOffset = byteOffset;
             if(newEnd > oldEnd) {
@@ -369,7 +369,7 @@ void glfons__setDirty(GLFONSbuffer* buffer, GLintptr start, GLsizei size) {
 void glfons__updateBuffer(void* usrPtr, GLintptr offset, GLsizei size, float* newData) {
     GLFONScontext* gl = (GLFONScontext*) usrPtr;
     GLFONSbuffer* buffer = glfons__bufferBound(gl);
-    
+
     glBindVertexArray(buffer->vao);
     glBindBuffer(GL_ARRAY_BUFFER, buffer->vbo);
     GLFONS_GL_CHECK(glBufferSubData(GL_ARRAY_BUFFER, offset, size, newData));
@@ -380,7 +380,7 @@ void glfons__updateBuffer(void* usrPtr, GLintptr offset, GLsizei size, float* ne
 void glfons__udpateAtas(void* usrPtr, unsigned int xoff, unsigned int yoff,
                         unsigned int width, unsigned int height, const unsigned int* pixels) {
     GLFONScontext* gl = (GLFONScontext*) usrPtr;
-    
+
     glActiveTexture(GL_TEXTURE0 + ATLAS_TEXTURE_SLOT);
     GLFONS_GL_CHECK(glBindTexture(GL_TEXTURE_2D, gl->atlas));
     glTexSubImage2D(GL_TEXTURE_2D, 0, xoff, yoff, width, height, GL_RED, GL_UNSIGNED_BYTE, pixels);
@@ -419,9 +419,9 @@ int glfonsRasterize(FONScontext* ctx, fsuint textId, const char* s, unsigned int
     }
 
     GLFONSstash* stash = new GLFONSstash;
-    
+
     stash->offset = buffer->interleavedArray.size();
-    
+
     // pre-allocate data for this text id
     int oldSize = buffer->interleavedArray.size();
     buffer->interleavedArray.resize(oldSize + gl->layout.nbComponents * ctx->nverts, 0);
@@ -465,7 +465,7 @@ int glfonsRasterize(FONScontext* ctx, fsuint textId, const char* s, unsigned int
         int i = 0;
         unsigned int utf8state = 0;
         unsigned int codepoint = 0;
-        
+
         // count glyphs
         for (; str != end; ++str) {
             if (fons__decutf8(&utf8state, &codepoint, *(const unsigned char*)str))
@@ -474,7 +474,7 @@ int glfonsRasterize(FONScontext* ctx, fsuint textId, const char* s, unsigned int
         }
         stash->nbGlyph = i;
     }
-    
+
     stash->padding = stash->nbGlyph * GLYPH_VERTS * gl->layout.nbComponents;
 
     // hack : reset fontstash state
@@ -498,7 +498,7 @@ void glfonsBufferCreate(FONScontext* ctx, fsuint* id) {
     buffer->dirtyOffset = 0;
     buffer->dirtySize = 0;
     buffer->dirty = false;
-    
+
     if(gl->params.useGLBackend) {
         glGenBuffers(1, &buffer->vbo);
         glGenVertexArrays(1, &buffer->vao);
@@ -522,7 +522,7 @@ void glfonsBufferDelete(GLFONScontext* gl, fsuint id) {
     for(auto& pair : buffer->stashes) {
         delete pair.second;
     }
-    
+
     std::vector<float> vertices;
     std::swap(buffer->interleavedArray, vertices);
     std::unordered_map<fsuint, GLFONSstash*> stashes;
@@ -551,9 +551,9 @@ void glfonsBindBuffer(FONScontext* ctx, fsuint id) {
 
 void glfonsUpdateBuffer(FONScontext* ctx) {
     GLFONS_LOAD_BUFFER
-    
+
     float* data = reinterpret_cast<float*>(buffer->interleavedArray.data());
-    
+
     if(gl->params.useGLBackend) {
         if(!buffer->vboInitialized) {
             glBindVertexArray(buffer->vao);
@@ -565,15 +565,15 @@ void glfonsUpdateBuffer(FONScontext* ctx) {
             return;
         }
     }
-    
+
     if(!buffer->dirty) {
         return;
     }
-    
+
     data += buffer->dirtyOffset / sizeof(float);
-    
+
     gl->params.updateBuffer(gl->userPtr, buffer->dirtyOffset, buffer->dirtySize, data);
-    
+
     buffer->dirty = false;
     buffer->dirtySize = 0;
     buffer->dirtyOffset = 0;
@@ -655,7 +655,7 @@ void glfons__createAtlas(void* usrPtr, unsigned int width, unsigned int height) 
     glActiveTexture(GL_TEXTURE0 + ATLAS_TEXTURE_SLOT);
     glGenTextures(1, &gl->atlas);
     GLFONS_GL_CHECK(glBindTexture(GL_TEXTURE_2D, gl->atlas));
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
@@ -723,16 +723,16 @@ bool glfonsVertices(FONScontext* ctx, float* data) {
 
 void glfons__updateInterleavedArray(GLFONScontext* gl, GLFONSbuffer* buffer, GLFONSstash* stash, const char* attribute, int offset, float value) {
     int index = glfons__layoutIndex(gl, attribute);
-    
+
     float* start = &buffer->interleavedArray[0] + stash->offset;
     int stride = gl->layout.nbComponents;
-    
+
     if (stash->nbGlyph == 0) {
         return;
     }
-    
+
     glfons__setDirty(buffer, stash->offset + index, stash->padding - gl->layout.nbComponents + index);
-    
+
     for(int i = 0; i < stash->nbGlyph * GLYPH_VERTS; i++) {
         start[i * stride + index + offset] = value;
     }
@@ -756,20 +756,20 @@ void glfonsTranslate(FONScontext* ctx, fsuint id, float tx, float ty) {
 
 void glfonsTransform(FONScontext* ctx, fsuint id, float tx, float ty, float r, float a) {
     GLFONS_LOAD_STASH
-    
+
     if (stash->nbGlyph == 0) {
         return;
     }
-    
+
     // cache those indexes
     static int i0 = glfons__layoutIndex(gl, "screenPosition");
     static int i1 = glfons__layoutIndex(gl, "alpha");
     static int i2 = glfons__layoutIndex(gl, "rotation");
-    
+
     float* start = &buffer->interleavedArray[0] + stash->offset;
     int stride = gl->layout.nbComponents;
     int min = std::min(i0, std::min(i1, i2));
-    
+
     // set the buffer dirty
     glfons__setDirty(buffer, stash->offset + min, stash->padding - stride + min);
 

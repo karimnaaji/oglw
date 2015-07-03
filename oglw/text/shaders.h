@@ -61,7 +61,7 @@ float contour(in float d, in float w, in float off) {
 }
 
 float sample(in vec2 uv, float w, in float off) {
-    return contour(texture(tex, uv).a, w, off);
+    return contour(texture(tex, uv).r, w, off);
 }
 
 float sampleAlpha(in vec2 uv, float distance, in float off) {
@@ -83,7 +83,7 @@ void main(void) {
         discard;
     }
 
-    float distance = texture(tex, uv).a;
+    float distance = texture(tex, uv).r;
     float alpha = sampleAlpha(uv, distance, sdf) * tint;
     alpha = pow(alpha, 1.0 / gamma);
 
