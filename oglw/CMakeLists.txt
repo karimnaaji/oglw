@@ -37,6 +37,7 @@ set(OGLW_INCLUDE_DIRS
     ${PROJECT_SOURCE_DIR}/utils
     ${PROJECT_SOURCE_DIR}/gl
     ${PROJECT_SOURCE_DIR}/stb
+    ${PROJECT_SOURCE_DIR}/text
     ${PROJECT_SOURCE_DIR}/
     CACHE INTERNAL "include directories" FORCE)
 

@@ -120,44 +120,37 @@ namespace OGLW {
     }
 
     void Shader::setUniform(const std::string& _name, float _x) {
-        if (isInUse()) {
-            glUniform1f(getUniformLocation(_name), _x);
-        }
+        use();
+        glUniform1f(getUniformLocation(_name), _x);
     }
 
     void Shader::setUniform(const std::string& _name, float _x, float _y) {
-        if (isInUse()) {
-            glUniform2f(getUniformLocation(_name), _x, _y);
-        }
+        use();
+        glUniform2f(getUniformLocation(_name), _x, _y);
     }
 
     void Shader::setUniform(const std::string& _name, float _x, float _y, float _z) {
-        if (isInUse()) {
-            glUniform3f(getUniformLocation(_name), _x, _y, _z);
-        }
+        use();
+        glUniform3f(getUniformLocation(_name), _x, _y, _z);
     }
 
     void Shader::setUniform(const std::string& _name, float _x, float _y, float _z, float _w) {
-        if (isInUse()) {
-            glUniform4f(getUniformLocation(_name), _x, _y, _z, _w);
-        }
+        use();
+        glUniform4f(getUniformLocation(_name), _x, _y, _z, _w);
     }
 
     void Shader::setUniform(const std::string& _name, const glm::mat2& _value, bool _transpose) {
-        if (isInUse()) {
-            glUniformMatrix2fv(getUniformLocation(_name), 1, _transpose, &_value[0][0]);
-        }
+        use();
+        glUniformMatrix2fv(getUniformLocation(_name), 1, _transpose, &_value[0][0]);
     }
 
     void Shader::setUniform(const std::string& _name, const glm::mat3& _value, bool _transpose) {
-        if (isInUse()) {
-            glUniformMatrix3fv(getUniformLocation(_name), 1, _transpose, &_value[0][0]);
-        }
+        use();
+        glUniformMatrix3fv(getUniformLocation(_name), 1, _transpose, &_value[0][0]);
     }
 
     void Shader::setUniform(const std::string& _name, const glm::mat4& _value, bool _transpose) {
-        if (isInUse()) {
-            glUniformMatrix4fv(getUniformLocation(_name), 1, _transpose, &_value[0][0]);
-        }
+        use();
+        glUniformMatrix4fv(getUniformLocation(_name), 1, _transpose, &_value[0][0]);
     }
 }

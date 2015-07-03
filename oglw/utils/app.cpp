@@ -1,9 +1,15 @@
 #include "app.h"
+#define GLFONTSTASH_IMPLEMENTATION
+#include "glfontstash.h"
 
 namespace OGLW {
 
     App::App(std::string _name, int _width, int _height) : m_name(_name), m_width(_width), m_height(_height) {
         initGLFW();
+    }
+
+    App::~App() {
+        glfonsDelete(m_fontContext);
     }
 
     void App::initGLFW() {
@@ -32,8 +38,40 @@ namespace OGLW {
 
         glfwMakeContextCurrent(m_window);
 
+        glEnable(GL_DEPTH_TEST);
+
         glewExperimental = GL_TRUE;
         glewInit();
+
+        GLFONSparams params;
+        params.useGLBackend = true;
+        m_fontContext = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT, params, nullptr);
+        
+        fonsAddFont(m_fontContext, "Arial", "/Library/Fonts/Arial.ttf");
+        glfonsScreenSize(m_fontContext, m_width * m_dpiRatio, m_height * m_dpiRatio);
+        fonsSetBlur(m_fontContext, 2.5);
+        fonsSetBlurType(m_fontContext, FONS_EFFECT_DISTANCE_FIELD);
+    }
+
+
+    fsuint App::displayText(float _size, glm::vec2 _position, const std::string& _text) {
+        fsuint textBuffer;
+        fsuint textId;
+
+        glfonsBufferCreate(m_fontContext, &textBuffer);
+        glfonsGenText(m_fontContext, 1, &textId);
+        glfonsSetColor(m_fontContext, 0xffffff);
+
+        fonsSetSize(m_fontContext, _size * m_dpiRatio);
+        glfonsRasterize(m_fontContext, textId, _text.c_str());
+        glfonsTransform(m_fontContext, textId, _position.x * m_dpiRatio, _position.y * m_dpiRatio, 0.0, 1.0);
+
+        m_texts.push_back({textId, textBuffer});
+        return textBuffer;
+    }
+            
+    void App::clearText(fsuint _buffer) {
+        glfonsBufferDelete(m_fontContext, _buffer);
     }
 
     void App::run() {
@@ -49,6 +87,11 @@ namespace OGLW {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             render(dt);
+
+            if (m_texts.size() > 0) {
+                glfonsUpdateBuffer(m_fontContext);
+                glfonsDraw(m_fontContext);
+            }
 
             glfwSwapBuffers(m_window);
             glfwPollEvents();

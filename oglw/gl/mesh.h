@@ -36,7 +36,9 @@ namespace OGLW {
         glm::vec3 normal;
     };
 
-    std::vector<std::unique_ptr<Mesh<Vertex>>> loadOBJ(std::string _path) {
+    typedef Mesh<Vertex> RawMesh;
+
+    std::vector<std::unique_ptr<RawMesh>> loadOBJ(std::string _path) {
         std::vector<tinyobj::shape_t> shapes;
         std::vector<tinyobj::material_t> materials;
 
@@ -52,12 +54,12 @@ namespace OGLW {
             {"normal", 3, GL_FLOAT, false, 0},
         }));
 
-        std::vector<std::unique_ptr<Mesh<Vertex>>> meshes;
+        std::vector<std::unique_ptr<RawMesh>> meshes;
 
         for (size_t i = 0; i < shapes.size(); i++) {
             std::vector<Vertex> vertices;
             std::vector<int> indices;
-            auto mesh = std::unique_ptr<Mesh<Vertex>>(new Mesh<Vertex>(layout, GL_TRIANGLES));
+            auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_TRIANGLES));
             assert((shapes[i].mesh.indices.size() % 3) == 0);
             for (size_t f = 0; f < shapes[i].mesh.indices.size() / 3; f++) {
                 indices.push_back(shapes[i].mesh.indices[3 * f + 0]);

@@ -4,17 +4,20 @@
 
 #include "oglw.h"
 
+template <class T>
+using uptr = std::unique_ptr<T>;
+
 class TestApp : public OGLW::App {
     public:
-        TestApp() : OGLW::App("test", 1024, 768) {}
+        TestApp() : OGLW::App("OGLW::TestApp", 960, 720) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
 
     private:
-        std::unique_ptr<OGLW::Shader> m_shader;
-        std::unique_ptr<OGLW::Texture> m_texture;
-        std::vector<std::unique_ptr<OGLW::Mesh<OGLW::Vertex>>> m_meshes;
+        uptr<OGLW::Shader> m_shader;
+        uptr<OGLW::Texture> m_texture;
+        std::vector<uptr<OGLW::RawMesh>> m_meshes;
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
@@ -24,7 +27,6 @@ int main() {
 
     app.init();
     app.run();
-
     return 0;
 }
 
@@ -41,13 +43,14 @@ void TestApp::update(float _dt) {
 
 void TestApp::init() {
     glClearColor(0.18f, 0.18f, 0.22f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
 
-    m_shader = std::unique_ptr<OGLW::Shader>(new OGLW::Shader("default.frag", "default.vert"));
-
-    m_meshes = OGLW::loadOBJ("suzanne.obj");
     m_camera.setPosition({0.0, -0.5, 14.0});
-    m_texture = std::unique_ptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
+
+    m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.frag", "default.vert"));
+    m_meshes = OGLW::loadOBJ("suzanne.obj");
+    m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
+
+    displayText(20.f, {150.f, 150.f}, "test App");
 }
 
 void TestApp::render(float _dt) {
@@ -62,7 +65,6 @@ void TestApp::render(float _dt) {
 
     m_texture->bind(0);
 
-    m_shader->use();
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("mv", model * view);
     m_shader->setUniform("normalmat", normalMat);
