@@ -10,7 +10,7 @@ namespace OGLW {
     }
 
     App::~App() {
-        glfonsDelete(m_fontContext);
+        //glfonsDelete(m_fontContext);
     }
 
     void App::initGLFW() {
