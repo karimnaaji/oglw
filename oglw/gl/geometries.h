@@ -20,10 +20,12 @@ namespace OGLW {
             { _size,  _size},
         };
 
-        std::vector<unsigned int> indices = {
+        std::vector<int> indices = {
             0, 1, 2,
             0, 2, 3,
         };
+
+        mesh->addVertices(std::move(vertices), std::move(indices));
 
         return std::move(mesh);
     }

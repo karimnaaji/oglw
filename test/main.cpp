@@ -14,8 +14,10 @@ class TestApp : public OGLW::App {
 
     private:
         uptr<OGLW::Shader> m_shader;
+        uptr<OGLW::Shader> m_backgroundShader;
         uptr<OGLW::Texture> m_texture;
         std::vector<uptr<OGLW::RawMesh>> m_meshes;
+        uptr<OGLW::Mesh<glm::vec2>> m_quad;
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
@@ -35,6 +37,8 @@ void TestApp::init() {
 
     m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.frag", "default.vert"));
     m_meshes = OGLW::loadOBJ("suzanne.obj");
+    m_quad = OGLW::quad(1.f);
+    m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.frag", "background.vert"));
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
 
     displayText(30.f, {150.f, 150.f}, "test App");
@@ -54,6 +58,11 @@ void TestApp::render(float _dt) {
 
     glm::mat4 mvp = m_camera.getProjectionMatrix() * view * model;
     glm::mat3 normalMat = glm::transpose(glm::inverse(glm::mat3(view)));
+
+    glDepthMask(GL_FALSE);
+    m_backgroundShader->setUniform("resolution", {m_width, m_height});
+    m_quad->draw(*m_backgroundShader);
+    glDepthMask(GL_TRUE);
 
     m_texture->bind(0);
 
