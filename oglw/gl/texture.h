@@ -30,11 +30,11 @@ namespace OGLW {
     public:
         Texture(unsigned int _width, unsigned int _height,
                 TextureOptions _options = {
-                    GL_ALPHA, GL_ALPHA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}});
+                    GL_RGBA8, GL_RGBA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}});
 
         Texture(const std::string& _file,
                 TextureOptions _options = {
-                    GL_RGBA, GL_RGBA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}});
+                    GL_RGBA8, GL_RGBA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}});
 
         virtual ~Texture();
 

@@ -1,4 +1,5 @@
 #include "app.h"
+//#define GLFONS_DEBUG
 #define GLFONTSTASH_IMPLEMENTATION
 #include "glfontstash.h"
 
@@ -38,10 +39,14 @@ namespace OGLW {
 
         glfwMakeContextCurrent(m_window);
 
-        glEnable(GL_DEPTH_TEST);
-
         glewExperimental = GL_TRUE;
-        glewInit();
+
+        if (glewInit() != GLEW_OK) {
+            glfwTerminate();
+            std::cerr << "glewInit failed." << std::endl;
+        }
+
+        glEnable(GL_DEPTH_TEST);
 
         GLFONSparams params;
         params.useGLBackend = true;
@@ -80,6 +85,9 @@ namespace OGLW {
         while (!glfwWindowShouldClose(m_window)) {
             double time = glfwGetTime();
             double dt = time - lastTime;
+
+            glfwGetCursorPos(m_window, &m_cursorX, &m_cursorY);
+            glfwSetCursorPos(m_window, 0, 0);
 
             update(dt);
 

@@ -37,18 +37,12 @@ void TestApp::init() {
     m_meshes = OGLW::loadOBJ("suzanne.obj");
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
 
-    displayText(20.f, {150.f, 150.f}, "test App");
+    displayText(30.f, {150.f, 150.f}, "test App");
 }
 
 void TestApp::update(float _dt) {
-    double cursorX, cursorY;
-    glfwGetCursorPos(m_window, &cursorX, &cursorY);
-    glfwSetCursorPos(m_window, 0, 0);
-
-    if (std::abs(cursorX) <= 100 && std::abs(cursorY) <= 100) {
-        m_xrot += cursorX;
-        m_yrot += cursorY;
-    }
+    m_xrot += m_cursorX;
+    m_yrot += m_cursorY;
 }
 
 void TestApp::render(float _dt) {

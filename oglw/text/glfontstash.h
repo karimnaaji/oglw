@@ -370,9 +370,11 @@ void glfons__updateBuffer(void* usrPtr, GLintptr offset, GLsizei size, float* ne
     GLFONScontext* gl = (GLFONScontext*) usrPtr;
     GLFONSbuffer* buffer = glfons__bufferBound(gl);
     
+    glBindVertexArray(buffer->vao);
     glBindBuffer(GL_ARRAY_BUFFER, buffer->vbo);
     GLFONS_GL_CHECK(glBufferSubData(GL_ARRAY_BUFFER, offset, size, newData));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 void glfons__udpateAtas(void* usrPtr, unsigned int xoff, unsigned int yoff,
@@ -381,7 +383,7 @@ void glfons__udpateAtas(void* usrPtr, unsigned int xoff, unsigned int yoff,
     
     glActiveTexture(GL_TEXTURE0 + ATLAS_TEXTURE_SLOT);
     GLFONS_GL_CHECK(glBindTexture(GL_TEXTURE_2D, gl->atlas));
-    glTexSubImage2D(GL_TEXTURE_2D, 0, xoff, yoff, width, height, GL_ALPHA, GL_UNSIGNED_BYTE, pixels);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, xoff, yoff, width, height, GL_RED, GL_UNSIGNED_BYTE, pixels);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -514,7 +516,7 @@ void glfonsBufferDelete(GLFONScontext* gl, fsuint id) {
 
     if(gl->params.useGLBackend && buffer->vbo != 0) {
         glDeleteBuffers(1, &buffer->vbo);
-	glDeleteVertexArrays(1, &buffer->vao);
+        glDeleteVertexArrays(1, &buffer->vao);
     }
 
     for(auto& pair : buffer->stashes) {
@@ -558,6 +560,7 @@ void glfonsUpdateBuffer(FONScontext* ctx) {
             glBindBuffer(GL_ARRAY_BUFFER, buffer->vbo);
             GLFONS_GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffer->interleavedArray.size(), data, GL_DYNAMIC_DRAW));
             glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
             buffer->vboInitialized = true;
             return;
         }
@@ -652,7 +655,7 @@ void glfons__createAtlas(void* usrPtr, unsigned int width, unsigned int height) 
     glActiveTexture(GL_TEXTURE0 + ATLAS_TEXTURE_SLOT);
     glGenTextures(1, &gl->atlas);
     GLFONS_GL_CHECK(glBindTexture(GL_TEXTURE_2D, gl->atlas));
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -26,6 +26,8 @@ namespace OGLW {
             int m_width;
             int m_height;
             int m_dpiRatio;
+            double m_cursorX;
+            double m_cursorY;
 
             fsuint displayText(float _size, glm::vec2 _position, const std::string& _text);
             void clearText(fsuint _id);
