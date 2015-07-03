@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(testApp)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
 set(EXECUTABLE_NAME test_app)
 
 find_package(PkgConfig REQUIRED)
@@ -29,7 +29,15 @@ include_directories(${OGLW_INCLUDE_DIRS})
 
 add_executable(${EXECUTABLE_NAME} test/main.cpp)
 
-target_link_libraries(${EXECUTABLE_NAME} OGLW ${GLFW_LDFLAGS} ${GLEW_LIBRARY} "-framework OpenGL")
+if(APPLE)
+    set(OGL "-framework OpenGL")
+endif()
+
+if(UNIX AND NOT APPLE)
+    set(OGL "-lGL")
+endif()
+
+target_link_libraries(${EXECUTABLE_NAME} OGLW ${GLFW_LDFLAGS} ${GLEW_LIBRARY} ${OGL})
 
 file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/test/resources/*)
 foreach(_resource ${RESOURCES})
