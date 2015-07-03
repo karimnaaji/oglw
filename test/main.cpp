@@ -59,12 +59,14 @@ void TestApp::render(float _dt) {
     glm::mat4 mvp = m_camera.getProjectionMatrix() * view * model;
     glm::mat3 normalMat = glm::transpose(glm::inverse(glm::mat3(view)));
 
+    m_texture->bind(0);
+
     glDepthMask(GL_FALSE);
     m_backgroundShader->setUniform("resolution", {m_width, m_height});
+    m_backgroundShader->setUniform("tex", 0);
+
     m_quad->draw(*m_backgroundShader);
     glDepthMask(GL_TRUE);
-
-    m_texture->bind(0);
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("mv", model * view);

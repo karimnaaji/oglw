@@ -1,5 +1,6 @@
 #version 150
 
+uniform sampler2D tex;
 uniform vec2 resolution;
 
 out vec4 outColour;
@@ -10,14 +11,16 @@ bool grid(vec2 p, float res){
 }
 
 vec3 back(vec2 p){
-    vec3 background = vec3(0.01, 0.05, 0.06); 
-    if(grid(p, 0.01)) { background += vec3(0.05); }
+    vec3 background = vec3(0.03, 0.03, 0.06); 
     if(grid(p, 0.05)) { background += vec3(0.02); }
     return background;
 }
 
 void main(void) {
-    vec2 uv = (gl_FragCoord.xy / resolution) * 2.0 - vec2(1.0);
-    float vignette = smoothstep(0.9, 0.5, length(uv));
-    outColour = vec4(back(gl_FragCoord.xy) * vignette, 1.0);
+    vec2 uv = gl_FragCoord.xy / resolution;
+    vec2 p = uv * 2.0 - 1.0;
+
+    float vignette = smoothstep(1.0, 0.8, length(p));
+    vec3 texColor = texture(tex, (uv + vec2(0.5)) * 0.4).rgb;
+    outColour = vec4(mix(back(gl_FragCoord.xy), texColor, 0.4), 1.0);
 }
