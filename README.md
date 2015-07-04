@@ -15,3 +15,5 @@ mkdir build && cd build
 cmake .. && make
 ./test_app
 ```
+
+![00](img/test-app.png)
