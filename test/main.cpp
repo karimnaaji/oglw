@@ -1,4 +1,5 @@
 #include <vector>
+#include <string>
 #include <memory>
 #include "oglw.h"
 
@@ -41,13 +42,15 @@ void TestApp::init() {
     m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.frag", "background.vert"));
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
 
-    displayText(30.f, {10.f, 30.f}, "OGLW::TestApp");
-    //displayText(30.f, {10.f, 60.f}, "app");
+    displayText(30.f, {10.f, 30.f}, "OGLW");
+    displayText(15.f, {10.f, 45.f}, "::TestApp");
 }
 
 void TestApp::update(float _dt) {
     m_xrot += m_cursorX;
     m_yrot += m_cursorY;
+
+    displayText(15.f, {m_width - 80.f, 20.f}, std::to_string(_dt).c_str() + std::string("ms"), true);
 }
 
 void TestApp::render(float _dt) {

@@ -59,7 +59,7 @@ namespace OGLW {
     }
 
 
-    fsuint App::displayText(float _size, glm::vec2 _position, const std::string& _text) {
+    fsuint App::displayText(float _size, glm::vec2 _position, const std::string& _text, bool _clear) {
         fsuint textBuffer;
         fsuint textId;
 
@@ -71,7 +71,7 @@ namespace OGLW {
         glfonsRasterize(m_fontContext, textId, _text.c_str());
         glfonsTransform(m_fontContext, textId, _position.x * m_dpiRatio, _position.y * m_dpiRatio, 0.0, 1.0);
 
-        m_texts.push_back({textId, textBuffer});
+        m_texts.push_back({textId, textBuffer, _clear});
         return textBuffer;
     }
 
@@ -104,8 +104,21 @@ namespace OGLW {
             render(dt);
 
             if (m_texts.size() > 0) {
-                glfonsUpdateBuffer(m_fontContext);
+                std::vector<fsuint> toClear;
+
+                for (int i = 0; i < m_texts.size(); ++i) {
+                    if (m_texts[i].m_clear) {
+                        toClear.push_back(m_texts[i].m_buffer);
+                    }
+
+                    glfonsBindBuffer(m_fontContext, m_texts[i].m_buffer);
+                    glfonsUpdateBuffer(m_fontContext);
+                }
                 glfonsDraw(m_fontContext);
+
+                for (auto buffer : toClear) {
+                    clearText(buffer);
+                }
             }
 
             glfwSwapBuffers(m_window);

@@ -29,12 +29,13 @@ namespace OGLW {
             double m_cursorX;
             double m_cursorY;
 
-            fsuint displayText(float _size, glm::vec2 _position, const std::string& _text);
+            fsuint displayText(float _size, glm::vec2 _position, const std::string& _text, bool _clear = false);
             void clearText(fsuint _id);
 
             struct Text {
                 fsuint m_textId;
                 fsuint m_buffer;
+                bool m_clear;
             };
 
         private:
