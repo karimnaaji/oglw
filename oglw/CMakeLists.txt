@@ -32,6 +32,7 @@ function(include_recursive_dirs HEADERS_PATH)
 endfunction(include_recursive_dirs)
 
 set(OGLW_INCLUDE_DIRS
+    ${PROJECT_SOURCE_DIR}/deps
     ${PROJECT_SOURCE_DIR}/glm
     ${PROJECT_SOURCE_DIR}/obj
     ${PROJECT_SOURCE_DIR}/utils
@@ -42,6 +43,17 @@ set(OGLW_INCLUDE_DIRS
     CACHE INTERNAL "include directories" FORCE)
 
 include_directories(${OGLW_INCLUDE_DIRS})
+
+# deps
+set(OGLW_DEPS
+    ${PROJECT_SOURCE_DIR}/deps/Gamma/libGamma.a
+    ${PROJECT_SOURCE_DIR}/deps/Gamma/libportaudio.a
+    ${PROJECT_SOURCE_DIR}/deps/Gamma/libsndfile.a
+    "-framework AudioUnit"
+    "-framework AudioToolbox"
+    "-framework CoreAudio"
+    "-framework Carbon"
+    CACHE INTERNAL "oglw deps" FORCE)
 
 find_sources_and_include_directories(gl/*.h gl/*.cpp)
 find_sources_and_include_directories(obj/*.h obj/*.cpp)

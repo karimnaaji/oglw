@@ -17,3 +17,7 @@
 // other
 #include "app.h"
 #include "utils.h"
+
+// gamma
+#define GAMMA_H_INC_ALL
+#include "Gamma/gamma.h"

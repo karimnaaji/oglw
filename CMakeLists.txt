@@ -37,7 +37,7 @@ if(UNIX AND NOT APPLE)
     set(OGL "-lGL")
 endif()
 
-target_link_libraries(${EXECUTABLE_NAME} OGLW ${GLFW_LDFLAGS} ${GLEW_LIBRARY} ${OGL})
+target_link_libraries(${EXECUTABLE_NAME} OGLW ${OGLW_DEPS} ${GLFW_LDFLAGS} ${GLEW_LIBRARY} ${OGL})
 
 file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/test/resources/*)
 foreach(_resource ${RESOURCES})
