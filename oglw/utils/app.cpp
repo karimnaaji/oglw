@@ -5,7 +5,8 @@
 
 namespace OGLW {
 
-    App::App(std::string _name, int _width, int _height) : m_name(_name), m_width(_width), m_height(_height) {
+    App::App(std::string _name, std::string _font, int _width, int _height) :
+        m_name(_name), m_font(_font), m_width(_width), m_height(_height) {
         initGLFW();
     }
 
@@ -52,7 +53,13 @@ namespace OGLW {
         params.useGLBackend = true;
         m_fontContext = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT, params, nullptr);
 
-        fonsAddFont(m_fontContext, "Arial", "/Library/Fonts/Arial.ttf");
+        int font = fonsAddFont(m_fontContext, m_font.c_str(), m_font.c_str());
+
+        if (font == FONS_INVALID) {
+            std::cerr << "Error loading font file " << m_font.c_str() << std::endl;
+            return;
+        }
+
         glfonsScreenSize(m_fontContext, m_width * m_dpiRatio, m_height * m_dpiRatio);
         fonsSetBlur(m_fontContext, 2.5);
         fonsSetBlurType(m_fontContext, FONS_EFFECT_DISTANCE_FIELD);

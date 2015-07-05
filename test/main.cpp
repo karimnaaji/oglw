@@ -8,7 +8,7 @@ using uptr = std::unique_ptr<T>;
 
 class TestApp : public OGLW::App {
     public:
-        TestApp() : OGLW::App("OGLW::TestApp", 800, 600) {}
+        TestApp() : OGLW::App("OGLW::TestApp", "Roboto-Regular.ttf", 800, 600) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;

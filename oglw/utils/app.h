@@ -9,7 +9,7 @@ namespace OGLW {
 
     class App {
         public:
-            App(std::string _name, int _width, int _height);
+            App(std::string _name, std::string _font, int _width, int _height);
             virtual ~App();
 
             virtual void update(float _dt) = 0;
@@ -20,6 +20,7 @@ namespace OGLW {
 
         protected:
             std::string m_name;
+            std::string m_font;
             Camera m_camera;
             GLFWwindow* m_window;
             FONScontext* m_fontContext;
