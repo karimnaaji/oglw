@@ -59,7 +59,7 @@ void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
 
     m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.frag", "default.vert"));
-    m_meshes = OGLW::loadOBJ("suzanne.obj");
+    m_meshes = OGLW::loadOBJ("suzanne.blend");
     m_quad = OGLW::quad(1.f);
     m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.frag", "background.vert"));
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));

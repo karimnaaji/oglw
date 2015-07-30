@@ -29,11 +29,11 @@ include_directories(${OGLW_INCLUDE_DIRS})
 
 file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/test/resources/*)
 
-add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${RESOURCES} test/main.cpp)
+add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE test/main.cpp ${RESOURCES})
 
 # add resource files and property list
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES 
-    #MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/test/resources/info.plist" 
+    MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/test/resources/info.plist" 
     RESOURCE "${RESOURCES}")
 
 set(OGL "-framework OpenGL")
