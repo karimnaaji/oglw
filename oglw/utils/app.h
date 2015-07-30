@@ -7,6 +7,25 @@
 
 namespace OGLW {
 
+#define OGLWMainGamma(OGLWApp, audioCB) \
+int main() { \
+    OGLWApp app; \
+    app.init(); \
+    gam::AudioIO io(256, 44100, audioCB, NULL, 2); \
+    gam::Sync::master().spu(io.framesPerSecond()); \
+    io.start(); \
+    app.run(); \
+    return 0; \
+} \
+
+#define OGLWMain(OGLWApp) \
+int main() { \
+    OGLWApp app; \
+    app.init(); \
+    app.run(); \
+    return 0; \
+} \
+
 class App {
     public:
         App(std::string _name, std::string _font, int _width, int _height);
