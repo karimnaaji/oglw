@@ -101,12 +101,14 @@ void TestApp::render(float _dt) {
 
     m_texture->bind(0);
 
-    glDepthMask(GL_FALSE);
+    OGLW::RenderState::depthWrite(GL_FALSE);
+    
     m_backgroundShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
     m_backgroundShader->setUniform("tex", 0);
 
     m_quad->draw(*m_backgroundShader);
-    glDepthMask(GL_TRUE);
+
+    OGLW::RenderState::depthWrite(GL_TRUE);
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("mv", model * view);
