@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(testApp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y")
-set(EXECUTABLE_NAME test_app)
+set(EXECUTABLE_NAME testApp)
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
@@ -27,20 +27,15 @@ include_directories(${GLEW_INCLUDE_DIRS})
 add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/)
 include_directories(${OGLW_INCLUDE_DIRS})
 
-add_executable(${EXECUTABLE_NAME} test/main.cpp)
+file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/test/resources/*)
 
-if(APPLE)
-    set(OGL "-framework OpenGL")
-endif()
+add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${RESOURCES} test/main.cpp)
 
-if(UNIX AND NOT APPLE)
-    set(OGL "-lGL")
-endif()
+# add resource files and property list
+set_target_properties(${EXECUTABLE_NAME} PROPERTIES 
+    #MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/test/resources/info.plist" 
+    RESOURCE "${RESOURCES}")
+
+set(OGL "-framework OpenGL")
 
 target_link_libraries(${EXECUTABLE_NAME} OGLW ${OGLW_DEPS} ${GLFW_LDFLAGS} ${GLEW_LIBRARY} ${OGL})
-
-file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/test/resources/*)
-foreach(_resource ${RESOURCES})
-    file(COPY ${_resource} DESTINATION ${PROJECT_SOURCE_DIR}/build/)
-endforeach()
-
