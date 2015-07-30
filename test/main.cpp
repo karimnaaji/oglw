@@ -68,8 +68,6 @@ int main() {
 }
 
 void TestApp::init() {
-    glClearColor(0.18f, 0.18f, 0.22f, 1.0f);
-
     m_camera.setPosition({0.0, -0.5, 14.0});
 
     m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.frag", "default.vert"));
