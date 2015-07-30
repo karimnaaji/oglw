@@ -19,15 +19,15 @@ VboMesh::VboMesh() {
 
 VboMesh::~VboMesh() {
     if (m_glVertexBuffer) {
-        glDeleteBuffers(1, &m_glVertexBuffer);
+        GL_CHECK(glDeleteBuffers(1, &m_glVertexBuffer));
     }
 
     if (m_glIndexBuffer) {
-        glDeleteBuffers(1, &m_glIndexBuffer);
+        GL_CHECK(glDeleteBuffers(1, &m_glIndexBuffer));
     }
 
     if (m_glVertexArray) {
-        glDeleteVertexArrays(1, &m_glVertexArray);
+        GL_CHECK(glDeleteVertexArrays(1, &m_glVertexArray));
     }
 }
 
@@ -66,8 +66,8 @@ void VboMesh::upload() {
 
     int vertexBytes = m_nVertices * m_vertexLayout->getStride();
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_glVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertexBytes, m_glVertexData, GL_STATIC_DRAW);
+    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_glVertexBuffer));
+    GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vertexBytes, m_glVertexData, GL_STATIC_DRAW));
 
     if (m_glIndexData) {
 
@@ -75,8 +75,8 @@ void VboMesh::upload() {
             glGenBuffers(1, &m_glIndexBuffer);
         }
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_nIndices * sizeof(GLushort), m_glIndexData, GL_STATIC_DRAW);
+        GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer));
+        GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_nIndices * sizeof(GLushort), m_glIndexData, GL_STATIC_DRAW));
 
         delete[] m_glIndexData;
     }
@@ -91,11 +91,11 @@ void VboMesh::draw(const Shader& _shader) {
         upload();
     }
 
-    glBindVertexArray(m_glVertexArray);
-    glBindBuffer(GL_ARRAY_BUFFER, m_glVertexBuffer);
+    GL_CHECK(glBindVertexArray(m_glVertexArray));
+    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_glVertexBuffer));
 
     if (m_nIndices > 0) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer);
+        GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer));
     }
 
     _shader.use();
@@ -112,9 +112,9 @@ void VboMesh::draw(const Shader& _shader) {
         m_vertexLayout->enable(_shader, byteOffset);
 
         if (nIndices > 0) {
-            glDrawElements(m_drawMode, nIndices, GL_UNSIGNED_SHORT, (void*)(indiceOffset * sizeof(GLushort)));
+            GL_CHECK(glDrawElements(m_drawMode, nIndices, GL_UNSIGNED_SHORT, (void*)(indiceOffset * sizeof(GLushort))));
         } else if (nVertices > 0) {
-            glDrawArrays(m_drawMode, 0, nVertices);
+            GL_CHECK(glDrawArrays(m_drawMode, 0, nVertices));
         }
 
         m_vertexLayout->disable(_shader);

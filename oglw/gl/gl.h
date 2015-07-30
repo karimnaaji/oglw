@@ -4,3 +4,10 @@
 #include <GLFW/glfw3.h>
 #include "utils/utils.h"
 #include "glm/glm.hpp"
+#include "error.h"
+
+#ifdef OGLW_DEBUG
+#define GL_CHECK(stmt) do { stmt; _Error::GLError(#stmt, __FILE__, __LINE__); } while (0)
+#else
+#define GL_CHECK(stmt) stmt
+#endif

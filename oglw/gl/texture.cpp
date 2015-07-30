@@ -32,12 +32,12 @@ Texture::Texture(const std::string& _file, TextureOptions _options) : Texture(0,
 }
 
 Texture::~Texture() {
-    glDeleteTextures(1, &m_glHandle);
+    GL_CHECK(glDeleteTextures(1, &m_glHandle));
 }
 
 void Texture::bind(GLuint _textureSlot) {
-    glActiveTexture(getTextureUnit(_textureSlot));
-    glBindTexture(m_target, m_glHandle);
+    GL_CHECK(glActiveTexture(getTextureUnit(_textureSlot)));
+    GL_CHECK(glBindTexture(m_target, m_glHandle));
 }
 
 void Texture::setData(const GLuint* _data, unsigned int _dataSize) {
@@ -52,15 +52,15 @@ void Texture::setData(const GLuint* _data, unsigned int _dataSize) {
 }
 
 void Texture::generate(GLuint _textureUnit) {
-    glGenTextures(1, &m_glHandle);
+    GL_CHECK(glGenTextures(1, &m_glHandle));
 
     bind(_textureUnit);
 
-    glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, m_options.m_filtering.m_min);
-    glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, m_options.m_filtering.m_mag);
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, m_options.m_filtering.m_min));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, m_options.m_filtering.m_mag));
 
-    glTexParameteri(m_target, GL_TEXTURE_WRAP_S, m_options.m_wrapping.m_wraps);
-    glTexParameteri(m_target, GL_TEXTURE_WRAP_T, m_options.m_wrapping.m_wrapt);
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_S, m_options.m_wrapping.m_wraps));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_T, m_options.m_wrapping.m_wrapt));
 }
 
 void Texture::update(GLuint _textureUnit) {
@@ -87,8 +87,8 @@ void Texture::update(GLuint _textureUnit) {
 
     // resize or push data
     if (data || m_shouldResize) {
-        glTexImage2D(m_target, 0, m_options.m_internalFormat, m_width, m_height, 0, m_options.m_format,
-                     GL_UNSIGNED_BYTE, data);
+        GL_CHECK(glTexImage2D(m_target, 0, m_options.m_internalFormat, m_width, m_height, 0, m_options.m_format,
+                     GL_UNSIGNED_BYTE, data));
         m_shouldResize = false;
     }
 

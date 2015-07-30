@@ -36,9 +36,9 @@ void VertexLayout::enable(const Shader& _program, size_t byteOffset) {
         const GLint location = _program.getAttribLocation(attrib.name);
 
         if (location != -1) {
-            glEnableVertexAttribArray(location);
-            glVertexAttribPointer(location, attrib.size, attrib.type, attrib.normalized, m_stride,
-                                  ((unsigned char*)attrib.offset) + byteOffset);
+            GL_CHECK(glEnableVertexAttribArray(location));
+            GL_CHECK(glVertexAttribPointer(location, attrib.size, attrib.type, attrib.normalized, m_stride,
+                                  ((unsigned char*)attrib.offset) + byteOffset));
         }
     }
 }
@@ -48,7 +48,7 @@ void VertexLayout::disable(const Shader& _program) {
 
         const GLint location = _program.getAttribLocation(attrib.name);
         if (location != -1) {
-            glDisableVertexAttribArray(location);
+            GL_CHECK(glDisableVertexAttribArray(location));
         }
     }
 }
