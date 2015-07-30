@@ -1,13 +1,14 @@
 #pragma once
 
-#define OGLW_DEBUG
-
 // math utils
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/rotate_vector.hpp"
 
 // gl
+#define OGLW_DEBUG
+#define GLFONS_DEBUG
+
 #include "gl.h"
 #include "shader.h"
 #include "mesh.h"

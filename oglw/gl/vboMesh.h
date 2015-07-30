@@ -14,7 +14,7 @@ namespace OGLW {
 class VboMesh {
 
 public:
-    VboMesh(std::shared_ptr<VertexLayout> _vertexlayout, GLenum _drawMode = GL_TRIANGLES);
+    VboMesh(std::shared_ptr<VertexLayout> _vertexlayout, GLenum _drawMode = GL_TRIANGLES, GLenum _hint = GL_STATIC_DRAW);
     VboMesh();
 
     void setVertexLayout(std::shared_ptr<VertexLayout> _vertexLayout);
@@ -31,7 +31,9 @@ public:
 
     virtual void compileVertexBuffer() = 0;
 
-    void upload();
+    bool upload();
+    bool subDataUpload();
+
     void draw(const Shader& _shader);
 
     static std::vector<glm::vec3> computeNormals(std::vector<glm::vec3> _vertices, std::vector<int> _indices) {
@@ -61,6 +63,9 @@ public:
         return std::move(normals);
     }
 
+    GLsizei getDirtySize() const { return m_dirtySize; }
+    GLintptr getDirtyOffset() const { return m_dirtyOffset; }
+
 protected:
     std::vector<std::pair<uint32_t, uint32_t>> m_vertexOffsets;
     std::shared_ptr<VertexLayout> m_vertexLayout;
@@ -73,11 +78,15 @@ protected:
     int m_nIndices;
     GLuint m_glIndexBuffer;
     GLushort* m_glIndexData = nullptr;
-
+    GLenum m_hint;
     GLenum m_drawMode;
 
     bool m_isUploaded;
     bool m_isCompiled;
+    bool m_dirty;
+
+    GLsizei m_dirtySize;
+    GLintptr m_dirtyOffset;
 
     template <typename T>
     void compile(std::vector<std::vector<T>>& _vertices, std::vector<std::vector<int>>& _indices) {

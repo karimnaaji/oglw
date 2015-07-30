@@ -1,5 +1,4 @@
 #include "app.h"
-//#define GLFONS_DEBUG
 #define GLFONTSTASH_IMPLEMENTATION
 #include "glfontstash.h"
 
