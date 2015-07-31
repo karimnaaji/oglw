@@ -64,4 +64,4 @@ class App {
         std::vector<Text> m_texts;
 };
 
-}
+} // OGLW

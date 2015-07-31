@@ -23,4 +23,4 @@ bool stringFromPath(const std::string& path, std::string* into);
 
 unsigned char* bytesFromPath(const char* _path, unsigned int* _size);
 
-}
+} // OGLW

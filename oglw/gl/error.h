@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace OGLW {
 namespace _Error {
 

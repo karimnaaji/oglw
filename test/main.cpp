@@ -72,7 +72,7 @@ void TestApp::update(float _dt) {
     m_xrot += m_cursorX;
     m_yrot += m_cursorY;
 
-    displayText(15.f, {m_width - 80.f, 20.f}, std::to_string(_dt).c_str() + std::string("ms"), true);
+    displayText(15.f, {m_width - 80.f, 20.f}, std::to_string(_dt) + std::string("ms"), true);
 }
 
 void TestApp::render(float _dt) {

@@ -81,4 +81,4 @@ protected:
     static GLuint getTextureUnit(GLuint _slot);
 };
 
-}
+} // OGLW

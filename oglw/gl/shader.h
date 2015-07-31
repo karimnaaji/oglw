@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "gl.h"
-#include "utils.h"
+#include "glm/glm.hpp"
 
 namespace OGLW {
 
@@ -56,4 +56,4 @@ private:
     GLuint m_vertexShader;
 };
 
-}
+} // OGLW

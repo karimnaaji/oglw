@@ -3,7 +3,7 @@
 #include "gl.h"
 #include <iostream>
 #include <cmath>
-#include "utils.h"
+#include "glm/glm.hpp"
 
 namespace OGLW {
 
@@ -42,4 +42,4 @@ private:
     const float m_maxRotationX = 89.0f;
 };
 
-}
+} // OGLW

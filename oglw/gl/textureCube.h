@@ -3,7 +3,7 @@
 #include "texture.h"
 #include "stb_image.h"
 #include <vector>
-#include <cstring>
+#include <string>
 
 namespace OGLW {
 
@@ -35,4 +35,4 @@ private:
     void load(const std::string& _file);
 };
 
-}
+} // OGLW

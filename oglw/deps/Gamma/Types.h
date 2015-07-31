@@ -15,8 +15,8 @@
 
 namespace gam{
 
-template<class T> class Complex;
-template<uint32_t N, class T> class Vec;
+template<class T> struct Complex;
+template<uint32_t N, class T> struct Vec;
 
 
 typedef float real;				///< Default real number type

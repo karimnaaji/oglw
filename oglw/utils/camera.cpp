@@ -1,6 +1,7 @@
 #include "camera.h"
 
 #include "glm/gtc/matrix_transform.hpp"
+#include "utils.h"
 
 namespace OGLW {
 
@@ -89,4 +90,4 @@ void Camera::normalizeAngles() {
     }
 }
 
-}
+} // OGLW

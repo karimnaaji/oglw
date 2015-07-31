@@ -2,8 +2,6 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include "utils/utils.h"
-#include "glm/glm.hpp"
 #include "error.h"
 
 #ifdef OGLW_DEBUG

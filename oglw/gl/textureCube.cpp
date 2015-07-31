@@ -1,4 +1,5 @@
 #include "textureCube.h"
+#include "utils/utils.h"
 
 namespace OGLW {
 
