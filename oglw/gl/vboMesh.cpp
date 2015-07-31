@@ -103,7 +103,7 @@ bool VboMesh::subDataUpload() {
     }
 
     if (m_hint == GL_STATIC_DRAW) {
-        std::cout << "WARNING: wrong usage hint provided to the Vbo" << std::endl;
+        WARN("wrong usage hint provided to the Vbo");
     }
 
     GL_CHECK(glBindVertexArray(m_glVertexArray));

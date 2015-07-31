@@ -24,6 +24,12 @@ Texture::Texture(const std::string& _file, TextureOptions _options) : Texture(0,
 
     pixels = stbi_load_from_memory(data, size, &width, &height, &comp, STBI_rgb_alpha);
 
+    if (!pixels || size == 0) {
+        WARN("Failed to load texture image resource %s", _file.c_str());
+        free(data);
+        return;
+    }
+
     resize(width, height);
     setData(reinterpret_cast<GLuint*>(pixels), width * height);
     update(0);
@@ -111,7 +117,7 @@ void Texture::resize(const unsigned int _width, const unsigned int _height) {
 
 GLuint Texture::getTextureUnit(GLuint _unit) {
     if (_unit >= GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS) {
-        std::cout << "Warning: trying to access unavailable texture unit" << std::endl;
+        WARN("trying to access unavailable texture unit");
     }
 
     return GL_TEXTURE0 + _unit;

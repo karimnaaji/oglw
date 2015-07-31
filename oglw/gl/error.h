@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include "log.h"
 
 namespace OGLW {
 namespace _Error {
@@ -8,8 +8,7 @@ namespace _Error {
 static inline void GLError(const char* stmt, const char* fname, int line) {
     GLenum err = glGetError();
     if(err != GL_NO_ERROR) {
-        printf("OpenGL error %08x, at %s:%i - for %s\n", err, fname, line, stmt);
-        exit(-1);
+        ERROR("OpenGL error %08x, at %s:%i - for %s\n", err, fname, line, stmt);
     }
 }
 

@@ -14,6 +14,8 @@ App::~App() {
 }
 
 void App::initGLFW() {
+    INFO("App init");
+
     glfwInit();
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -27,7 +29,7 @@ void App::initGLFW() {
     m_window = glfwCreateWindow(m_width, m_height, m_name.c_str(), NULL, NULL);
 
     if (!m_window) {
-        std::cerr << "Window creation failed" << std::endl;
+        ERROR("Window creation failure");
         glfwTerminate();
     }
 
@@ -43,7 +45,7 @@ void App::initGLFW() {
 
     if (glewInit() != GLEW_OK) {
         glfwTerminate();
-        std::cerr << "glewInit failed." << std::endl;
+        ERROR("glewInit failed");
     }
 
     glEnable(GL_DEPTH_TEST);
@@ -52,10 +54,11 @@ void App::initGLFW() {
     params.useGLBackend = true;
     m_fontContext = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT, params, nullptr);
 
+    INFO("Loading font %s", m_font.c_str());
     int font = fonsAddFont(m_fontContext, m_font.c_str(), m_font.c_str());
 
     if (font == FONS_INVALID) {
-        std::cerr << "Error loading font file " << m_font.c_str() << std::endl;
+        ERROR("Error loading font file %s", m_font.c_str());
         return;
     }
 

@@ -54,6 +54,8 @@ private:
     GLuint m_program;
     GLuint m_fragmentShader;
     GLuint m_vertexShader;
+    std::string m_fragShaderPath;
+    std::string m_vertShaderPath;
 };
 
 } // OGLW

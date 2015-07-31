@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "log.h"
 
 namespace OGLW {
 
@@ -7,8 +8,10 @@ bool stringFromPath(const std::string& path, std::string* into) {
     std::string buffer;
 
     file.open(path.c_str());
-    if (!file.is_open())
+    if (!file.is_open()) {
+        WARN("Can't load string resource %s", path.c_str());
         return false;
+    }
     while (!file.eof()) {
         getline(file, buffer);
         (*into) += buffer + "\n";
@@ -22,7 +25,7 @@ unsigned char* bytesFromPath(const char* _path, unsigned int* _size) {
     std::ifstream resource(_path, std::ifstream::ate | std::ifstream::binary);
 
     if (!resource.is_open()) {
-        std::cerr << "Failed to read file at path: " << _path << std::endl;
+        WARN("Failed to read file at path %s ", _path);
         *_size = 0;
         return nullptr;
     }

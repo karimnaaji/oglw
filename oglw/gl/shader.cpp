@@ -3,19 +3,15 @@
 
 namespace OGLW {
 
-Shader::Shader(std::string _fragPath, std::string _vertPath) {
+Shader::Shader(std::string _fragPath, std::string _vertPath) :
+m_fragShaderPath(_fragPath),
+m_vertShaderPath(_vertPath)
+{
     std::string vert, frag;
-
-    if (!stringFromPath(_vertPath, &vert)) {
-        std::cerr << "Can't load shader " << _vertPath << std::endl;
-    }
-
-    if (!stringFromPath(_fragPath, &frag)) {
-        std::cerr << "Can't load shader " << _fragPath << std::endl;
-    }
-
+    stringFromPath(_vertPath, &vert);
+    stringFromPath(_fragPath, &frag);
     if (!load(frag, vert)) {
-        std::cerr << "Error building shader" << std::endl;
+        WARN("failed to build shader %s %s", _fragPath.c_str(), _vertPath.c_str());
     }
 }
 
@@ -28,15 +24,17 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
 
     if (!m_vertexShader) {
         GL_CHECK(glDeleteShader(m_vertexShader));
-        std::cerr << "Error loading vertex shader src" << std::endl;
+        WARN("Failed to compile vertex shader");
+        WARN("%s", _vertexSrc.c_str());
         return false;
     }
 
     m_fragmentShader = compile(_fragmentSrc, GL_FRAGMENT_SHADER);
 
     if (!m_fragmentShader) {
-        std::cerr << "Error loading fragment shader src" << std::endl;
         GL_CHECK(glDeleteShader(m_fragmentShader));
+        WARN("Failed to compile vertex shader");
+        WARN("%s", _fragmentSrc.c_str());
         return false;
     }
 
@@ -57,13 +55,15 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
             std::vector<GLchar> infoLog(infoLength);
             GL_CHECK(glGetProgramInfoLog(m_program, infoLength, NULL, &infoLog[0]));
             std::string error(infoLog.begin(), infoLog.end());
-            std::cerr << "Error linking shader: " << error << std::endl;
+            DBG("Error linking shader program");
+            DBG(error.c_str());
         }
 
         GL_CHECK(glDeleteProgram(m_program));
         return false;
     } else {
-        std::cout << "Shader linked successfuly" << std::endl;
+        INFO("Shader program %s %s linked successfuly", m_fragShaderPath.c_str(),
+             m_fragShaderPath.c_str());
         GL_CHECK(glDeleteShader(m_vertexShader));
         GL_CHECK(glDeleteShader(m_fragmentShader));
         return true;
@@ -102,8 +102,9 @@ GLuint Shader::compile(const std::string& _src, GLenum _type) {
         if (infoLength > 1) {
             std::vector<GLchar> infoLog(infoLength);
             GL_CHECK(glGetShaderInfoLog(shader, infoLength, NULL, &infoLog[0]));
-            std::cerr << "Error compiling shader: " << std::endl;
-            std::cerr << &infoLog[0] << std::endl;
+            DBG("Compilation error");
+            DBG(_src.c_str());
+            DBG(&infoLog[0]);
         }
         GL_CHECK(glDeleteShader(shader));
         return 0;
@@ -115,7 +116,8 @@ GLuint Shader::compile(const std::string& _src, GLenum _type) {
 GLint Shader::getUniformLocation(const std::string& _uniformName) const {
     GLint loc = GL_CHECK(glGetUniformLocation(m_program, _uniformName.c_str()));
     if (loc == -1) {
-        std::cerr << "Uniform " << _uniformName << " not found" << std::endl;
+        WARN("shader uniform %s not found on shader program: %s %s", _uniformName.c_str(),
+             m_fragShaderPath.c_str(), m_vertShaderPath.c_str());
     }
     return loc;
 }
