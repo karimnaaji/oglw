@@ -1,6 +1,7 @@
 #include "app.h"
 #define GLFONTSTASH_IMPLEMENTATION
 #include "glfontstash.h"
+#include "renderState.h"
 
 namespace OGLW {
 
@@ -10,6 +11,7 @@ App::App(std::string _name, std::string _font, int _width, int _height) :
 }
 
 App::~App() {
+    INFO("App destroy");
     glfonsDelete(m_fontContext);
 }
 
@@ -48,16 +50,16 @@ void App::initGLFW() {
         ERROR("glewInit failed");
     }
 
-    glEnable(GL_DEPTH_TEST);
+    RenderState::depthTest(GL_DEPTH_TEST);
 
     GLFONSparams params;
     params.useGLBackend = true;
     m_fontContext = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT, params, nullptr);
-
     INFO("Loading font %s", m_font.c_str());
     int font = fonsAddFont(m_fontContext, m_font.c_str(), m_font.c_str());
 
     if (font == FONS_INVALID) {
+        printf("%s", m_font.c_str());
         ERROR("Error loading font file %s", m_font.c_str());
         return;
     }
