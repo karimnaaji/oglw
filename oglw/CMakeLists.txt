@@ -61,19 +61,20 @@ include_directories(${PROJECT_SOURCE_DIR}/3rdparty/glm)
 
 # Tiny obj loader
 message(STATUS "Add tinyobjloader")
-include_directories(${PROJECT_SOURCE_DIR}/3rdparty/tinyobjloader)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/tinyobjloader)
 add_library(tinyobjloader ${PROJECT_SOURCE_DIR}/3rdparty/tinyobjloader/tiny_obj_loader.cc)
 set(LIBRARIES ${LIBRARIES} tinyobjloader)
 
 # GLEW
 message(STATUS "Add glew")
 set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "Build glew shared")
-set(${LIBRARIES} ${LIBRARIES} libglew_static)
+set(LIBRARIES ${LIBRARIES} libglew_static)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/glew-cmake)
 
 # STB
 message(STATUS "Include stb")
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/stb)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/stb)
 
 # OGLW Libraries
 #set(LIBRARIES

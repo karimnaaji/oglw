@@ -4,7 +4,7 @@
 #include "vboMesh.h"
 #include <vector>
 #include <memory>
-#include "obj/tiny_obj_loader.h"
+#include "tiny_obj_loader.h"
 
 namespace OGLW {
 
@@ -60,7 +60,7 @@ protected:
     std::vector<std::vector<int>> indices;
 };
 
-template<class T> 
+template<class T>
 void Mesh<T>::setDirty(GLintptr _byteOffset, GLsizei _byteSize) {
     if (!m_dirty) {
         m_dirtySize = _byteSize;
@@ -170,24 +170,24 @@ std::vector<std::unique_ptr<RawMesh>> loadOBJ(std::string _path) {
             glm::vec3 color;
 
             if (hasUVs) {
-                uv = { 
+                uv = {
                     shapes[i].mesh.texcoords[3 * v + 0],
-                    shapes[i].mesh.texcoords[3 * v + 1] 
+                    shapes[i].mesh.texcoords[3 * v + 1]
                 };
             }
 
             if (hasNormals) {
-                normal = { 
+                normal = {
                     shapes[i].mesh.normals[3 * v + 0],
                     shapes[i].mesh.normals[3 * v + 1],
-                    shapes[i].mesh.normals[3 * v + 2] 
+                    shapes[i].mesh.normals[3 * v + 2]
                 };
             }
 
             position = {
-                shapes[i].mesh.positions[3 * v + 0], 
-               -shapes[i].mesh.positions[3 * v + 1], 
-                shapes[i].mesh.positions[3 * v + 2] 
+                shapes[i].mesh.positions[3 * v + 0],
+               -shapes[i].mesh.positions[3 * v + 1],
+                shapes[i].mesh.positions[3 * v + 2]
             };
 
             vertices.push_back({ position, color, normal, uv });
