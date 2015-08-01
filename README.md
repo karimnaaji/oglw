@@ -1,4 +1,7 @@
-![Travis CI Build Status](https://travis-ci.org/karimnaaji/oglw.svg?branch=master)
+|Platform|Build Status|
+|--------|------|
+|OSX & Linux|[![Build Status](https://travis-ci.org/karimnaaji/oglw.svg?branch=master)](https://travis-ci.org/karimnaaji/oglw)|
+
 
 # oglw
 OpenGL 3.2 wrapper utilities and more
