@@ -43,7 +43,7 @@ set(INCLUDE_DIRS "")
 set(LIBRARIES "")
 
 # GLFW
-message(STATUS "Add GLFW library")
+message(STATUS "Add GLFW")
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Build the GLFW example programs")
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "Build the GLFW test programs")
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "Build the GLFW documentation")
@@ -51,11 +51,11 @@ set(GLFW_INSTALL OFF CACHE BOOL "Generate installation target")
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/glfw)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/glfw/include)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/glfw/include)
 set(LIBRARIES ${LIBRARIES} glfw ${GLFW_LIBRARIES})
 
 # GLM
 message(STATUS "Include GLM")
-# add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/glm)
 set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/glm)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/glm)
 
@@ -70,6 +70,8 @@ message(STATUS "Add glew")
 set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "Build glew shared")
 set(LIBRARIES ${LIBRARIES} libglew_static)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/glew-cmake)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/glew-cmake/include)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/glew-cmake/include)
 
 # STB
 message(STATUS "Include stb")
