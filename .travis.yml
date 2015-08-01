@@ -31,4 +31,4 @@ install:
 script:
   - source ./travis/build.sh
 
-sudo: required
+sudo: false
