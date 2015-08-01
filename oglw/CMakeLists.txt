@@ -78,16 +78,13 @@ message(STATUS "Include stb")
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/stb)
 set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/stb)
 
-# OGLW Libraries
-#set(LIBRARIES
-#    ${LIBRARIES}
-#    ${PROJECT_SOURCE_DIR}/deps/Gamma/libGamma.a
-#    ${PROJECT_SOURCE_DIR}/deps/Gamma/libportaudio.a
-#    ${PROJECT_SOURCE_DIR}/deps/Gamma/libsndfile.a
-#    "-framework AudioUnit"
-#    "-framework AudioToolbox"
-#    "-framework CoreAudio"
-#    "-framework Carbon")
+# Add gamma
+message(STATUS "Add Gamma")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/3rdparty/Gamma/cmake_modules)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+set(LIBRARIES ${LIBRARIES} Gamma)
 
 # OGLW Include dirs
 set(INCLUDE_DIRS

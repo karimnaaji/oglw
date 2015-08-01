@@ -8,32 +8,32 @@ using uptr = std::unique_ptr<T>;
 
 // ------------------------------------------------------------------------------
 // Gamma sound processing configuration
-//gam::SineDs<> src(3);
-//gam::Accum<> tmr(1);
-//gam::LFO<> modSR(1./ 8, 0.0);
-//gam::LFO<> modQn(1./32, 0.5);
-//gam::Quantizer<> qnt;
-//static float f;
-//
-//void audioCB(gam::AudioIOData& io) {
-//    while (io()) {
-//        if (tmr()) {
-//            src.set(0, 220, 1, 2.0);
-//            src.set(1, 347, 1, 1.2);
-//            src.set(2, 1237, 1, 0.2);
-//            tmr.freq(gam::rnd::uni(2., 1.));
-//        }
-//
-//        qnt.freq(modSR.triU() * 4000 + 1400);
-//        qnt.step(modQn.paraU() * 0.25);
-//
-//        float s = src() * 0.2;
-//        s = qnt(s);
-//        f = s;
-//
-//        io.out(0) = io.out(1) = s;
-//    }
-//}
+gam::SineDs<> src(3);
+gam::Accum<> tmr(1);
+gam::LFO<> modSR(1./ 8, 0.0);
+gam::LFO<> modQn(1./32, 0.5);
+gam::Quantizer<> qnt;
+static float f;
+
+void audioCB(gam::AudioIOData& io) {
+    while (io()) {
+        if (tmr()) {
+            src.set(0, 220, 1, 2.0);
+            src.set(1, 347, 1, 1.2);
+            src.set(2, 1237, 1, 0.2);
+            tmr.freq(gam::rnd::uni(2., 1.));
+        }
+
+        qnt.freq(modSR.triU() * 4000 + 1400);
+        qnt.step(modQn.paraU() * 0.25);
+
+        float s = src() * 0.2;
+        s = qnt(s);
+        f = s;
+
+        io.out(0) = io.out(1) = s;
+    }
+}
 
 // ------------------------------------------------------------------------------
 // OGLW App
@@ -53,8 +53,7 @@ class TestApp : public OGLW::App {
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
-//OGLWMainGamma(TestApp, audioCB);
-OGLWMain(TestApp);
+OGLWMainGamma(TestApp, audioCB);
 
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
@@ -101,7 +100,7 @@ void TestApp::render(float _dt) {
     m_shader->setUniform("mv", model * view);
     m_shader->setUniform("normalmat", normalMat);
     m_shader->setUniform("tex", 0);
-    //m_shader->setUniform("f", f);
+    m_shader->setUniform("f", f);
 
     for (auto& m : m_meshes) {
         m->draw(*m_shader);
