@@ -1,6 +1,14 @@
+# sets up those variable
+# - OGLW_INCLUDE_DIRS : the include headers in order to use the library
+# - OGLW_LIBRARIES : libraries to link
+
 cmake_minimum_required(VERSION 2.8)
 project(OGLW)
 
+# CXX Flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y")
+
+# Utility functions
 function(find_sources_and_include_directories HEADERS_PATH SOURCES_PATH)
     include_recursive_dirs(${HEADERS_PATH})
     file(GLOB_RECURSE FOUND_SOURCES ${SOURCES_PATH})
@@ -15,14 +23,14 @@ endfunction(find_sources_and_include_directories)
 function(include_recursive_dirs HEADERS_PATH)
     file(GLOB_RECURSE FOUND_HEADERS ${HEADERS_PATH})
 
-    set(INCLUDE_DIRS "")
+    set(INCLUDES ${INCLUDES} "")
     foreach(_headerFile ${FOUND_HEADERS})
         get_filename_component(_dir ${_headerFile} PATH)
-        list(APPEND INCLUDE_DIRS ${_dir})
+        list(APPEND INCLUDES ${_dir})
     endforeach()
-    list(REMOVE_DUPLICATES INCLUDE_DIRS)
+    list(REMOVE_DUPLICATES INCLUDES)
 
-    include_directories(${INCLUDE_DIRS})
+    include_directories(${INCLUDES})
 
     set(HEADERS
         ${HEADERS}
@@ -31,32 +39,69 @@ function(include_recursive_dirs HEADERS_PATH)
     list(REMOVE_DUPLICATES HEADERS)
 endfunction(include_recursive_dirs)
 
-set(OGLW_INCLUDE_DIRS
-    ${PROJECT_SOURCE_DIR}/deps
-    ${PROJECT_SOURCE_DIR}/glm
-    ${PROJECT_SOURCE_DIR}/obj
-    ${PROJECT_SOURCE_DIR}/utils
+set(INCLUDE_DIRS "")
+set(LIBRARIES "")
+
+# GLFW
+message(STATUS "Add GLFW")
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Build the GLFW example programs")
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "Build the GLFW test programs")
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "Build the GLFW documentation")
+set(GLFW_INSTALL OFF CACHE BOOL "Generate installation target")
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/glfw)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/glfw/include)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/glfw/include)
+set(LIBRARIES ${LIBRARIES} glfw ${GLFW_LIBRARIES})
+
+# GLM
+message(STATUS "Include GLM")
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/glm)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/glm)
+
+# Tiny obj loader
+message(STATUS "Add tinyobjloader")
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/tinyobjloader)
+add_library(tinyobjloader ${PROJECT_SOURCE_DIR}/3rdparty/tinyobjloader/tiny_obj_loader.cc)
+set(LIBRARIES ${LIBRARIES} tinyobjloader)
+
+# GLEW
+message(STATUS "Add glew")
+set(glew-cmake_BUILD_SHARED OFF CACHE BOOL "Build glew shared")
+set(LIBRARIES ${LIBRARIES} libglew_static)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/glew-cmake)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/glew-cmake/include)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/glew-cmake/include)
+
+# STB
+message(STATUS "Include stb")
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/stb)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/stb)
+
+# Add gamma
+message(STATUS "Add Gamma")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/3rdparty/Gamma/cmake_modules)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+set(LIBRARIES ${LIBRARIES} Gamma)
+
+# OGLW Include dirs
+set(INCLUDE_DIRS
+    ${INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/gl
-    ${PROJECT_SOURCE_DIR}/stb
     ${PROJECT_SOURCE_DIR}/text
-    ${PROJECT_SOURCE_DIR}/
-    CACHE INTERNAL "include directories" FORCE)
+    ${PROJECT_SOURCE_DIR}/utils
+    ${PROJECT_SOURCE_DIR}/)
 
-include_directories(${OGLW_INCLUDE_DIRS})
-
-# deps
-set(OGLW_DEPS
-    ${PROJECT_SOURCE_DIR}/deps/Gamma/libGamma.a
-    ${PROJECT_SOURCE_DIR}/deps/Gamma/libportaudio.a
-    ${PROJECT_SOURCE_DIR}/deps/Gamma/libsndfile.a
-    "-framework AudioUnit"
-    "-framework AudioToolbox"
-    "-framework CoreAudio"
-    "-framework Carbon"
-    CACHE INTERNAL "oglw deps" FORCE)
-
+# Add OGLW files and include directories
 find_sources_and_include_directories(gl/*.h gl/*.cpp)
-find_sources_and_include_directories(obj/*.h obj/*.cpp)
 find_sources_and_include_directories(utils/*.h utils/*.cpp)
+find_sources_and_include_directories(text/*.h text/*.cpp)
+include_directories(${PROJECT_SOURCE_DIR}/)
 
 add_library(OGLW STATIC ${SOURCES} ${HEADERS})
+
+# Output variables
+set(OGLW_INCLUDE_DIRS ${INCLUDE_DIRS} CACHE INTERNAL "OGLW include directories" FORCE)
+set(OGLW_LIBRARIES ${LIBRARIES} CACHE INTERNAL "OGLW libraries" FORCE)

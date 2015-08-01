@@ -88,7 +88,7 @@ void TestApp::render(float _dt) {
     m_texture->bind(0);
 
     OGLW::RenderState::depthWrite(GL_FALSE);
-    
+
     m_backgroundShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
     m_backgroundShader->setUniform("tex", 0);
 

@@ -1,0 +1,18 @@
+[submodule "oglw/3rdparty/glfw"]
+	path = oglw/3rdparty/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "oglw/3rdparty/stb"]
+	path = oglw/3rdparty/stb
+	url = https://github.com/nothings/stb.git
+[submodule "oglw/3rdparty/tinyobjloader"]
+	path = oglw/3rdparty/tinyobjloader
+	url = https://github.com/syoyo/tinyobjloader
+[submodule "oglw/3rdparty/glm"]
+	path = oglw/3rdparty/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "oglw/3rdparty/glew-cmake"]
+	path = oglw/3rdparty/glew-cmake
+	url = https://github.com/Perlmint/glew-cmake.git
+[submodule "oglw/3rdparty/Gamma"]
+	path = oglw/3rdparty/Gamma
+	url = https://github.com/AlloSphere-Research-Group/Gamma.git
