@@ -1,34 +1,31 @@
 language: cpp
 
-os: 
-  - osx
-
-#matrix:
-#    include:
-#        - os: osx
-#          env: PLATFORM=osx
-#          compiler: clang
-#        - os: linux
-#          env: PLATFORM=linux CXX=g++-4.9 CC=gcc-4.9
-#          compiler: gcc
-#          addons:
-#            apt:
-#              sources: [ 'kalakris-cmake', 'ubuntu-toolchain-r-test' ]
-#              packages: [ 'cmake', 'gcc-4.9', 'g++-4.9', 'xorg-dev', 'libglu1-mesa-dev' ]
+matrix:
+    include:
+        - os: osx
+          env: PLATFORM=osx
+          compiler: clang
+        - os: linux
+          env: PLATFORM=linux CXX=g++-4.9 CC=gcc-4.9
+          compiler: gcc
+          addons:
+            apt:
+              sources: [ 'kalakris-cmake', 'ubuntu-toolchain-r-test' ]
+              packages: [ 'cmake', 'gcc-4.9', 'g++-4.9', 'xorg-dev', 'libglu1-mesa-dev' ]
 
 before_install:
   - echo $TRAVIS_OS_NAME
-#  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; fi
-#  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libportaudio-dev; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libsndfile-dev; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install portaudio libsndfile; fi
   - git submodule init && git submodule update
 
-install:
-  - echo $TRAVIS_OS_NAME
-#  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libportaudio-dev; fi
-#  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libsndfile-dev; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install cmake portaudio libsndfile; fi
+install: ulimit -c
+
+before_script:
+  - ulimit -c unlimited -S
 
 script:
   - source ./travis/build.sh
 
-sudo: required
