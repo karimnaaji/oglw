@@ -4,6 +4,7 @@
 #include "stb_image.h"
 #include <vector>
 #include <string>
+#include <cstring>
 
 namespace OGLW {
 

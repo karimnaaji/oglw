@@ -1,4 +1,4 @@
-language: cpp
+#language: cpp
 
 matrix:
     include:
@@ -15,7 +15,7 @@ matrix:
 
 before_install:
   - echo $TRAVIS_OS_NAME
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libportaudio-dev; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install portaudio19-dev; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install libsndfile-dev; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install portaudio libsndfile; fi
