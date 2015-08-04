@@ -1,4 +1,5 @@
 #include "vertexLayout.h"
+#include "types.h"
 
 namespace OGLW {
 
