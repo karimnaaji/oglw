@@ -1,5 +1,7 @@
 #pragma once
 
+#include "types.h"
+
 // math utils
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"

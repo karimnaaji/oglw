@@ -10,9 +10,9 @@ TextureCube::TextureCube(std::string _file, TextureOptions _options) : Texture(0
 }
 
 void TextureCube::load(const std::string& _file) {
-    unsigned int size;
-    unsigned char* data = bytesFromPath(_file.c_str(), &size);
-    unsigned char* pixels;
+    uint size;
+    uchar* data = bytesFromPath(_file.c_str(), &size);
+    uchar* pixels;
     int width, height, comp;
 
     pixels = stbi_load_from_memory(data, size, &width, &height, &comp, STBI_rgb_alpha);
@@ -57,8 +57,8 @@ void TextureCube::load(const std::string& _file) {
                 continue;
             }
 
-            int offset = (m_width * iFace + y * width) * sizeof(unsigned int);
-            std::memcpy(face->m_data.data() + face->m_offset, pixels + offset, m_width * sizeof(unsigned int));
+            int offset = (m_width * iFace + y * width) * sizeof(uint);
+            std::memcpy(face->m_data.data() + face->m_offset, pixels + offset, m_width * sizeof(uint));
             face->m_offset += m_width;
         }
     }

@@ -29,7 +29,7 @@ struct TextureOptions {
 class Texture {
 
 public:
-    Texture(unsigned int _width, unsigned int _height,
+    Texture(uint _width, uint _height,
             TextureOptions _options = {
                 GL_RGBA8, GL_RGBA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}});
 
@@ -46,13 +46,14 @@ public:
     virtual void update(GLuint _textureSlot);
 
     /* Resize the texture */
-    void resize(const unsigned int _width, const unsigned int _height);
+    void resize(const uint _width, const uint _height);
 
     /* Width and Height texture getters */
-    unsigned int getWidth() const {
+    uint getWidth() const {
         return m_width;
     }
-    unsigned int getHeight() const {
+
+    uint getHeight() const {
         return m_height;
     }
 
@@ -60,7 +61,7 @@ public:
         return m_glHandle;
     }
 
-    void setData(const GLuint* _data, unsigned int _dataSize);
+    void setData(const GLuint* _data, uint _dataSize);
 
     typedef std::pair<GLuint, GLuint> TextureSlot;
 
@@ -74,8 +75,8 @@ protected:
     bool m_dirty;
     bool m_shouldResize;
 
-    unsigned int m_width;
-    unsigned int m_height;
+    uint m_width;
+    uint m_height;
 
     GLenum m_target;
 

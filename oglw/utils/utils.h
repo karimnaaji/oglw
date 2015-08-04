@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include "types.h"
 
 namespace OGLW {
 
@@ -21,6 +22,6 @@ static inline float clamp(float _x, float _a, float _b) {
 
 bool stringFromPath(const std::string& path, std::string* into);
 
-unsigned char* bytesFromPath(const char* _path, unsigned int* _size);
+uchar* bytesFromPath(const char* _path, uint* _size);
 
 } // OGLW

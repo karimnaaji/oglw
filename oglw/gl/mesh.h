@@ -24,10 +24,10 @@ public:
         compile(vertices, indices);
     }
 
-    void updateVertices(GLintptr _byteOffset, unsigned int _nVerts, const T& _newVertexValue);
+    void updateVertices(GLintptr _byteOffset, uint _nVerts, const T& _newVertexValue);
 
     template<class A>
-    void updateAttribute(GLintptr _byteOffset, unsigned int _nVerts, const A& _newAttributeValue) {
+    void updateAttribute(GLintptr _byteOffset, uint _nVerts, const A& _newAttributeValue) {
         if (!m_isCompiled) {
             return;
         }
@@ -93,7 +93,7 @@ void Mesh<T>::setDirty(GLintptr _byteOffset, GLsizei _byteSize) {
 }
 
 template<class T>
-void Mesh<T>::updateVertices(GLintptr _byteOffset, unsigned int _nVerts, const T& _newVertexValue) {
+void Mesh<T>::updateVertices(GLintptr _byteOffset, uint _nVerts, const T& _newVertexValue) {
     if (!m_isCompiled) {
         return;
     }

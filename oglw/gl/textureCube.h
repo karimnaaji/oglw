@@ -17,13 +17,13 @@ public:
 
     void update(GLuint _textureUnit) override;
 
-    void resize(const unsigned int _width, const unsigned int _height) = delete;
-    void setData(const GLuint* _data, unsigned int _dataSize) = delete;
+    void resize(const uint _width, const uint _height) = delete;
+    void setData(const GLuint* _data, uint _dataSize) = delete;
 
 private:
     struct Face {
         GLenum m_face;
-        std::vector<unsigned int> m_data;
+        std::vector<uint> m_data;
         int m_offset;
     };
 

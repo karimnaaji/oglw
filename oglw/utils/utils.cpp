@@ -21,7 +21,7 @@ bool stringFromPath(const std::string& path, std::string* into) {
     return true;
 }
 
-unsigned char* bytesFromPath(const char* _path, unsigned int* _size) {
+uchar* bytesFromPath(const char* _path, uint* _size) {
     std::ifstream resource(_path, std::ifstream::ate | std::ifstream::binary);
 
     if (!resource.is_open()) {
@@ -39,7 +39,7 @@ unsigned char* bytesFromPath(const char* _path, unsigned int* _size) {
     resource.read(cdata, *_size);
     resource.close();
 
-    return reinterpret_cast<unsigned char*>(cdata);
+    return reinterpret_cast<uchar*>(cdata);
 }
 
 }

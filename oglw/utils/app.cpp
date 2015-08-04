@@ -2,6 +2,7 @@
 #define GLFONTSTASH_IMPLEMENTATION
 #include "glfontstash.h"
 #include "renderState.h"
+#include "types.h"
 
 namespace OGLW {
 
@@ -89,7 +90,7 @@ fsuint App::displayText(float _size, glm::vec2 _position, const std::string& _te
 void App::clearText(fsuint _buffer) {
     glfonsBufferDelete(m_fontContext, _buffer);
 
-    for (int i = 0; i < m_texts.size(); ++i) {
+    for (uint i = 0; i < m_texts.size(); ++i) {
         if (m_texts[i].m_buffer == _buffer) {
             m_texts.erase(m_texts.begin()+i);
             break;
@@ -117,7 +118,7 @@ void App::run() {
         if (m_texts.size() > 0) {
             std::vector<fsuint> toClear;
 
-            for (int i = 0; i < m_texts.size(); ++i) {
+            for (uint i = 0; i < m_texts.size(); ++i) {
                 if (m_texts[i].m_clear) {
                     toClear.push_back(m_texts[i].m_buffer);
                 }

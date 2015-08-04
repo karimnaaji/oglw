@@ -5,7 +5,7 @@ namespace OGLW {
 VertexLayout::VertexLayout(std::vector<VertexAttrib> _attribs) : m_attribs(_attribs) {
     m_stride = 0;
 
-    for (unsigned int i = 0; i < m_attribs.size(); i++) {
+    for (uint i = 0; i < m_attribs.size(); i++) {
         m_attribs[i].offset = reinterpret_cast<void*>(m_stride);
 
         GLint byteSize = m_attribs[i].size;
@@ -38,7 +38,7 @@ void VertexLayout::enable(const Shader& _program, size_t byteOffset) {
         if (location != -1) {
             GL_CHECK(glEnableVertexAttribArray(location));
             GL_CHECK(glVertexAttribPointer(location, attrib.size, attrib.type, attrib.normalized, m_stride,
-                                  ((unsigned char*)attrib.offset) + byteOffset));
+                                  ((uchar*)attrib.offset) + byteOffset));
         }
     }
 }

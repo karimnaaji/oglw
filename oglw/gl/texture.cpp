@@ -5,7 +5,7 @@
 
 namespace OGLW {
 
-Texture::Texture(unsigned int _width, unsigned int _height, TextureOptions _options) : m_options(_options) {
+Texture::Texture(uint _width, uint _height, TextureOptions _options) : m_options(_options) {
 
     m_glHandle = 0;
     m_dirty = false;
@@ -17,9 +17,9 @@ Texture::Texture(unsigned int _width, unsigned int _height, TextureOptions _opti
 
 Texture::Texture(const std::string& _file, TextureOptions _options) : Texture(0, 0, _options) {
 
-    unsigned int size;
-    unsigned char* data = bytesFromPath(_file.c_str(), &size);
-    unsigned char* pixels;
+    uint size;
+    uchar* data = bytesFromPath(_file.c_str(), &size);
+    uchar* pixels;
     int width, height, comp;
 
     pixels = stbi_load_from_memory(data, size, &width, &height, &comp, STBI_rgb_alpha);
@@ -47,7 +47,7 @@ void Texture::bind(GLuint _textureSlot) {
     GL_CHECK(glBindTexture(m_target, m_glHandle));
 }
 
-void Texture::setData(const GLuint* _data, unsigned int _dataSize) {
+void Texture::setData(const GLuint* _data, uint _dataSize) {
 
     if (m_data.size() > 0) {
         m_data.clear();
@@ -107,7 +107,7 @@ void Texture::update(GLuint _textureUnit) {
     m_dirty = false;
 }
 
-void Texture::resize(const unsigned int _width, const unsigned int _height) {
+void Texture::resize(const uint _width, const uint _height) {
     m_width = _width;
     m_height = _height;
 
