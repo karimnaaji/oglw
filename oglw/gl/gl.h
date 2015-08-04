@@ -13,9 +13,4 @@ namespace OGLW {
 #define GL_CHECK(STMT) STMT
 #endif
 
-typedef unsigned int uint;
-typedef unsigned char uchar;
-typedef unsigned short ushort;
-typedef unsigned long ulong;
-
 }
