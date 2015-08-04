@@ -13,9 +13,7 @@ Linux
 -----
 
 ```
-git submodule update --init --recursive
-sudo apt-get install portaudio19-dev
-sudo apt-get install libsndfile-dev 
+sudo apt-get install portaudio19-dev libsndfile-dev
 mkdir build && cd build
 cmake .. && make
 ```
@@ -23,8 +21,6 @@ OS X
 ----
 
 ```
-git submodule update --init --recursive
-brew tap homebrew/versions
 brew install cmake portaudio libsndfile
 mkdir build && cd build
 cmake .. && make

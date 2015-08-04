@@ -42,6 +42,11 @@ endfunction(include_recursive_dirs)
 set(INCLUDE_DIRS "")
 set(LIBRARIES "")
 
+message(STATUS "Initializing third party submodules")
+execute_process(
+        COMMAND git submodule update --init --recursive
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
 # GLFW
 message(STATUS "Add GLFW")
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Build the GLFW example programs")
