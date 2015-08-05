@@ -1,32 +1,31 @@
 cmake_minimum_required(VERSION 2.8)
-project(testApp)
+project(OGLW)
+
+option(OGLW_BUILD_SAMPLES "Build OGLW samples" ON)
 
 # cmake output configuration
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(EXECUTABLE_NAME testApp)
+# c++14 flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y")
 
+# load OGLW library
 add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/)
 
 # include OGLW headers
 include_directories(${OGLW_INCLUDE_DIRS})
 
-# find resources
-file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/test/resources/*)
+# utilities
+include(cmake/samples.cmake)
 
-# create executable
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE test/main.cpp ${RESOURCES})
-    set_target_properties(${EXECUTABLE_NAME} PROPERTIES RESOURCE "${RESOURCES}")    
-else()
-    add_executable(${EXECUTABLE_NAME} test/main.cpp)
-    file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/test/resources/*)
-    foreach(_resource ${RESOURCES})
-        file(COPY ${_resource} DESTINATION ${PROJECT_SOURCE_DIR}/build/bin)
+# build samples
+if(OGLW_BUILD_SAMPLES)
+    file(GLOB SAMPLES ${PROJECT_SOURCE_DIR}/samples/*)
+    foreach(_sample ${SAMPLES})
+        if(IS_DIRECTORY ${_sample})
+            message(STATUS "Adding sample " ${_sample})
+            add_subdirectory(${_sample})
+        endif()
     endforeach()
 endif()
-
-target_link_libraries(${EXECUTABLE_NAME} OGLW ${OGLW_LIBRARIES})
