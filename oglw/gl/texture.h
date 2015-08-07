@@ -31,11 +31,11 @@ class Texture {
 public:
     Texture(uint _width, uint _height,
             TextureOptions _options = {
-                GL_RGBA8, GL_RGBA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}});
+                GL_RGBA8, GL_RGBA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}}, bool _generateMipmaps = false);
 
     Texture(const std::string& _file,
             TextureOptions _options = {
-                GL_RGBA8, GL_RGBA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}});
+                GL_RGBA8, GL_RGBA, {GL_LINEAR, GL_LINEAR}, {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}}, bool _generateMipmaps = false);
 
     virtual ~Texture();
 
@@ -74,6 +74,7 @@ protected:
 
     bool m_dirty;
     bool m_shouldResize;
+    bool m_generateMipmaps;
 
     uint m_width;
     uint m_height;

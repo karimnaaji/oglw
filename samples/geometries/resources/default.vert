@@ -1,13 +1,21 @@
 #version 150
 
-in vec3 position;
-in vec4 color;
+in vec2 position;
+in vec2 uv;
 
 uniform mat4 mvp;
+uniform sampler2D tex;
 
-out vec4 col;
+out vec2 uvs;
+
+float luminance(vec3 color) {
+    return dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+}
 
 void main() {
-    gl_Position = mvp * vec4(position, 1.0);
-    col = color;
+
+    float d = luminance(texture(tex, uv).rgb);
+
+    gl_Position = mvp * vec4(position, d * 0.3, 1.0);
+    uvs = uv;
 }

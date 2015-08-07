@@ -1,9 +1,11 @@
 #version 150
 
+uniform sampler2D tex;
+
 out vec4 outColour;
 
-in vec4 col;
+in vec2 uvs;
 
 void main(void) {
-    outColour = col;
+    outColour = texture(tex, uvs);
 }

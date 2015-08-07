@@ -49,7 +49,7 @@ class TestApp : public OGLW::App {
         uptr<OGLW::Shader> m_backgroundShader;
         uptr<OGLW::Texture> m_texture;
         std::vector<uptr<OGLW::RawMesh>> m_meshes;
-        uptr<OGLW::Mesh<glm::vec2>> m_quad;
+        uptr<OGLW::Mesh<glm::vec4>> m_quad;
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
