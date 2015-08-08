@@ -1,7 +1,7 @@
 #include "texture.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "utils/utils.h"
+#include "core/utils.h"
 
 namespace OGLW {
 

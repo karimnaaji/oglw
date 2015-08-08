@@ -1,5 +1,5 @@
 #include "shader.h"
-#include "utils/utils.h"
+#include "core/utils.h"
 
 namespace OGLW {
 
