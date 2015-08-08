@@ -122,6 +122,16 @@ GLint Shader::getUniformLocation(const std::string& _uniformName) const {
     return loc;
 }
 
+    
+void Shader::setUniform(const std::string& _name, int _x) {
+    use();
+    GLint location = getUniformLocation(_name);
+    if (location >= 0) {
+        GL_CHECK(glUniform1i(location, _x));
+    }
+}
+
+    
 void Shader::setUniform(const std::string& _name, float _x) {
     use();
     GLint location = getUniformLocation(_name);

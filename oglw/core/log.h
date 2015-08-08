@@ -29,7 +29,7 @@ public:
     void error(const char* msg, ...);
 
 private:
-    Level m_level = Level::Info;
+    Level m_level = Level::Verbose;
 
 };
 

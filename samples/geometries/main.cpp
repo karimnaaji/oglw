@@ -57,8 +57,7 @@ void TestApp::render(float _dt) {
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("tex", 0);
-
-
+    
     m_geometry->draw(*m_shader);
 }
 

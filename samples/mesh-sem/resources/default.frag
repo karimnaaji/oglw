@@ -7,7 +7,6 @@ out vec4 outColour;
 
 in vec3 incident;
 in vec3 n;
-in vec2 uvs;
 in float ratio;
 
 void main(void) {

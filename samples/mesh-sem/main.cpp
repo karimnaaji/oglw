@@ -93,7 +93,6 @@ void TestApp::render(float _dt) {
     m_backgroundShader->setUniform("tex", 0);
 
     m_quad->draw(*m_backgroundShader);
-
     OGLW::RenderState::depthWrite(GL_TRUE);
 
     m_shader->setUniform("mvp", mvp);

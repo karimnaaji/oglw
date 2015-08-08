@@ -59,7 +59,7 @@ void App::initGLFW() {
         ERROR("glewInit failed");
     }
 
-    RenderState::depthTest(GL_DEPTH_TEST);
+    RenderState::initialize();
 
     if (m_textRendering) {
         GLFONSparams params;

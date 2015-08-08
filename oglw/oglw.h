@@ -8,8 +8,8 @@
 #include "glm/gtx/rotate_vector.hpp"
 
 // gl
-//#define OGLW_DEBUG
-//#define GLFONS_DEBUG
+#define OGLW_DEBUG
+#define GLFONS_DEBUG
 
 #include "gl.h"
 #include "shader.h"

@@ -27,7 +27,7 @@ private:
 
 template <GLenum N>
 struct BoolSwitch {
-    using Type = GLboolean;
+    using Type = int;
     inline static void set(const Type& _type) {
         if (_type) {
             GL_CHECK(glEnable(N));
@@ -51,6 +51,7 @@ struct StateWrap {
 
     void init(Args... _param) {
         params = std::make_tuple(_param...);
+        call(typename gens<sizeof...(Args)>::type());
     }
 
     inline void operator()(Args... _args) {
@@ -95,6 +96,8 @@ extern ColorWrite colorWrite;
 extern FrontFace frontFace;
 extern CullFace cullFace;
 extern Culling culling;
+    
+void initialize();
 
 } // RenderState
 } // OGLW
