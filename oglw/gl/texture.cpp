@@ -1,12 +1,14 @@
 #include "texture.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "utils/utils.h"
+#include "core/utils.h"
 
 namespace OGLW {
 
-Texture::Texture(uint _width, uint _height, TextureOptions _options) : m_options(_options) {
-
+Texture::Texture(uint _width, uint _height, TextureOptions _options, bool _generateMipmaps) : 
+m_options(_options),
+m_generateMipmaps(_generateMipmaps) 
+{
     m_glHandle = 0;
     m_dirty = false;
     m_shouldResize = false;
@@ -15,8 +17,9 @@ Texture::Texture(uint _width, uint _height, TextureOptions _options) : m_options
     resize(_width, _height);
 }
 
-Texture::Texture(const std::string& _file, TextureOptions _options) : Texture(0, 0, _options) {
-
+Texture::Texture(const std::string& _file, TextureOptions _options, bool _generateMipmaps) : 
+Texture(0, 0, _options, _generateMipmaps) 
+{
     uint size;
     uchar* data = bytesFromPath(_file.c_str(), &size);
     uchar* pixels;
@@ -97,6 +100,11 @@ void Texture::update(GLuint _textureUnit) {
         GL_CHECK(glTexImage2D(m_target, 0, m_options.m_internalFormat, m_width, m_height, 0, m_options.m_format,
                      GL_UNSIGNED_BYTE, data));
         m_shouldResize = false;
+
+        if (data && m_generateMipmaps) {
+            // generate the mipmaps for this texture
+            glGenerateMipmap(m_target);
+        }
     }
 
     // clear cpu data

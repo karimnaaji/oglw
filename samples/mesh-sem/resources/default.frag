@@ -1,4 +1,4 @@
-#version 150
+#version 330
 
 uniform sampler2D tex;
 uniform mat3 normalmat;

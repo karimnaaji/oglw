@@ -7,13 +7,21 @@
 namespace OGLW {
 
 App::App(std::string _name, std::string _font, int _width, int _height) :
-    m_name(_name), m_font(_font), m_width(_width), m_height(_height) {
+    m_name(_name), m_font(_font), m_width(_width), m_height(_height), m_textRendering(true) {
+    initGLFW();
+}
+
+App::App(std::string _name, int _width, int _height) :
+    m_name(_name), m_width(_width), m_height(_height), m_textRendering(false) {
     initGLFW();
 }
 
 App::~App() {
     INFO("App destroy");
-    glfonsDelete(m_fontContext);
+
+    if (m_textRendering) {
+        glfonsDelete(m_fontContext);
+    }
 }
 
 void App::initGLFW() {
@@ -53,25 +61,30 @@ void App::initGLFW() {
 
     RenderState::depthTest(GL_DEPTH_TEST);
 
-    GLFONSparams params;
-    params.useGLBackend = true;
-    m_fontContext = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT, params, nullptr);
-    INFO("Loading font %s", m_font.c_str());
-    int font = fonsAddFont(m_fontContext, m_font.c_str(), m_font.c_str());
+    if (m_textRendering) {
+        GLFONSparams params;
+        params.useGLBackend = true;
+        m_fontContext = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT, params, nullptr);
+        INFO("Loading font %s", m_font.c_str());
+        int font = fonsAddFont(m_fontContext, m_font.c_str(), m_font.c_str());
 
-    if (font == FONS_INVALID) {
-        printf("%s", m_font.c_str());
-        ERROR("Error loading font file %s", m_font.c_str());
-        return;
+        if (font == FONS_INVALID) {
+            ERROR("Error loading font file %s", m_font.c_str());
+            return;
+        }
+
+        glfonsScreenSize(m_fontContext, m_width * m_dpiRatio, m_height * m_dpiRatio);
+        fonsSetBlur(m_fontContext, 2.5);
+        fonsSetBlurType(m_fontContext, FONS_EFFECT_DISTANCE_FIELD);
     }
-
-    glfonsScreenSize(m_fontContext, m_width * m_dpiRatio, m_height * m_dpiRatio);
-    fonsSetBlur(m_fontContext, 2.5);
-    fonsSetBlurType(m_fontContext, FONS_EFFECT_DISTANCE_FIELD);
 }
 
 
 fsuint App::displayText(float _size, glm::vec2 _position, const std::string& _text, bool _clear) {
+    if (!m_textRendering) {
+        return 0;
+    }
+
     fsuint textBuffer;
     fsuint textId;
 
@@ -88,6 +101,10 @@ fsuint App::displayText(float _size, glm::vec2 _position, const std::string& _te
 }
 
 void App::clearText(fsuint _buffer) {
+    if (!m_textRendering) {
+        return;
+    }
+
     glfonsBufferDelete(m_fontContext, _buffer);
 
     for (uint i = 0; i < m_texts.size(); ++i) {
@@ -115,7 +132,7 @@ void App::run() {
 
         render(dt);
 
-        if (m_texts.size() > 0) {
+        if (m_textRendering && m_texts.size() > 0) {
             std::vector<fsuint> toClear;
 
             for (uint i = 0; i < m_texts.size(); ++i) {

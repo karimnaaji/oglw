@@ -28,6 +28,7 @@ int main() { \
 
 class App {
     public:
+        App(std::string _name, int _width, int _height);
         App(std::string _name, std::string _font, int _width, int _height);
         virtual ~App();
 
@@ -40,12 +41,17 @@ class App {
     protected:
         std::string m_name;
         std::string m_font;
+        
         Camera m_camera;
         GLFWwindow* m_window;
         FONScontext* m_fontContext;
+
         int m_width;
         int m_height;
         int m_dpiRatio;
+
+        bool m_textRendering;
+
         double m_cursorX;
         double m_cursorY;
 
