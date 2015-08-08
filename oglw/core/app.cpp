@@ -69,7 +69,6 @@ void App::initGLFW() {
         int font = fonsAddFont(m_fontContext, m_font.c_str(), m_font.c_str());
 
         if (font == FONS_INVALID) {
-            printf("%s", m_font.c_str());
             ERROR("Error loading font file %s", m_font.c_str());
             return;
         }
