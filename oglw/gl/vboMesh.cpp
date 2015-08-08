@@ -61,11 +61,11 @@ bool VboMesh::upload() {
     }
 
     if (m_glVertexBuffer == 0) {
-        glGenBuffers(1, &m_glVertexBuffer);
+        GL_CHECK(glGenBuffers(1, &m_glVertexBuffer));
     }
 
     if (m_glVertexArray == 0) {
-        glGenVertexArrays(1, &m_glVertexArray);
+        GL_CHECK(glGenVertexArrays(1, &m_glVertexArray));
     }
 
     if (!m_isCompiled) {
@@ -80,7 +80,7 @@ bool VboMesh::upload() {
     if (m_glIndexData) {
 
         if (m_glIndexBuffer == 0) {
-            glGenBuffers(1, &m_glIndexBuffer);
+            GL_CHECK(glGenBuffers(1, &m_glIndexBuffer));
         }
 
         GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer));
