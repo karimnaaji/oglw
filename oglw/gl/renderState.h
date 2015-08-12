@@ -76,6 +76,7 @@ using StencilTest = State<BoolSwitch<GL_STENCIL_TEST>>;
 using Blending = State<BoolSwitch<GL_BLEND>>;
 using Culling = State<BoolSwitch<GL_CULL_FACE>>;
 using DepthWrite = StateWrap<FUN(glDepthMask), GLboolean>;
+using DepthFunc = StateWrap<FUN(glDepthFunc), GLenum>;
 using BlendingFunc = StateWrap<FUN(glBlendFunc), GLenum, GLenum>;
 using StencilWrite = StateWrap<FUN(glStencilMask), GLuint>;
 using StencilFunc = StateWrap<FUN(glStencilFunc), GLenum, GLint, GLuint>;
@@ -83,11 +84,14 @@ using StencilOp = StateWrap<FUN(glStencilOp), GLenum, GLenum, GLenum>;
 using ColorWrite = StateWrap<FUN(glColorMask), GLboolean, GLboolean, GLboolean, GLboolean>;
 using FrontFace = StateWrap<FUN(glFrontFace), GLenum>;
 using CullFace = StateWrap<FUN(glCullFace), GLenum>;
+using ClearDepth = StateWrap<FUN(glClearDepth), GLclampd>;
+using DepthRange = StateWrap<FUN(glDepthRange), GLclampd, GLclampd>;
 
 extern DepthTest depthTest;
 extern DepthWrite depthWrite;
 extern Blending blending;
 extern BlendingFunc blendingFunc;
+extern DepthFunc depthFunc;
 extern StencilTest stencilTest;
 extern StencilWrite stencilWrite;
 extern StencilFunc stencilFunc;
@@ -96,7 +100,9 @@ extern ColorWrite colorWrite;
 extern FrontFace frontFace;
 extern CullFace cullFace;
 extern Culling culling;
-    
+extern ClearDepth clearDepth;
+extern DepthRange depthRange;
+
 void initialize();
 
 } // RenderState
