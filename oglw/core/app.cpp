@@ -143,6 +143,9 @@ void App::run() {
                 glfonsBindBuffer(m_fontContext, m_texts[i].m_buffer);
                 glfonsUpdateBuffer(m_fontContext);
             }
+
+            RenderState::blending(true);
+            RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glfonsDraw(m_fontContext);
 
             for (auto buffer : toClear) {
