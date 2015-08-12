@@ -140,7 +140,7 @@ bool VboMesh::subDataUpload() {
 
 void VboMesh::draw(const Shader& _shader) {
     bool bound = false;
-    
+
     if (!m_isUploaded) {
         bound = upload();
     } else if (m_dirty) {

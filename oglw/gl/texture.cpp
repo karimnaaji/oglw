@@ -5,9 +5,9 @@
 
 namespace OGLW {
 
-Texture::Texture(uint _width, uint _height, TextureOptions _options, bool _generateMipmaps) : 
+Texture::Texture(uint _width, uint _height, TextureOptions _options, bool _generateMipmaps) :
 m_options(_options),
-m_generateMipmaps(_generateMipmaps) 
+m_generateMipmaps(_generateMipmaps)
 {
     m_glHandle = 0;
     m_dirty = false;
@@ -17,8 +17,8 @@ m_generateMipmaps(_generateMipmaps)
     resize(_width, _height);
 }
 
-Texture::Texture(const std::string& _file, TextureOptions _options, bool _generateMipmaps) : 
-Texture(0, 0, _options, _generateMipmaps) 
+Texture::Texture(const std::string& _file, TextureOptions _options, bool _generateMipmaps) :
+Texture(0, 0, _options, _generateMipmaps)
 {
     uint size;
     uchar* data = bytesFromPath(_file.c_str(), &size);

@@ -30,8 +30,8 @@ void TestApp::init() {
 
     m_shader = uptr<Shader>(new Shader("default.frag", "default.vert"));
     OGLW::TextureOptions options = {
-        GL_RGBA8, GL_RGBA, 
-        {GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR}, 
+        GL_RGBA8, GL_RGBA,
+        {GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR},
         {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}
     };
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("merc_hillshade_av.png", options, true));
@@ -57,7 +57,7 @@ void TestApp::render(float _dt) {
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("tex", 0);
-    
+
     m_geometry->draw(*m_shader);
 }
 

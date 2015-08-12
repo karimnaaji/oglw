@@ -93,6 +93,7 @@ void TestApp::render(float _dt) {
     m_backgroundShader->setUniform("tex", 0);
 
     m_quad->draw(*m_backgroundShader);
+
     OGLW::RenderState::depthWrite(GL_TRUE);
 
     m_shader->setUniform("mvp", mvp);
@@ -101,8 +102,12 @@ void TestApp::render(float _dt) {
     m_shader->setUniform("tex", 0);
     m_shader->setUniform("f", f);
 
+    OGLW::RenderState::cullFace(GL_FRONT);
+
     for (auto& m : m_meshes) {
         m->draw(*m_shader);
     }
+
+    OGLW::RenderState::cullFace(GL_BACK);
 }
 
