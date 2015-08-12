@@ -366,7 +366,7 @@ void glfons__updateBuffer(void* usrPtr, GLintptr offset, GLsizei size, float* ne
     GLFONScontext* gl = (GLFONScontext*) usrPtr;
     GLFONSbuffer* buffer = glfons__bufferBound(gl);
 
-    GLFONS_GL_CHECK(glBindVertexArray(buffer->vao));
+    //GLFONS_GL_CHECK(glBindVertexArray(buffer->vao));
     GLFONS_GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, buffer->vbo));
     GLFONS_GL_CHECK(glBufferSubData(GL_ARRAY_BUFFER, offset, size, newData));
 }
