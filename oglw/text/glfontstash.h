@@ -329,11 +329,8 @@ void glfons__draw(GLFONScontext* gl) {
     for(auto& pair : gl->buffers) {
         GLFONSbuffer* buffer = pair.second;
         GLFONS_GL_CHECK(glBindVertexArray(buffer->vao));
-        GLFONS_GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, buffer->vbo));
-        glfons__enableVertexLayout(gl);
         glfons__bindUniforms(gl, buffer);
         GLFONS_GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, buffer->nVerts));
-        glfons__disableVertexLayout(gl);
     }
 }
 
@@ -555,6 +552,7 @@ void glfonsUpdateBuffer(FONScontext* ctx) {
             GLFONS_GL_CHECK(glBindVertexArray(buffer->vao));
             GLFONS_GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, buffer->vbo));
             GLFONS_GL_CHECK(glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffer->interleavedArray.size(), data, GL_DYNAMIC_DRAW));
+            glfons__enableVertexLayout(gl);
             buffer->vboInitialized = true;
             return;
         }
