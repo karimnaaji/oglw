@@ -103,6 +103,9 @@ build
 cmake_install.cmake
 install_manifest.txt
 
+# todos
+todos
+
 # vim
 *.swp
 *.swo
