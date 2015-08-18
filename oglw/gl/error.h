@@ -1,16 +1,16 @@
 #pragma once
 
+#include "glTypes.h"
+#include <unordered_map>
 #include "log.h"
 
 namespace OGLW {
 namespace _Error {
-
-static inline void GLError(const char* stmt, const char* fname, int line) {
-    GLenum err = glGetError();
-    if(err != GL_NO_ERROR) {
-        ERROR("OpenGL error %08x, at %s:%i - for %s\n", err, fname, line, stmt);
-    }
-}
+    
+// check for gl error and print the corresponding error code
+void glError(const char* stmt, const char* fname, int line);
+// get the string from the error code
+std::string errorCodeString(GLenum _error);
 
 } // _Error
 } // OGLW

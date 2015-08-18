@@ -3,8 +3,7 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "gl.h"
-#include "shader.h"
+#include "glTypes.h"
 
 namespace OGLW {
 
