@@ -88,6 +88,7 @@ void TestApp::render(float _dt) {
     m_texture->bind(0);
 
     OGLW::RenderState::depthWrite(GL_FALSE);
+    OGLW::RenderState::cullFace(GL_BACK);
 
     m_backgroundShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
     m_backgroundShader->setUniform("tex", 0);
@@ -95,6 +96,7 @@ void TestApp::render(float _dt) {
     m_quad->draw(*m_backgroundShader);
 
     OGLW::RenderState::depthWrite(GL_TRUE);
+    OGLW::RenderState::cullFace(GL_FRONT);
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("mv", model * view);
@@ -102,12 +104,9 @@ void TestApp::render(float _dt) {
     m_shader->setUniform("tex", 0);
     m_shader->setUniform("f", f);
 
-    OGLW::RenderState::cullFace(GL_FRONT);
 
     for (auto& m : m_meshes) {
         m->draw(*m_shader);
     }
-
-    OGLW::RenderState::cullFace(GL_BACK);
 }
 

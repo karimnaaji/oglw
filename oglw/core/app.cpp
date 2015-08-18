@@ -1,3 +1,4 @@
+
 #include "app.h"
 #define GLFONTSTASH_IMPLEMENTATION
 #include "glfontstash.h"
@@ -144,10 +145,15 @@ void App::run() {
                 glfonsUpdateBuffer(m_fontContext);
             }
 
+            // render state for text drawing
             RenderState::blending(true);
+            RenderState::cullFace(GL_BACK);
             RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // draw registered text
             glfonsDraw(m_fontContext);
 
+            // cleanup now unused text ids
             for (auto buffer : toClear) {
                 clearText(buffer);
             }

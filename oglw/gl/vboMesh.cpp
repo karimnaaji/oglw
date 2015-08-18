@@ -183,4 +183,31 @@ void VboMesh::draw(const Shader& _shader) {
     }
 }
 
+std::vector<glm::vec3> VboMesh::computeNormals(std::vector<glm::vec3> _vertices, std::vector<int> _indices) {
+    std::vector<glm::vec3> normals;
+    normals.resize(_vertices.size());
+
+    for (int i = 0; i < _indices.size() / 3; ++i) {
+        int i1 = _indices[3 * i + 0];
+        int i2 = _indices[3 * i + 1];
+        int i3 = _indices[3 * i + 2];
+
+        const glm::vec3& v1 = _vertices[i1];
+        const glm::vec3& v2 = _vertices[i2];
+        const glm::vec3& v3 = _vertices[i3];
+
+        glm::vec3 d = glm::normalize(glm::cross(v2 - v1, v3 - v1));
+
+        normals[i1] += d;
+        normals[i2] += d;
+        normals[i3] += d;
+    }
+
+    for (auto& n : normals) {
+        n = glm::normalize(n);
+    }
+
+    return std::move(normals);
 }
+
+} // OGLW

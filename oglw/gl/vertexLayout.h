@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "glTypes.h"
+#include "vertexAttribute.h"
 
 namespace OGLW {
 
@@ -11,13 +12,6 @@ class Shader;
 
 class VertexLayout {
 public:
-    struct VertexAttrib {
-        std::string name;
-        GLint size;
-        GLenum type;
-        GLboolean normalized;
-        GLvoid* offset;
-    };
 
     VertexLayout(std::vector<VertexAttrib> _attribs);
 
