@@ -11,52 +11,59 @@ namespace OGLW {
 class Shader {
 
 public:
+    Shader(std::string _programBundlePath);
     Shader(std::string _fragPath, std::string _vertPath);
     ~Shader();
 
-    const GLuint getProgram() const {
-        return m_program;
-    };
-    const GLuint getFragmentShader() const {
-        return m_fragmentShader;
-    };
-    const GLuint getVertexShader() const {
-        return m_vertexShader;
-    };
+    // get the GL shader program handle
+    GLuint getProgram() const;
+    // get the GL fragment shader handle
+    GLuint getFragmentShader() const;
+    // get the GL vertex shader handle
+    GLuint getVertexShader() const;
 
+    // sets the current program
     void use() const;
+    // checks whether the shader program is in use
     bool isInUse() const;
 
-    const GLint getAttribLocation(const std::string& _attribute) const;
-    bool load(const std::string& _fragmentSrc, const std::string& _vertexSrc);
-
+    // retrieve the attribute location for a given attribute name
+    GLint getAttribLocation(const std::string& _attribute) const;
+    // set uniforms for the given name
     void setUniform(const std::string& _name, int _x);
     void setUniform(const std::string& _name, float _x);
     void setUniform(const std::string& _name, float _x, float _y);
     void setUniform(const std::string& _name, float _x, float _y, float _z);
     void setUniform(const std::string& _name, float _x, float _y, float _z, float _w);
-    void setUniform(const std::string& _name, const glm::vec2& _value) {
-        setUniform(_name, _value.x, _value.y);
-    }
-    void setUniform(const std::string& _name, const glm::vec3& _value) {
-        setUniform(_name, _value.x, _value.y, _value.z);
-    }
-    void setUniform(const std::string& _name, const glm::vec4& _value) {
-        setUniform(_name, _value.x, _value.y, _value.z, _value.w);
-    }
+    void setUniform(const std::string& _name, const glm::vec2& _value);
+    void setUniform(const std::string& _name, const glm::vec3& _value);
+    void setUniform(const std::string& _name, const glm::vec4& _value);
     void setUniform(const std::string& _name, const glm::mat2& _value, bool transpose = false);
     void setUniform(const std::string& _name, const glm::mat3& _value, bool transpose = false);
     void setUniform(const std::string& _name, const glm::mat4& _value, bool transpose = false);
 
 private:
+    // retrive a shader source from a program bundle
+    bool getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out) const;
+    // load a shader program
+    bool load(const std::string& _fragmentSrc, const std::string& _vertexSrc);
+    // compile the shader program for the specified type
     GLuint compile(const std::string& _src, GLenum _type);
+    // retrieve the uniform location for a given name
     GLint getUniformLocation(const std::string& _uniformName) const;
 
+    // GL shader program handle
     GLuint m_program;
+    // GL fragment shader id
     GLuint m_fragmentShader;
+    // GL vertex shader id
     GLuint m_vertexShader;
+    // fragment shader path
     std::string m_fragShaderPath;
+    // vertex shader path
     std::string m_vertShaderPath;
+    // program bundle shader path
+    std::string m_programBundlePath;
 };
 
 } // OGLW

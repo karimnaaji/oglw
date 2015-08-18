@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <cstring>
-#include "gl.h"
+#include "glTypes.h"
 #include "vertexLayout.h"
 #include "shader.h"
 
@@ -16,57 +16,30 @@ class VboMesh {
 public:
     VboMesh(std::shared_ptr<VertexLayout> _vertexlayout, GLenum _drawMode = GL_TRIANGLES, GLenum _hint = GL_STATIC_DRAW);
     VboMesh();
+    virtual ~VboMesh();
 
     void setVertexLayout(std::shared_ptr<VertexLayout> _vertexLayout);
     void setDrawMode(GLenum _drawMode = GL_TRIANGLES);
-    virtual ~VboMesh();
 
-    int numVertices() const {
-        return m_nVertices;
-    }
-
-    int numIndices() const {
-        return m_nIndices;
-    }
-
+    // number of vertices in the mesh
+    int numVertices() const { return m_nVertices; }
+    // number of indices in the mesh
+    int numIndices() const { return m_nIndices; }
+    // compile the vertex buffer to unsigned byte data for ready for upload
     virtual void compileVertexBuffer() = 0;
-
-    bool upload();
-    bool subDataUpload();
-
+    // draw the mesh for a specific shader program
     void draw(const Shader& _shader);
-
-    static std::vector<glm::vec3> computeNormals(std::vector<glm::vec3> _vertices, std::vector<int> _indices) {
-        std::vector<glm::vec3> normals;
-        normals.resize(_vertices.size());
-
-        for (int i = 0; i < _indices.size() / 3; ++i) {
-            int i1 = _indices[3 * i + 0];
-            int i2 = _indices[3 * i + 1];
-            int i3 = _indices[3 * i + 2];
-
-            const glm::vec3& v1 = _vertices[i1];
-            const glm::vec3& v2 = _vertices[i2];
-            const glm::vec3& v3 = _vertices[i3];
-
-            glm::vec3 d = glm::normalize(glm::cross(v2 - v1, v3 - v1));
-
-            normals[i1] += d;
-            normals[i2] += d;
-            normals[i3] += d;
-        }
-
-        for (auto& n : normals) {
-            n = glm::normalize(n);
-        }
-
-        return std::move(normals);
-    }
-
+    // compute normals for a set of vertices and indices
+    static std::vector<glm::vec3> computeNormals(std::vector<glm::vec3> _vertices, std::vector<int> _indices);
+    // get the buffer dirty size (data not yet uploaded in gpu)
     GLsizei getDirtySize() const { return m_dirtySize; }
+    // get the buffer dirty offset (memory location offset not yet uploaded starts)
     GLintptr getDirtyOffset() const { return m_dirtyOffset; }
 
 protected:
+    bool upload();
+    bool subDataUpload();
+
     std::vector<std::pair<uint32_t, uint32_t>> m_vertexOffsets;
     std::shared_ptr<VertexLayout> m_vertexLayout;
 

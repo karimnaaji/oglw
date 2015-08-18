@@ -1,5 +1,6 @@
 #include "vertexLayout.h"
 #include "types.h"
+#include "shader.h"
 
 namespace OGLW {
 
@@ -32,7 +33,6 @@ VertexLayout::~VertexLayout() {
 }
 
 void VertexLayout::enable(const Shader& _program, size_t byteOffset) {
-
     for (auto& attrib : m_attribs) {
         const GLint location = _program.getAttribLocation(attrib.name);
 

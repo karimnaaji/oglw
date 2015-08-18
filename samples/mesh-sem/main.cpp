@@ -58,10 +58,10 @@ OGLWMainGamma(TestApp, audioCB);
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
 
-    m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.frag", "default.vert"));
+    m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.glsl"));
     m_meshes = OGLW::loadOBJ("suzanne.blend");
     m_quad = OGLW::quad(1.f);
-    m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.frag", "background.vert"));
+    m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.glsl"));
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
 
     displayText(30.f, {10.f, 30.f}, "OGLW");
@@ -88,6 +88,7 @@ void TestApp::render(float _dt) {
     m_texture->bind(0);
 
     OGLW::RenderState::depthWrite(GL_FALSE);
+    OGLW::RenderState::cullFace(GL_BACK);
 
     m_backgroundShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
     m_backgroundShader->setUniform("tex", 0);
@@ -95,6 +96,7 @@ void TestApp::render(float _dt) {
     m_quad->draw(*m_backgroundShader);
 
     OGLW::RenderState::depthWrite(GL_TRUE);
+    OGLW::RenderState::cullFace(GL_FRONT);
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("mv", model * view);
@@ -102,12 +104,9 @@ void TestApp::render(float _dt) {
     m_shader->setUniform("tex", 0);
     m_shader->setUniform("f", f);
 
-    OGLW::RenderState::cullFace(GL_FRONT);
 
     for (auto& m : m_meshes) {
         m->draw(*m_shader);
     }
-
-    OGLW::RenderState::cullFace(GL_BACK);
 }
 

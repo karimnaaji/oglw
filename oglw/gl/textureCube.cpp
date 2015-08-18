@@ -1,5 +1,6 @@
 #include "textureCube.h"
 #include "core/utils.h"
+#include "core/log.h"
 
 namespace OGLW {
 
@@ -83,4 +84,4 @@ void TextureCube::update(GLuint _textureUnit) {
     }
 }
 
-}
+} // OGLW

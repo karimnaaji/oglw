@@ -3,8 +3,8 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "gl.h"
-#include "shader.h"
+#include "glTypes.h"
+#include "vertexAttribute.h"
 
 namespace OGLW {
 
@@ -12,14 +12,6 @@ class Shader;
 
 class VertexLayout {
 public:
-    struct VertexAttrib {
-        std::string name;
-        GLint size;
-        GLenum type;
-        GLboolean normalized;
-        GLvoid* offset;
-    };
-
     VertexLayout(std::vector<VertexAttrib> _attribs);
 
     virtual ~VertexLayout();
