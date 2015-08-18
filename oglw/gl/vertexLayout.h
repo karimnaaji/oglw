@@ -12,7 +12,6 @@ class Shader;
 
 class VertexLayout {
 public:
-
     VertexLayout(std::vector<VertexAttrib> _attribs);
 
     virtual ~VertexLayout();

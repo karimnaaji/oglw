@@ -3,6 +3,8 @@
 #include <string>
 #include "glTypes.h"
 
+namespace OGLW {
+
 struct VertexAttrib {
     std::string name;
     GLint size;
@@ -10,3 +12,5 @@ struct VertexAttrib {
     GLboolean normalized;
     GLvoid* offset;
 };
+
+}

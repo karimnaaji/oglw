@@ -33,7 +33,6 @@ VertexLayout::~VertexLayout() {
 }
 
 void VertexLayout::enable(const Shader& _program, size_t byteOffset) {
-
     for (auto& attrib : m_attribs) {
         const GLint location = _program.getAttribLocation(attrib.name);
 

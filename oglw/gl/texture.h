@@ -46,21 +46,11 @@ public:
     // Resize the texture
     void resize(const uint _width, const uint _height);
     // Width and Height texture getters
-    uint getWidth() const {
-        return m_width;
-    }
-
-    uint getHeight() const {
-        return m_height;
-    }
-
-    GLuint getGlHandle() {
-        return m_glHandle;
-    }
+    uint getWidth() const { return m_width; }
+    uint getHeight() const { return m_height; }
+    GLuint getGlHandle() { return m_glHandle; }
 
     void setData(const GLuint* _data, uint _dataSize);
-
-    typedef std::pair<GLuint, GLuint> TextureSlot;
 
 protected:
     void generate(GLuint _textureUnit);
