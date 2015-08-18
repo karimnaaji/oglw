@@ -2,6 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "core/utils.h"
+#include "core/log.h"
 
 namespace OGLW {
 
@@ -131,4 +132,4 @@ GLuint Texture::getTextureUnit(GLuint _unit) {
     return GL_TEXTURE0 + _unit;
 }
 
-}
+} // OGLW

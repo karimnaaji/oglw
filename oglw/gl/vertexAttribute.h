@@ -13,4 +13,4 @@ struct VertexAttrib {
     GLvoid* offset;
 };
 
-}
+} // OGLW

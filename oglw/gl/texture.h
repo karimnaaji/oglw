@@ -1,11 +1,10 @@
 #pragma once
 
 #include "gl.h"
+#include "core/types.h"
 #include <vector>
 #include <memory>
 #include <string>
-#include <iostream>
-#include <cstring>
 
 namespace OGLW {
 

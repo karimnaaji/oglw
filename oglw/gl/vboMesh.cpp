@@ -1,5 +1,6 @@
 #include "vboMesh.h"
 #include "gl.h"
+#include "core/log.h"
 
 namespace OGLW {
 
@@ -187,7 +188,7 @@ std::vector<glm::vec3> VboMesh::computeNormals(std::vector<glm::vec3> _vertices,
     std::vector<glm::vec3> normals;
     normals.resize(_vertices.size());
 
-    for (int i = 0; i < _indices.size() / 3; ++i) {
+    for (uint i = 0; i < _indices.size() / 3; ++i) {
         int i1 = _indices[3 * i + 0];
         int i2 = _indices[3 * i + 1];
         int i3 = _indices[3 * i + 2];

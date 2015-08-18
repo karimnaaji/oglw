@@ -4,6 +4,8 @@
 #include "glfontstash.h"
 #include "renderState.h"
 #include "types.h"
+#include "log.h"
+#include "gl.h"
 
 namespace OGLW {
 

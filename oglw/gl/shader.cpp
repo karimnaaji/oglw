@@ -1,5 +1,6 @@
 #include "shader.h"
 #include "core/utils.h"
+#include "log.h"
 
 namespace OGLW {
 
@@ -248,4 +249,4 @@ GLuint Shader::getVertexShader() const {
     return m_vertexShader;
 }
 
-}
+} // OGLW

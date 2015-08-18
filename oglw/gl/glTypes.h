@@ -1,7 +1,7 @@
 #pragma once
 
 namespace OGLW {
-	
+
 #ifndef GL_VERSION_1_1
 typedef unsigned int GLenum;
 typedef unsigned int GLbitfield;
@@ -21,4 +21,4 @@ typedef double GLclampd;
 typedef void GLvoid;
 #endif
 
-}
+} // OGLW

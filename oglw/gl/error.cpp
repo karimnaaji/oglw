@@ -1,5 +1,6 @@
 #include "error.h"
 #include "gl.h"
+#include "log.h"
 
 namespace OGLW {
 namespace _Error {

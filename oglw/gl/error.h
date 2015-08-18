@@ -2,7 +2,6 @@
 
 #include "glTypes.h"
 #include <unordered_map>
-#include "log.h"
 
 namespace OGLW {
 namespace _Error {

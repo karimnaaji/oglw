@@ -1,11 +1,16 @@
 #pragma once
 
 #include <string>
-#include "gl.h"
 #include "camera.h"
 #include "glfontstash.h"
 
+// forward
+struct GLFWwindow;
+
 namespace OGLW {
+
+// forward
+class Camera;
 
 #define OGLWMainGamma(OGLWApp, audioCB) \
 int main() { \

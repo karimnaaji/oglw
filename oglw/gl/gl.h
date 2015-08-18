@@ -7,7 +7,6 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "error.h"
-#include "log.h"
 
 namespace OGLW {
 
@@ -17,4 +16,4 @@ namespace OGLW {
 #define GL_CHECK(STMT) STMT;
 #endif
 
-}
+} // OGLW
