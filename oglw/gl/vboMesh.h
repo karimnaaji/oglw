@@ -3,9 +3,9 @@
 #include <vector>
 #include <memory>
 #include <cstring>
-#include "glTypes.h"
-#include "vertexLayout.h"
-#include "shader.h"
+#include "gl/glTypes.h"
+#include "gl/vertexLayout.h"
+#include "gl/shader.h"
 
 namespace OGLW {
 

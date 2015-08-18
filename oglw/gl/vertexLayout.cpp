@@ -1,6 +1,6 @@
 #include "vertexLayout.h"
-#include "types.h"
-#include "shader.h"
+#include "core/types.h"
+#include "gl/shader.h"
 
 namespace OGLW {
 

@@ -1,11 +1,10 @@
 #include "shader.h"
 #include "core/utils.h"
-#include "log.h"
+#include "core/log.h"
 
 namespace OGLW {
 
-Shader::Shader(std::string _fragPath, std::string _vertPath, std::string _geomPath)
-{
+Shader::Shader(std::string _fragPath, std::string _vertPath, std::string _geomPath) {
     std::string vert, frag, geom;
     stringFromPath(_vertPath, &vert);
     stringFromPath(_fragPath, &frag);
@@ -19,8 +18,7 @@ Shader::Shader(std::string _fragPath, std::string _vertPath, std::string _geomPa
     }
 }
 
-Shader::Shader(std::string _programBundlePath)
-{
+Shader::Shader(std::string _programBundlePath) {
     std::string vert, frag, bundle;
     stringFromPath(_programBundlePath, &bundle);
 

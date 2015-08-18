@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "camera.h"
-#include "glfontstash.h"
+#include "core/camera.h"
+#include "text/glfontstash.h"
 
 // forward
 struct GLFWwindow;

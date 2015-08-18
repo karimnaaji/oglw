@@ -1,11 +1,11 @@
 
 #include "app.h"
 #define GLFONTSTASH_IMPLEMENTATION
-#include "glfontstash.h"
-#include "renderState.h"
-#include "types.h"
-#include "log.h"
-#include "gl.h"
+#include "text/glfontstash.h"
+#include "gl/renderState.h"
+#include "core/types.h"
+#include "core/log.h"
+#include "gl/gl.h"
 
 namespace OGLW {
 

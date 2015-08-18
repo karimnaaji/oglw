@@ -1,7 +1,7 @@
 #pragma once
 
-#include "glTypes.h"
-#include "vboMesh.h"
+#include "gl/glTypes.h"
+#include "gl/vboMesh.h"
 #include <vector>
 #include <memory>
 #include "tiny_obj_loader.h"

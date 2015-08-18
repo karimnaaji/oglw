@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "log.h"
+#include "core/log.h"
 
 namespace OGLW {
 

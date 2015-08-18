@@ -3,8 +3,7 @@
 #include <cmath>
 #include <fstream>
 #include <sstream>
-#include <iostream>
-#include "types.h"
+#include "core/types.h"
 
 namespace OGLW {
 

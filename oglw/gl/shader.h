@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "gl.h"
+#include "gl/gl.h"
 #include "glm/glm.hpp"
 
 namespace OGLW {

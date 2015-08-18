@@ -1,6 +1,6 @@
 #include "error.h"
-#include "gl.h"
-#include "log.h"
+#include "gl/gl.h"
+#include "core/log.h"
 
 namespace OGLW {
 namespace _Error {
@@ -9,7 +9,7 @@ void glError(const char* stmt, const char* fname, int line) {
     GLenum err = glGetError();
     
     if(err != GL_NO_ERROR) {
-        ERROR("OpenGL error %s, at %s:%i - for %s\n", errorCodeString(err).c_str(), fname, line, stmt);
+        ERROR("OpenGL error %s, at %s:%i - for %s\n", glErrorString(err).c_str(), fname, line, stmt);
     }
 }
 

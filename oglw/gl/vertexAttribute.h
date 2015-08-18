@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "glTypes.h"
+#include "gl/glTypes.h"
 
 namespace OGLW {
 

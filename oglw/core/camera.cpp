@@ -1,7 +1,7 @@
 #include "camera.h"
 
 #include "glm/gtc/matrix_transform.hpp"
-#include "utils.h"
+#include "core/utils.h"
 
 namespace OGLW {
 
