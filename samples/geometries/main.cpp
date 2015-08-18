@@ -28,7 +28,7 @@ OGLWMain(TestApp);
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
 
-    m_shader = uptr<Shader>(new Shader("default.frag", "default.vert"));
+    m_shader = uptr<Shader>(new Shader("default.glsl"));
     OGLW::TextureOptions options = {
         GL_RGBA8, GL_RGBA,
         {GL_LINEAR, GL_LINEAR_MIPMAP_LINEAR},

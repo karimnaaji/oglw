@@ -39,16 +39,13 @@ public:
 
     virtual ~Texture();
 
-    /* Binds the texture to the specified slot */
+    // Binds the texture to the specified slot
     void bind(GLuint _textureSlot);
-
-    /* Perform texture updates, should be called at least once and after adding data or resizing */
+    // Perform texture updates, should be called at least once and after adding data or resizing
     virtual void update(GLuint _textureSlot);
-
-    /* Resize the texture */
+    // Resize the texture
     void resize(const uint _width, const uint _height);
-
-    /* Width and Height texture getters */
+    // Width and Height texture getters
     uint getWidth() const {
         return m_width;
     }

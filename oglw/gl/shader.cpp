@@ -11,12 +11,44 @@ m_vertShaderPath(_vertPath)
     stringFromPath(_vertPath, &vert);
     stringFromPath(_fragPath, &frag);
     if (!load(frag, vert)) {
-        WARN("failed to build shader %s %s", _fragPath.c_str(), _vertPath.c_str());
+        WARN("Failed to build shader %s %s", _fragPath.c_str(), _vertPath.c_str());
+    }
+}
+
+Shader::Shader(std::string _programBundlePath) : 
+m_programBundlePath(_programBundlePath)
+{
+    std::string vert, frag, bundle;
+    stringFromPath(_programBundlePath, &bundle);
+
+    if (getBundleShaderSource("vertex", bundle, &vert) && 
+        getBundleShaderSource("fragment", bundle, &frag)) {
+        if (!load(frag, vert)) {
+            WARN("Failed to build shader program bundle %s", _programBundlePath.c_str());
+        }
+    } else {
+        WARN("Failed to load shader in program bundle %s", _programBundlePath.c_str());
     }
 }
 
 Shader::~Shader() {
     GL_CHECK(glDeleteProgram(m_program));
+}
+
+bool Shader::getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out) const {
+    const std::string startTag = "#pragma begin:" + _type;
+    const std::string endTag = "#pragma end:" + _type;
+
+    size_t start = _bundle.find(startTag);
+    start += startTag.length();
+    size_t end = _bundle.find(endTag);
+
+    if (start != std::string::npos && end != std::string::npos) {
+        *_out = _bundle.substr(start, end);
+        return true;
+    }
+
+    return false;
 }
 
 bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc) {
@@ -38,7 +70,8 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
         return false;
     }
 
-    m_program = GL_CHECK(glCreateProgram());
+    m_program = glCreateProgram();
+    GL_CHECK(void(0));
 
     GL_CHECK(glAttachShader(m_program, m_vertexShader));
     GL_CHECK(glAttachShader(m_program, m_fragmentShader));
@@ -70,8 +103,10 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
     }
 }
 
-const GLint Shader::getAttribLocation(const std::string& _attribute) const {
-    return GL_CHECK(glGetAttribLocation(m_program, _attribute.c_str()));
+GLint Shader::getAttribLocation(const std::string& _attribute) const {
+    GLint attribute = glGetAttribLocation(m_program, _attribute.c_str());
+    GL_CHECK(void(0));
+    return attribute;
 }
 
 void Shader::use() const {
@@ -83,7 +118,7 @@ void Shader::use() const {
 bool Shader::isInUse() const {
     GLint currentProgram = 0;
     GL_CHECK(glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram));
-    return (GL_CHECK(getProgram()) == (GLuint)currentProgram);
+    return getProgram() == (GLuint)currentProgram;
 }
 
 GLuint Shader::compile(const std::string& _src, GLenum _type) {
@@ -114,7 +149,8 @@ GLuint Shader::compile(const std::string& _src, GLenum _type) {
 }
 
 GLint Shader::getUniformLocation(const std::string& _uniformName) const {
-    GLint loc = GL_CHECK(glGetUniformLocation(m_program, _uniformName.c_str()));
+    GLint loc = glGetUniformLocation(m_program, _uniformName.c_str());
+    GL_CHECK(void(0));
     if (loc == -1) {
         WARN("shader uniform %s not found on shader program: %s %s", _uniformName.c_str(),
              m_fragShaderPath.c_str(), m_vertShaderPath.c_str());
@@ -186,6 +222,30 @@ void Shader::setUniform(const std::string& _name, const glm::mat4& _value, bool 
     if (location >= 0) {
         GL_CHECK(glUniformMatrix4fv(location, 1, _transpose, &_value[0][0]));
     }
+}
+
+void Shader::setUniform(const std::string& _name, const glm::vec2& _value) {
+    setUniform(_name, _value.x, _value.y);
+}
+
+void Shader::setUniform(const std::string& _name, const glm::vec3& _value) {
+    setUniform(_name, _value.x, _value.y, _value.z);
+}
+
+void Shader::setUniform(const std::string& _name, const glm::vec4& _value) {
+    setUniform(_name, _value.x, _value.y, _value.z, _value.w);
+}
+
+GLuint Shader::getProgram() const {
+    return m_program;
+}
+
+GLuint Shader::getFragmentShader() const {
+    return m_fragmentShader;
+}
+
+GLuint Shader::getVertexShader() const {
+    return m_vertexShader;
 }
 
 }
