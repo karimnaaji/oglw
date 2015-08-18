@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 #include <cstring>
-#include "gl.h"
+#include "glTypes.h"
 #include "vertexLayout.h"
 #include "shader.h"
 

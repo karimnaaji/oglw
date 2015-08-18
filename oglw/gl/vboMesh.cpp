@@ -1,4 +1,5 @@
 #include "vboMesh.h"
+#include "gl.h"
 
 namespace OGLW {
 
