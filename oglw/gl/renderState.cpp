@@ -24,6 +24,7 @@ void initialize() {
     RenderState::clearDepth(1.0);
     RenderState::depthRange(0.0, 1.0);
     RenderState::depthFunc.init(GL_LEQUAL);
+    RenderState::depthWrite.init(GL_TRUE);
     RenderState::depthWrite.init(true);
     RenderState::culling.init(true);
     RenderState::cullFace.init(GL_BACK);

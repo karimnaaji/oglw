@@ -65,7 +65,7 @@ struct StateWrap {
 
     template<int ...S>
     inline void call(seq<S...>) {
-        fn(std::get<S>(params) ...);
+        GL_CHECK(fn(std::get<S>(params) ...));
     }
 };
 

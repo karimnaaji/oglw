@@ -13,7 +13,7 @@ void glError(const char* stmt, const char* fname, int line) {
     }
 }
 
-std::string errorCodeString(GLenum _error) {
+std::string glErrorString(GLenum _error) {
     switch (_error) {
         case GL_STACK_OVERFLOW:                 return "Stack overflow";
         case GL_OUT_OF_MEMORY:                  return "Out of memory";

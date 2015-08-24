@@ -3,9 +3,11 @@
 #include <vector>
 #include <memory>
 #include <cstring>
+#include <unordered_map>
 #include "gl/glTypes.h"
 #include "gl/vertexLayout.h"
 #include "gl/shader.h"
+#include "gl/vao.h"
 
 namespace OGLW {
 
@@ -37,7 +39,7 @@ public:
     GLintptr getDirtyOffset() const { return m_dirtyOffset; }
 
 protected:
-    bool upload();
+    bool upload(const Shader& _shader);
     bool subDataUpload();
 
     std::vector<std::pair<uint32_t, uint32_t>> m_vertexOffsets;
@@ -46,7 +48,7 @@ protected:
     int m_nVertices;
     GLuint m_glVertexBuffer;
     GLbyte* m_glVertexData = nullptr;
-    GLuint m_glVertexArray;
+    std::unique_ptr<Vao> m_vao;
 
     int m_nIndices;
     GLuint m_glIndexBuffer;

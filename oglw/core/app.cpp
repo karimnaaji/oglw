@@ -54,7 +54,7 @@ void App::initGLFW() {
     m_dpiRatio = fbWidth / m_width;
 
     glfwMakeContextCurrent(m_window);
-
+    
     glewExperimental = GL_TRUE;
 
     if (glewInit() != GLEW_OK) {

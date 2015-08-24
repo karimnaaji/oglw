@@ -105,6 +105,9 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
 GLint Shader::getAttribLocation(const std::string& _attribute) const {
     GLint attribute = glGetAttribLocation(m_program, _attribute.c_str());
     GL_CHECK(void(0));
+    if (attribute == -1) {
+        WARN("Attribute location not found on shader for attribute %s", _attribute.c_str());
+    }
     return attribute;
 }
 
