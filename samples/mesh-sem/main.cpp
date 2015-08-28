@@ -96,6 +96,7 @@ void TestApp::render(float _dt) {
     m_quad->draw(*m_backgroundShader);
 
     OGLW::RenderState::depthWrite(GL_TRUE);
+    OGLW::RenderState::culling(GL_FALSE);
     OGLW::RenderState::cullFace(GL_FRONT);
 
     m_shader->setUniform("mvp", mvp);

@@ -1,12 +1,8 @@
 #pragma once
 
-// defines
-//#define OGLW_DEBUG
-//#define GLFONS_DEBUG
-
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-#include "error.h"
+#include "gl/error.h"
 
 namespace OGLW {
 

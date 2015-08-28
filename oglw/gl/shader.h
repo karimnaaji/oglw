@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "gl.h"
+#include "gl/gl.h"
 #include "glm/glm.hpp"
 
 namespace OGLW {
@@ -12,7 +12,7 @@ class Shader {
 
 public:
     Shader(std::string _programBundlePath);
-    Shader(std::string _fragPath, std::string _vertPath);
+    Shader(std::string _fragPath, std::string _vertPath, std::string _geomPath = "");
     ~Shader();
 
     // get the GL shader program handle
@@ -43,6 +43,8 @@ public:
     void setUniform(const std::string& _name, const glm::mat4& _value, bool transpose = false);
 
 private:
+    // compile and attach a shader to the shader program
+    GLuint add(const std::string& _shaderSource, GLenum _kind);
     // retrive a shader source from a program bundle
     bool getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out) const;
     // load a shader program
@@ -53,17 +55,11 @@ private:
     GLint getUniformLocation(const std::string& _uniformName) const;
 
     // GL shader program handle
-    GLuint m_program;
+    GLuint m_program = -1;
     // GL fragment shader id
-    GLuint m_fragmentShader;
+    GLuint m_fragmentShader = -1;
     // GL vertex shader id
-    GLuint m_vertexShader;
-    // fragment shader path
-    std::string m_fragShaderPath;
-    // vertex shader path
-    std::string m_vertShaderPath;
-    // program bundle shader path
-    std::string m_programBundlePath;
+    GLuint m_vertexShader = -1;
 };
 
 } // OGLW

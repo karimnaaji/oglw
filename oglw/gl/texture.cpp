@@ -108,7 +108,7 @@ void Texture::update(GLuint _textureUnit) {
         }
     }
 
-    // clear cpu data
+    // clear data
     if (data) {
         m_data.clear();
     }

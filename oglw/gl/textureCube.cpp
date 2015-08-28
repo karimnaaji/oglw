@@ -42,17 +42,17 @@ void TextureCube::load(const std::string& _file) {
             Face* face = nullptr;
 
             if (iFace == 2 && jFace == 1)
-                face = &m_faces[0]; // POS_X
+                face = &m_faces[0]; // +x
             if (iFace == 0 && jFace == 1)
-                face = &m_faces[1]; // NEG_X
+                face = &m_faces[1]; // -x
             if (iFace == 1 && jFace == 0)
-                face = &m_faces[2]; // POS_Y
+                face = &m_faces[2]; // +y
             if (iFace == 1 && jFace == 2)
-                face = &m_faces[3]; // NEG_Y
+                face = &m_faces[3]; // -y
             if (iFace == 1 && jFace == 1)
-                face = &m_faces[4]; // POS_Z
+                face = &m_faces[4]; // +z
             if (iFace == 3 && jFace == 1)
-                face = &m_faces[5]; // NEG_Z
+                face = &m_faces[5]; // -z
 
             if (!face) {
                 continue;
@@ -69,6 +69,7 @@ void TextureCube::load(const std::string& _file) {
 
     update(0);
 }
+
 void TextureCube::update(GLuint _textureUnit) {
     if (m_glHandle != 0 || m_faces.size() == 0) {
         return;

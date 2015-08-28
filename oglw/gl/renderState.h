@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gl.h"
+#include "gl/gl.h"
 #include <tuple>
 
 namespace OGLW {
@@ -65,7 +65,7 @@ struct StateWrap {
 
     template<int ...S>
     inline void call(seq<S...>) {
-        fn(std::get<S>(params) ...);
+        GL_CHECK(fn(std::get<S>(params) ...));
     }
 };
 

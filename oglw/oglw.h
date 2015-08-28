@@ -1,5 +1,9 @@
 #pragma once
 
+// defines
+//#define OGLW_DEBUG
+#define GLFONS_DEBUG
+
 #include "types.h"
 
 // math utils

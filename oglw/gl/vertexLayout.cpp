@@ -1,6 +1,6 @@
 #include "vertexLayout.h"
-#include "types.h"
-#include "shader.h"
+#include "core/types.h"
+#include "gl/shader.h"
 
 namespace OGLW {
 
@@ -32,25 +32,31 @@ VertexLayout::~VertexLayout() {
     m_attribs.clear();
 }
 
-void VertexLayout::enable(const Shader& _program, size_t byteOffset) {
+void VertexLayout::enable(const std::unordered_map<std::string, GLuint>& _locations, size_t byteOffset) {
     for (auto& attrib : m_attribs) {
-        const GLint location = _program.getAttribLocation(attrib.name);
-
-        if (location != -1) {
-            GL_CHECK(glEnableVertexAttribArray(location));
-            GL_CHECK(glVertexAttribPointer(location, attrib.size, attrib.type, attrib.normalized, m_stride,
-                                  ((uchar*)attrib.offset) + byteOffset));
+        auto it = _locations.find(attrib.name);
+        
+        if (it == _locations.end()) {
+            continue;
         }
+        
+        const GLint location = it->second;
+
+        GL_CHECK(glEnableVertexAttribArray(location));
+        GL_CHECK(glVertexAttribPointer(location, attrib.size, attrib.type, attrib.normalized, m_stride,
+                                  ((uchar*)attrib.offset) + byteOffset));
     }
 }
 
-void VertexLayout::disable(const Shader& _program) {
+void VertexLayout::disable(const std::unordered_map<std::string, GLuint>& _locations) {
     for (auto& attrib : m_attribs) {
-
-        const GLint location = _program.getAttribLocation(attrib.name);
-        if (location != -1) {
-            GL_CHECK(glDisableVertexAttribArray(location));
+        auto it = _locations.find(attrib.name);
+        
+        if (it == _locations.end()) {
+            continue;
         }
+        const GLint location = it->second;
+        GL_CHECK(glDisableVertexAttribArray(location));
     }
 }
 

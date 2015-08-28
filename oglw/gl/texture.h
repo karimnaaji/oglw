@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gl.h"
+#include "gl/gl.h"
 #include "core/types.h"
 #include <vector>
 #include <memory>
@@ -39,36 +39,36 @@ public:
 
     virtual ~Texture();
 
-    // Binds the texture to the specified slot
+    // binds the texture to the specified slot
     void bind(GLuint _textureSlot);
-    // Perform texture updates, should be called at least once and after adding data or resizing
+    // perform texture updates, should be called at least once and after adding data or resizing
     virtual void update(GLuint _textureSlot);
-    // Resize the texture
+    // resize the texture
     void resize(const uint _width, const uint _height);
-    // Width and Height texture getters
+    // get the width of the texture
     uint getWidth() const { return m_width; }
+    // get the height of the texture
     uint getHeight() const { return m_height; }
+    // returns the gl handle
     GLuint getGlHandle() { return m_glHandle; }
-
+    // set data for the texture, needs to be updated after this call
     void setData(const GLuint* _data, uint _dataSize);
 
 protected:
+    // generate the gl handle and bind it at the specified unit
     void generate(GLuint _textureUnit);
+    // get the texture unit from a slot
+    static GLuint getTextureUnit(GLuint _slot);
 
     TextureOptions m_options;
     std::vector<GLuint> m_data;
     GLuint m_glHandle;
-
+    GLenum m_target;
     bool m_dirty;
     bool m_shouldResize;
     bool m_generateMipmaps;
-
     uint m_width;
     uint m_height;
-
-    GLenum m_target;
-
-    static GLuint getTextureUnit(GLuint _slot);
 };
 
 } // OGLW

@@ -1,5 +1,5 @@
 #include "vboMesh.h"
-#include "gl.h"
+#include "gl/gl.h"
 #include "core/log.h"
 
 namespace OGLW {
@@ -13,7 +13,6 @@ VboMesh::VboMesh(std::shared_ptr<VertexLayout> _vertexLayout, GLenum _drawMode, 
 VboMesh::VboMesh() {
     m_glVertexBuffer = 0;
     m_glIndexBuffer = 0;
-    m_glVertexArray = 0;
     m_nVertices = 0;
     m_nIndices = 0;
     m_isUploaded = false;
@@ -30,10 +29,6 @@ VboMesh::~VboMesh() {
 
     if (m_glIndexBuffer) {
         GL_CHECK(glDeleteBuffers(1, &m_glIndexBuffer));
-    }
-
-    if (m_glVertexArray) {
-        GL_CHECK(glDeleteVertexArrays(1, &m_glVertexArray));
     }
 }
 
@@ -57,17 +52,31 @@ void VboMesh::setDrawMode(GLenum _drawMode) {
     }
 }
 
-bool VboMesh::upload() {
+bool VboMesh::upload(const Shader& _shader) {
     if (m_isUploaded) {
         return false;
     }
 
+    // Create vertex Buffer if needed
     if (m_glVertexBuffer == 0) {
         GL_CHECK(glGenBuffers(1, &m_glVertexBuffer));
     }
 
-    if (m_glVertexArray == 0) {
-        GL_CHECK(glGenVertexArrays(1, &m_glVertexArray));
+    // if VAO not yet created, initialized it and capture related states
+    if (!m_vao) {
+        m_vao = std::unique_ptr<Vao>(new Vao());
+        std::unordered_map<std::string, GLuint> locations;
+        
+        auto& layoutAttributes = m_vertexLayout->getAttributes();
+
+        for (auto& attribute : layoutAttributes) {
+            GLint location = _shader.getAttribLocation(attribute.name);
+            if (location != -1) {
+                locations[attribute.name] = location;
+            }
+        }
+
+        m_vao->init(m_glVertexBuffer, *m_vertexLayout, locations, 0);
     }
 
     if (!m_isCompiled) {
@@ -77,16 +86,19 @@ bool VboMesh::upload() {
     int vertexBytes = m_nVertices * m_vertexLayout->getStride();
 
     GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_glVertexBuffer));
-    GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vertexBytes, m_glVertexData, GL_STATIC_DRAW));
+    GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vertexBytes, m_glVertexData, m_hint));
 
     if (m_glIndexData) {
-
         if (m_glIndexBuffer == 0) {
             GL_CHECK(glGenBuffers(1, &m_glIndexBuffer));
         }
 
+        m_vao->bind();
+
         GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer));
         GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_nIndices * sizeof(GLushort), m_glIndexData, GL_STATIC_DRAW));
+
+        m_vao->unbind();
 
         delete[] m_glIndexData;
         m_glIndexData = nullptr;
@@ -108,7 +120,7 @@ bool VboMesh::subDataUpload() {
         WARN("wrong usage hint provided to the Vbo");
     }
 
-    GL_CHECK(glBindVertexArray(m_glVertexArray));
+    //m_vao->bind();
     GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_glVertexBuffer));
 
     long vertexBytes = m_nVertices * m_vertexLayout->getStride();
@@ -141,22 +153,13 @@ bool VboMesh::subDataUpload() {
 }
 
 void VboMesh::draw(const Shader& _shader) {
-    bool bound = false;
-
     if (!m_isUploaded) {
-        bound = upload();
+        upload(_shader);
     } else if (m_dirty) {
-        bound = subDataUpload();
+        subDataUpload();
     }
 
-    if (!bound) {
-        GL_CHECK(glBindVertexArray(m_glVertexArray));
-        GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_glVertexBuffer));
-
-        if (m_nIndices > 0) {
-            GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer));
-        }
-    }
+    m_vao->bind();
 
     _shader.use();
 
@@ -167,21 +170,17 @@ void VboMesh::draw(const Shader& _shader) {
         uint32_t nIndices = o.first;
         uint32_t nVertices = o.second;
 
-        size_t byteOffset = vertexOffset * m_vertexLayout->getStride();
-
-        m_vertexLayout->enable(_shader, byteOffset);
-
         if (nIndices > 0) {
             GL_CHECK(glDrawElements(m_drawMode, nIndices, GL_UNSIGNED_SHORT, (void*)(indiceOffset * sizeof(GLushort))));
         } else if (nVertices > 0) {
             GL_CHECK(glDrawArrays(m_drawMode, 0, nVertices));
         }
 
-        m_vertexLayout->disable(_shader);
-
         vertexOffset += nVertices;
         indiceOffset += nIndices;
     }
+
+    m_vao->unbind();
 }
 
 std::vector<glm::vec3> VboMesh::computeNormals(std::vector<glm::vec3> _vertices, std::vector<int> _indices) {

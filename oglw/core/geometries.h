@@ -1,7 +1,7 @@
 #pragma once
 
-#include "glTypes.h"
-#include "mesh.h"
+#include "gl/glTypes.h"
+#include "gl/mesh.h"
 #include <vector>
 
 namespace OGLW {
