@@ -102,13 +102,22 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
     }
 }
 
-GLint Shader::getAttribLocation(const std::string& _attribute) const {
-    GLint attribute = glGetAttribLocation(m_program, _attribute.c_str());
-    GL_CHECK(void(0));
-    if (attribute == -1) {
-        WARN("Attribute location not found on shader for attribute %s", _attribute.c_str());
+GLint Shader::getAttribLocation(const std::string& _attribute) {
+    auto attributePair = m_attributes.find(_attribute);
+
+    if (attributePair == m_attributes.end()) {
+        GLint attribute = glGetAttribLocation(m_program, _attribute.c_str());
+        GL_CHECK(void(0));
+
+        if (attribute == -1) {
+            WARN("Attribute location not found on shader for attribute %s", _attribute.c_str());
+        } else {
+            m_attributes[_attribute] = attribute;
+        }
+        return attribute;
     }
-    return attribute;
+
+    return attributePair->second;
 }
 
 void Shader::use() const {

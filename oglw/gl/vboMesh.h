@@ -30,7 +30,7 @@ public:
     // compile the vertex buffer to unsigned byte data for ready for upload
     virtual void compileVertexBuffer() = 0;
     // draw the mesh for a specific shader program
-    void draw(const Shader& _shader);
+    void draw(Shader& _shader);
     // compute normals for a set of vertices and indices
     static std::vector<glm::vec3> computeNormals(std::vector<glm::vec3> _vertices, std::vector<int> _indices);
     // get the buffer dirty size (data not yet uploaded in gpu)
@@ -39,7 +39,7 @@ public:
     GLintptr getDirtyOffset() const { return m_dirtyOffset; }
 
 protected:
-    bool upload(const Shader& _shader);
+    bool upload(Shader& _shader);
     bool subDataUpload();
 
     std::vector<std::pair<uint32_t, uint32_t>> m_vertexOffsets;

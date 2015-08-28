@@ -52,7 +52,7 @@ void VboMesh::setDrawMode(GLenum _drawMode) {
     }
 }
 
-bool VboMesh::upload(const Shader& _shader) {
+bool VboMesh::upload(Shader& _shader) {
     if (m_isUploaded) {
         return false;
     }
@@ -152,7 +152,7 @@ bool VboMesh::subDataUpload() {
     return true;
 }
 
-void VboMesh::draw(const Shader& _shader) {
+void VboMesh::draw(Shader& _shader) {
     if (!m_isUploaded) {
         upload(_shader);
     } else if (m_dirty) {

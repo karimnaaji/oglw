@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 #include "gl/gl.h"
 #include "glm/glm.hpp"
 
@@ -28,7 +29,7 @@ public:
     bool isInUse() const;
 
     // retrieve the attribute location for a given attribute name
-    GLint getAttribLocation(const std::string& _attribute) const;
+    GLint getAttribLocation(const std::string& _attribute);
     // set uniforms for the given name
     void setUniform(const std::string& _name, int _x);
     void setUniform(const std::string& _name, float _x);
