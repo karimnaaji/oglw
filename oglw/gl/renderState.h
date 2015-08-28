@@ -2,6 +2,7 @@
 
 #include "gl/gl.h"
 #include <tuple>
+#include <limits>
 
 namespace OGLW {
 
@@ -49,9 +50,12 @@ struct StateWrap {
     using Type = std::tuple<Args...>;
     Type params;
 
-    void init(Args... _param) {
+
+    void init(Args... _param, bool _force = true) {
         params = std::make_tuple(_param...);
-        call(typename gens<sizeof...(Args)>::type());
+        if (_force) {
+            call(typename gens<sizeof...(Args)>::type());
+        }
     }
 
     inline void operator()(Args... _args) {
@@ -62,6 +66,12 @@ struct StateWrap {
             call(typename gens<sizeof...(Args)>::type());
         }
     }
+
+    inline bool compare(Args... _args) {
+        auto _params = std::make_tuple(_args...);
+        return _params == params;
+    }
+
 
     template<int ...S>
     inline void call(seq<S...>) {
@@ -86,6 +96,7 @@ using FrontFace = StateWrap<FUN(glFrontFace), GLenum>;
 using CullFace = StateWrap<FUN(glCullFace), GLenum>;
 using ClearDepth = StateWrap<FUN(glClearDepth), GLclampd>;
 using DepthRange = StateWrap<FUN(glDepthRange), GLclampd, GLclampd>;
+using ShaderProgram = StateWrap<FUN(glUseProgram), GLuint>;
 
 extern DepthTest depthTest;
 extern DepthWrite depthWrite;
@@ -102,6 +113,7 @@ extern CullFace cullFace;
 extern Culling culling;
 extern ClearDepth clearDepth;
 extern DepthRange depthRange;
+extern ShaderProgram shaderProgram;
 
 void initialize();
 

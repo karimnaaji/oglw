@@ -1,6 +1,7 @@
 #include "shader.h"
 #include "core/utils.h"
 #include "core/log.h"
+#include "gl/renderState.h"
 
 namespace OGLW {
 
@@ -34,6 +35,12 @@ Shader::Shader(std::string _programBundlePath) {
 
 Shader::~Shader() {
     GL_CHECK(glDeleteProgram(m_program));
+
+    // Deleting a shader program being used ends up setting up the current shader program to 0
+    // after the driver finishes using it, force this setup by setting the current program
+    if (RenderState::shaderProgram.compare(m_program)) {
+        RenderState::shaderProgram.init(0, false);
+    }
 }
 
 bool Shader::getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out) const {
@@ -121,15 +128,7 @@ GLint Shader::getAttribLocation(const std::string& _attribute) {
 }
 
 void Shader::use() const {
-    if (!isInUse()) {
-        GL_CHECK(glUseProgram(getProgram()));
-    }
-}
-
-bool Shader::isInUse() const {
-    GLint currentProgram = 0;
-    GL_CHECK(glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram));
-    return getProgram() == (GLuint)currentProgram;
+    RenderState::shaderProgram(m_program);
 }
 
 GLuint Shader::compile(const std::string& _src, GLenum _type) {

@@ -18,6 +18,7 @@ FrontFace frontFace;
 CullFace cullFace;
 ClearDepth clearDepth;
 DepthRange depthRange;
+ShaderProgram shaderProgram;
 
 void initialize() {
     RenderState::depthTest.init(true);
@@ -30,6 +31,7 @@ void initialize() {
     RenderState::cullFace.init(GL_BACK);
     RenderState::frontFace.init(GL_CCW);
     RenderState::blending.init(false);
+    RenderState::shaderProgram.init(std::numeric_limits<unsigned int>::max(), false);
 }
 
 } // RenderState
