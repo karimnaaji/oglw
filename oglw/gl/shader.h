@@ -51,8 +51,8 @@ private:
     bool load(const std::string& _fragmentSrc, const std::string& _vertexSrc);
     // compile the shader program for the specified type
     GLuint compile(const std::string& _src, GLenum _type);
-    // retrieve the uniform location for a given name
-    GLint getUniformLocation(const std::string& _uniformName) const;
+    // retrieve the uniform location for a given name, lazily access the driver to request for uniform location
+    GLint getUniformLocation(const std::string& _uniformName);
 
     // GL shader program handle
     GLuint m_program = -1;
@@ -60,6 +60,9 @@ private:
     GLuint m_fragmentShader = -1;
     // GL vertex shader id
     GLuint m_vertexShader = -1;
+
+    std::unordered_map<std::string, GLuint> m_uniforms;
+    std::unordered_map<std::string, GLuint> m_attributes;
 };
 
 } // OGLW

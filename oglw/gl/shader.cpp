@@ -150,13 +150,23 @@ GLuint Shader::compile(const std::string& _src, GLenum _type) {
     return shader;
 }
 
-GLint Shader::getUniformLocation(const std::string& _uniformName) const {
-    GLint loc = glGetUniformLocation(m_program, _uniformName.c_str());
-    GL_CHECK(void(0));
-    if (loc == -1) {
-        WARN("shader uniform %s not found on shader program: %d", m_program);
+GLint Shader::getUniformLocation(const std::string& _uniformName) {
+    auto uniformPair = m_uniforms.find(_uniformName);
+
+    if (uniformPair == m_uniforms.end()) {
+        GLint loc = glGetUniformLocation(m_program, _uniformName.c_str());
+        GL_CHECK(void(0));
+
+        if (loc == -1) {
+            WARN("shader uniform %s not found on shader program: %d", m_program);
+        } else {
+            m_uniforms[_uniformName] = loc;
+        }
+        return loc;
     }
-    return loc;
+
+    // directly access the uniform from the map
+    return uniformPair->second;
 }
 
 
