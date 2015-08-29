@@ -9,7 +9,7 @@ bool stringFromPath(const std::string& path, std::string* into) {
 
     file.open(path.c_str());
     if (!file.is_open()) {
-        WARN("Can't load string resource %s", path.c_str());
+        WARN("Can't load string resource %s\n", path.c_str());
         return false;
     }
     while (!file.eof()) {
@@ -25,7 +25,7 @@ uchar* bytesFromPath(const char* _path, uint* _size) {
     std::ifstream resource(_path, std::ifstream::ate | std::ifstream::binary);
 
     if (!resource.is_open()) {
-        WARN("Failed to read file at path %s ", _path);
+        WARN("Failed to read file at path %s\n", _path);
         *_size = 0;
         return nullptr;
     }

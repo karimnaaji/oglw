@@ -117,7 +117,7 @@ bool VboMesh::subDataUpload() {
     }
 
     if (m_hint == GL_STATIC_DRAW) {
-        WARN("wrong usage hint provided to the Vbo");
+        WARN("wrong usage hint provided to the Vbo\n");
     }
 
     //m_vao->bind();

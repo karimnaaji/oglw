@@ -19,7 +19,7 @@ void TextureCube::load(const std::string& _file) {
     pixels = stbi_load_from_memory(data, size, &width, &height, &comp, STBI_rgb_alpha);
 
     if (!pixels || size == 0) {
-        WARN("Failed to load texture cube resource %s", _file.c_str());
+        WARN("Failed to load texture cube resource %s\n", _file.c_str());
         free(data);
         return;
     }

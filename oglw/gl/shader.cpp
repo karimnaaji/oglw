@@ -15,7 +15,7 @@ Shader::Shader(std::string _fragPath, std::string _vertPath, std::string _geomPa
     }
 
     if (!load(frag, vert)) {
-        WARN("Failed to build shader %s %s", _fragPath.c_str(), _vertPath.c_str());
+        WARN("Failed to build shader %s %s\n", _fragPath.c_str(), _vertPath.c_str());
     }
 }
 
@@ -26,10 +26,10 @@ Shader::Shader(std::string _programBundlePath) {
     if (getBundleShaderSource("vertex", bundle, &vert) && 
         getBundleShaderSource("fragment", bundle, &frag)) {
         if (!load(frag, vert)) {
-            WARN("Failed to build shader program bundle %s", _programBundlePath.c_str());
+            WARN("Failed to build shader program bundle %s\n", _programBundlePath.c_str());
         }
     } else {
-        WARN("Failed to load shader in program bundle %s", _programBundlePath.c_str());
+        WARN("Failed to load shader in program bundle %s\n", _programBundlePath.c_str());
     }
 }
 
@@ -64,8 +64,8 @@ GLuint Shader::add(const std::string& _shaderSource, GLenum _kind) {
 
     if (!shader) {
         GL_CHECK(glDeleteShader(shader));
-        WARN("Failed to compile shader");
-        WARN("%s", _shaderSource.c_str());
+        WARN("Failed to compile shader\n");
+        WARN("%s\n", _shaderSource.c_str());
         return -1;
     }
 
@@ -96,8 +96,8 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
             std::vector<GLchar> infoLog(infoLength);
             GL_CHECK(glGetProgramInfoLog(m_program, infoLength, NULL, &infoLog[0]));
             std::string error(infoLog.begin(), infoLog.end());
-            DBG("Error linking shader program");
-            DBG(error.c_str());
+            DBG("Error linking shader program\n");
+            DBG("%s\n", error.c_str());
         }
 
         GL_CHECK(glDeleteProgram(m_program));
@@ -117,7 +117,7 @@ GLint Shader::getAttribLocation(const std::string& _attribute) {
         GL_CHECK(void(0));
 
         if (attribute == -1) {
-            WARN("Attribute location not found on shader for attribute %s", _attribute.c_str());
+            WARN("Attribute location not found on shader for attribute %s\n", _attribute.c_str());
         } else {
             m_attributes[_attribute] = attribute;
         }
@@ -147,9 +147,9 @@ GLuint Shader::compile(const std::string& _src, GLenum _type) {
         if (infoLength > 1) {
             std::vector<GLchar> infoLog(infoLength);
             GL_CHECK(glGetShaderInfoLog(shader, infoLength, NULL, &infoLog[0]));
-            DBG("Compilation error");
-            DBG(_src.c_str());
-            DBG(&infoLog[0]);
+            DBG("Compilation error\n");
+            DBG("%s\n", _src.c_str());
+            DBG("%s\n", &infoLog[0]);
         }
         GL_CHECK(glDeleteShader(shader));
         return 0;
@@ -166,7 +166,7 @@ GLint Shader::getUniformLocation(const std::string& _uniformName) {
         GL_CHECK(void(0));
 
         if (loc == -1) {
-            WARN("shader uniform %s not found on shader program: %d", m_program);
+            WARN("shader uniform %s not found on shader program: %d\n", m_program);
         } else {
             m_uniforms[_uniformName] = loc;
         }

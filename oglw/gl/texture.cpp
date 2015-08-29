@@ -29,7 +29,7 @@ Texture(0, 0, _options, _generateMipmaps)
     pixels = stbi_load_from_memory(data, size, &width, &height, &comp, STBI_rgb_alpha);
 
     if (!pixels || size == 0) {
-        WARN("Failed to load texture image resource %s", _file.c_str());
+        WARN("Failed to load texture image resource %s\n", _file.c_str());
         free(data);
         return;
     }
@@ -126,7 +126,7 @@ void Texture::resize(const uint _width, const uint _height) {
 
 GLuint Texture::getTextureUnit(GLuint _unit) {
     if (_unit >= GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS) {
-        WARN("trying to access unavailable texture unit");
+        WARN("trying to access unavailable texture unit\n");
     }
 
     return GL_TEXTURE0 + _unit;

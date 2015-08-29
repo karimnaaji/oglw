@@ -20,7 +20,7 @@ App::App(std::string _name, int _width, int _height) :
 }
 
 App::~App() {
-    INFO("App destroy");
+    INFO("App destroy\n");
 
     if (m_textRendering) {
         glfonsDelete(m_fontContext);
@@ -28,7 +28,7 @@ App::~App() {
 }
 
 void App::initGLFW() {
-    INFO("App init");
+    INFO("App init\n");
 
     glfwInit();
 
@@ -43,7 +43,7 @@ void App::initGLFW() {
     m_window = glfwCreateWindow(m_width, m_height, m_name.c_str(), NULL, NULL);
 
     if (!m_window) {
-        ERROR("Window creation failure");
+        ERROR("Window creation failure\n");
         glfwTerminate();
     }
 
@@ -59,7 +59,7 @@ void App::initGLFW() {
 
     if (glewInit() != GLEW_OK) {
         glfwTerminate();
-        ERROR("glewInit failed");
+        ERROR("glewInit failed\n");
     }
 
     RenderState::initialize();
@@ -68,11 +68,11 @@ void App::initGLFW() {
         GLFONSparams params;
         params.useGLBackend = true;
         m_fontContext = glfonsCreate(512, 512, FONS_ZERO_TOPLEFT, params, nullptr);
-        INFO("Loading font %s", m_font.c_str());
+        INFO("Loading font %s\n", m_font.c_str());
         int font = fonsAddFont(m_fontContext, m_font.c_str(), m_font.c_str());
 
         if (font == FONS_INVALID) {
-            ERROR("Error loading font file %s", m_font.c_str());
+            ERROR("Error loading font file %s\n", m_font.c_str());
             return;
         }
 
