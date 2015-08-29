@@ -27,7 +27,7 @@ Shader::Shader(std::string _programBundlePath) {
         getBundleShaderSource("fragment", bundle, &frag)) {
 
         // geometry shader is optionnal
-        getBundleShaderSource("geom", bundle, &geom);
+        getBundleShaderSource("geom", bundle, &geom, true);
 
         if (!load(frag, vert, geom)) {
             WARN("Failed to build shader program bundle %s\n", _programBundlePath.c_str());
@@ -47,20 +47,31 @@ Shader::~Shader() {
     }
 }
 
-bool Shader::getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out) const {
+bool Shader::getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out, bool _opt) const {
     const std::string startTag = "#pragma begin:" + _type;
     const std::string endTag = "#pragma end:" + _type;
 
     size_t start = _bundle.find(startTag);
     start += startTag.length();
-    size_t end = _bundle.find(endTag);
 
-    if (start != std::string::npos && end != std::string::npos) {
-        *_out = _bundle.substr(start, end);
-        return true;
+    if (start == std::string::npos && !_opt) {
+        WARN("Missing tag %s in shader bundle\n", startTag.c_str());
+        return false;
     }
 
-    return false;
+    size_t end = _bundle.find(endTag);
+
+    if (end < start) {
+        return false;
+    }
+
+    if (end == std::string::npos && !_opt) {
+        WARN("Missing tag %s in shader bundle\n", endTag.c_str());
+        return false;
+    }
+
+    *_out = _bundle.substr(start, end - start);
+    return true;
 }
 
 GLuint Shader::add(const std::string& _shaderSource, GLenum _kind) {
@@ -107,7 +118,7 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
             GL_CHECK(glGetProgramInfoLog(m_program, infoLength, NULL, &infoLog[0]));
             std::string error(infoLog.begin(), infoLog.end());
             DBG("Error linking shader program\n");
-            DBG("%s\n", error.c_str());
+            DBG("%s", error.c_str());
         }
 
         GL_CHECK(glDeleteProgram(m_program));
@@ -162,8 +173,7 @@ GLuint Shader::compile(const std::string& _src, GLenum _type) {
             std::vector<GLchar> infoLog(infoLength);
             GL_CHECK(glGetShaderInfoLog(shader, infoLength, NULL, &infoLog[0]));
             DBG("Compilation error\n");
-            DBG("%s\n", _src.c_str());
-            DBG("%s\n", &infoLog[0]);
+            DBG("%s", &infoLog[0]);
         }
         GL_CHECK(glDeleteShader(shader));
         return 0;
@@ -180,7 +190,12 @@ GLint Shader::getUniformLocation(const std::string& _uniformName) {
         GL_CHECK(void(0));
 
         if (loc == -1) {
-            WARN("shader uniform %s not found on shader program: %d\n", m_program);
+            static bool notified = false;
+            // not to overflow log, notify once
+            if (!notified) {
+                WARN("Shader uniform %s not found on shader program: %d\n", _uniformName.c_str(), m_program);
+                notified = true;
+            }
         } else {
             m_uniforms[_uniformName] = loc;
         }

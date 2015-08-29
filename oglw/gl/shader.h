@@ -47,7 +47,7 @@ private:
     // compile and attach a shader to the shader program
     GLuint add(const std::string& _shaderSource, GLenum _kind);
     // retrive a shader source from a program bundle
-    bool getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out) const;
+    bool getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out, bool _opt = false) const;
     // load a shader program
     bool load(const std::string& _fragmentSrc, const std::string& _vertexSrc, const std::string& _geomSrc);
     // compile the shader program for the specified type

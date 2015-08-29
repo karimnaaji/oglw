@@ -19,7 +19,6 @@ void main() {
 }
 
 #pragma end:vertex
-
 #pragma begin:fragment
 #version 330
 
@@ -45,3 +44,16 @@ void main(void) {
 }
 
 #pragma end:fragment
+#pragma begin:geom
+#version 330
+
+layout(points) in;
+layout(points, max_vertices = 1) out;
+
+void main() {
+    gl_Position = gl_in[0].gl_Position;
+    EmitVertex();
+    EndPrimitive();
+}
+
+#pragma end:geom
