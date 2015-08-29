@@ -49,7 +49,7 @@ private:
     // retrive a shader source from a program bundle
     bool getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out) const;
     // load a shader program
-    bool load(const std::string& _fragmentSrc, const std::string& _vertexSrc);
+    bool load(const std::string& _fragmentSrc, const std::string& _vertexSrc, const std::string& _geomSrc);
     // compile the shader program for the specified type
     GLuint compile(const std::string& _src, GLenum _type);
     // retrieve the uniform location for a given name, lazily access the driver to request for uniform location

@@ -14,18 +14,22 @@ Shader::Shader(std::string _fragPath, std::string _vertPath, std::string _geomPa
         stringFromPath(_geomPath, &geom);
     }
 
-    if (!load(frag, vert)) {
+    if (!load(frag, vert, geom)) {
         WARN("Failed to build shader %s %s\n", _fragPath.c_str(), _vertPath.c_str());
     }
 }
 
 Shader::Shader(std::string _programBundlePath) {
-    std::string vert, frag, bundle;
+    std::string vert, frag, geom, bundle;
     stringFromPath(_programBundlePath, &bundle);
 
     if (getBundleShaderSource("vertex", bundle, &vert) && 
         getBundleShaderSource("fragment", bundle, &frag)) {
-        if (!load(frag, vert)) {
+
+        // geometry shader is optionnal
+        getBundleShaderSource("geom", bundle, &geom);
+
+        if (!load(frag, vert, geom)) {
             WARN("Failed to build shader program bundle %s\n", _programBundlePath.c_str());
         }
     } else {
@@ -74,7 +78,7 @@ GLuint Shader::add(const std::string& _shaderSource, GLenum _kind) {
     return shader;
 }
 
-bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc) {
+bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc, const std::string& _geomSrc) {
     m_program = glCreateProgram();
     GL_CHECK(void(0));
 
@@ -82,6 +86,12 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
     GLuint vert = add(_vertexSrc, GL_VERTEX_SHADER);
     // add fragment shader to shader program
     GLuint frag = add(_fragmentSrc, GL_FRAGMENT_SHADER);
+
+    GLuint geom = -1;
+    if (_geomSrc != "") {
+        // add geometry shader to shader program
+        geom = add(_geomSrc, GL_GEOMETRY_SHADER);
+    }
 
     GL_CHECK(glLinkProgram(m_program));
 
@@ -105,6 +115,10 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
     } else {
         GL_CHECK(glDeleteShader(vert));
         GL_CHECK(glDeleteShader(frag));
+
+        if (frag != -1) {
+            GL_CHECK(glDeleteShader(geom));
+        }
         return true;
     }
 }
