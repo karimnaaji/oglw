@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 2.8)
 project(OGLW)
 
 option(OGLW_BUILD_SHARED "Build OGLW as a shared library" OFF)
+option(OGLW_BUILD_SHARED_WITH_JNI "Build OGLW as a shared library with JNIs" OFF)
 
 # CXX Flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags -Wno-unused-function -std=c++1y")
@@ -107,10 +108,27 @@ find_sources_and_include_directories(core/*.h core/*.cpp)
 find_sources_and_include_directories(text/*.h text/*.cpp)
 include_directories(${PROJECT_SOURCE_DIR}/)
 
-if (OGLW_BUILD_SHARED)
-    add_library(OGLW SHARED ${SOURCES} ${HEADERS})
+if (OGLW_BUILD_SHARED OR OGLW_BUILD_SHARED_WITH_JNI)
+    if (OGLW_BUILD_SHARED_WITH_JNI)
+        # load jni
+        find_package(JNI REQUIRED)
+        include_directories(${JNI_INCLUDE_DIRS})
+
+        if (NOT ${JNI_FOUND})
+            message(STATUS "JNI library not found")
+            return()
+        endif()
+
+        message(STATUS "Shared options with JNI exports chosen for OGLW")
+        set(JNI_SOURCES ${PROJECT_SOURCE_DIR}/java/jni/jniExports.cpp)
+        add_library(OGLW SHARED ${SOURCES} ${HEADERS} ${JNI_SOURCES} ${JNI_LIBRARIES})
+    else()
+        message(STATUS "Shared options chosen for OGLW")
+        add_library(OGLW SHARED ${SOURCES} ${HEADERS})
+    endif()
     target_link_libraries(OGLW ${LIBRARIES})
 else()
+    message(STATUS "Static options chosen for OGLW")
     add_library(OGLW STATIC ${SOURCES} ${HEADERS})
 endif()
 

@@ -12,7 +12,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-function -std=c++1y")
 
 # load OGLW library
-set(OGLW_BUILD_SHARED ON)
+# set(OGLW_BUILD_SHARED ON)
+set(OGLW_BUILD_SHARED_WITH_JNI ON)
 add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/)
 
 # include OGLW headers
