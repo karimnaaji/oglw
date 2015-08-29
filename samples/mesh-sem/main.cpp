@@ -48,7 +48,7 @@ class TestApp : public OGLW::App {
         uptr<OGLW::Shader> m_shader;
         uptr<OGLW::Shader> m_backgroundShader;
         uptr<OGLW::Texture> m_texture;
-        std::vector<uptr<OGLW::RawMesh>> m_meshes;
+        uptr<OGLW::RawMesh> m_mesh;
         uptr<OGLW::Mesh<glm::vec4>> m_quad;
 
         float m_xrot = 0.f, m_yrot = 0.f;
@@ -59,7 +59,7 @@ void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
 
     m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.glsl"));
-    m_meshes = OGLW::loadOBJ("suzanne.blend");
+    m_mesh = OGLW::loadOBJ("suzanne.blend");
     m_quad = OGLW::quad(1.f);
     m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.glsl"));
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
@@ -105,9 +105,6 @@ void TestApp::render(float _dt) {
     m_shader->setUniform("tex", 0);
     m_shader->setUniform("f", f);
 
-
-    for (auto& m : m_meshes) {
-        m->draw(*m_shader);
-    }
+    m_mesh->draw(*m_shader);
 }
 

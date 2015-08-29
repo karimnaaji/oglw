@@ -121,7 +121,7 @@ struct Vertex {
 
 typedef Mesh<Vertex> RawMesh;
 
-std::vector<std::unique_ptr<RawMesh>> loadOBJ(std::string _path) {
+std::unique_ptr<RawMesh> loadOBJ(std::string _path) {
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
 
@@ -140,13 +140,14 @@ std::vector<std::unique_ptr<RawMesh>> loadOBJ(std::string _path) {
 
     std::vector<std::unique_ptr<RawMesh>> meshes;
 
+    auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_TRIANGLES));
+
     for (size_t i = 0; i < shapes.size(); i++) {
         std::vector<Vertex> vertices;
         std::vector<int> indices;
         bool hasNormals;
         bool hasUVs;
 
-        auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_TRIANGLES));
         assert((shapes[i].mesh.indices.size() % 3) == 0);
         for (size_t f = 0; f < shapes[i].mesh.indices.size() / 3; f++) {
             indices.push_back(shapes[i].mesh.indices[3 * f + 0]);
@@ -206,10 +207,9 @@ std::vector<std::unique_ptr<RawMesh>> loadOBJ(std::string _path) {
         }
 
         mesh->addVertices(std::move(vertices), std::move(indices));
-        meshes.push_back(std::move(mesh));
     }
 
-    return std::move(meshes);
+    return std::move(mesh);
 }
 
 } // OGLW
