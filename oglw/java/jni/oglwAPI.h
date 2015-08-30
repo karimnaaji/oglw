@@ -2,5 +2,5 @@
 
 namespace OGLW {
 	
-	void init(float _windowWidth, float _windowHeight);
+    void init(float _windowWidth, float _windowHeight);
 }
