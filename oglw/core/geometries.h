@@ -6,7 +6,7 @@
 
 namespace OGLW {
 
-std::unique_ptr<Mesh<glm::vec4>> quad(float _size) {
+static std::unique_ptr<Mesh<glm::vec4>> quad(float _size) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
         {"position", 2, GL_FLOAT, false, 0},
         {"uv", 2, GL_FLOAT, false, 0},
@@ -31,7 +31,7 @@ std::unique_ptr<Mesh<glm::vec4>> quad(float _size) {
     return std::move(mesh);
 }
 
-std::unique_ptr<Mesh<glm::vec4>> plane(float _width, float _height, uint _nw, uint _nh) {
+static std::unique_ptr<Mesh<glm::vec4>> plane(float _width, float _height, uint _nw, uint _nh) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
         {"position", 2, GL_FLOAT, false, 0},
         {"uv", 2, GL_FLOAT, false, 0},
@@ -83,7 +83,7 @@ std::unique_ptr<Mesh<glm::vec4>> plane(float _width, float _height, uint _nw, ui
     return std::move(mesh);
 }
 
-std::unique_ptr<RawMesh> axis() {
+static std::unique_ptr<RawMesh> axis() {
 
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
         {"position", 3, GL_FLOAT, false, 0},
@@ -108,7 +108,7 @@ std::unique_ptr<RawMesh> axis() {
 }
     
 
-std::unique_ptr<RawMesh> icosahedron(float _size = 0.5f) {
+static std::unique_ptr<RawMesh> icosahedron(float _size = 0.5f) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
         {"position", 3, GL_FLOAT, false, 0},
         {"color", 3, GL_FLOAT, false, 0},
@@ -154,7 +154,7 @@ struct LineVertex {
     uint color;
 };
 
-auto spiral(float _resolution = 1000.f, float _freq = 15.f) {
+static auto spiral(float _resolution = 1000.f, float _freq = 15.f) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
         {"position", 3, GL_FLOAT, false, 0},
         {"color", 4, GL_UNSIGNED_BYTE, true, 0},

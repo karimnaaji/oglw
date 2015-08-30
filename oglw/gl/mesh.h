@@ -121,7 +121,7 @@ struct Vertex {
 
 typedef Mesh<Vertex> RawMesh;
 
-std::unique_ptr<RawMesh> loadOBJ(std::string _path) {
+static std::unique_ptr<RawMesh> loadOBJ(std::string _path) {
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
 
