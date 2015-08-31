@@ -14,7 +14,7 @@ public final class Main {
         Main main = new Main();
 
         // test stdout
-        main.helloOGLW();
+        //main.helloOGLW();
 
         // init app
         main.init(800.f, 600.f);
