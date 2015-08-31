@@ -9,4 +9,8 @@ void init(float _windowWidth, float _windowHeight) {
     app = uptr<OGLWApp>(new OGLWApp(_windowWidth, _windowHeight));
 }
 
+void run() {
+    app->run();
+}
+
 }

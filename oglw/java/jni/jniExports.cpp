@@ -12,4 +12,8 @@ extern "C" {
         OGLW::init(width, height);
     }
 
+    JNIEXPORT void JNICALL Java_Main_run(JNIEnv* jniEnv, jobject obj) {
+        OGLW::run();
+    }
+
 }

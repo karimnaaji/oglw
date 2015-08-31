@@ -2,6 +2,7 @@
 public final class Main {
     native void helloOGLW();
     native void init(float width, float height);
+    native void run();
 
     static {
         System.loadLibrary("OGLW");
@@ -13,11 +14,9 @@ public final class Main {
 
         Main main = new Main();
 
-        // test stdout
-        //main.helloOGLW();
-
         // init app
-        main.init(800.f, 600.f);
+        main.init(1024, 720.f);
+        main.run();
 
-	}
+    }
 }
