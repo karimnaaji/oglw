@@ -1,7 +1,6 @@
 
 #include "app.h"
 #define GLFONTSTASH_IMPLEMENTATION
-#define GLFONS_DEBUG
 #include "text/glfontstash.h"
 #include "gl/renderState.h"
 #include "core/types.h"

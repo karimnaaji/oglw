@@ -4,8 +4,6 @@
 #include "GLFW/glfw3.h"
 #include "gl/error.h"
 
-#define OGLW_DEBUG
-
 namespace OGLW {
 
 #ifdef OGLW_DEBUG

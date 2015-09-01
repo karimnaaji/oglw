@@ -11,6 +11,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # c++14 flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-function -std=c++1y")
 
+add_definitions(-DOGLW_DEBUG)
+add_definitions(-DGLFONS_DEBUG)
+
 # load OGLW library
 add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/)
 
