@@ -1,6 +1,7 @@
 
 #include "app.h"
 #define GLFONTSTASH_IMPLEMENTATION
+#define GLFONS_DEBUG
 #include "text/glfontstash.h"
 #include "gl/renderState.h"
 #include "core/types.h"
@@ -54,12 +55,18 @@ void App::initGLFW() {
     m_dpiRatio = fbWidth / m_width;
 
     glfwMakeContextCurrent(m_window);
-    
+
     glewExperimental = GL_TRUE;
 
     if (glewInit() != GLEW_OK) {
         glfwTerminate();
         ERROR("glewInit failed\n");
+    } else {
+        // pop any error triggered by glew initialization
+        GLenum error = glGetError();
+        while (error != GL_NO_ERROR) {
+            error = glGetError();
+        }
     }
 
     RenderState::initialize();
