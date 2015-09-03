@@ -37,7 +37,7 @@ std::unique_ptr<Mesh<glm::vec4>> plane(float _width, float _height, uint _nw, ui
         {"uv", 2, GL_FLOAT, false, 0},
     }));
 
-    auto mesh = std::unique_ptr<Mesh<glm::vec4>>(new Mesh<glm::vec4>(layout, GL_TRIANGLES));
+    auto mesh = std::unique_ptr<Mesh<glm::vec4>>(new Mesh<glm::vec4>(layout, GL_LINES));
 
     std::vector<glm::vec4> vertices;
     std::vector<int> indices;
@@ -106,7 +106,7 @@ std::unique_ptr<RawMesh> axis() {
     mesh->addVertices(std::move(vertices), {});
     return std::move(mesh);
 }
-    
+
 
 std::unique_ptr<RawMesh> icosahedron(float _size = 0.5f) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
@@ -115,13 +115,13 @@ std::unique_ptr<RawMesh> icosahedron(float _size = 0.5f) {
         {"normal", 3, GL_FLOAT, false, 0},
         {"uv", 2, GL_FLOAT, false, 0},
     }));
-    
-    auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_LINES));
-    
+
+    auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_LINE_STRIP));
+
     std::vector<Vertex> vertices;
 
     const float phi = (1.0f + sqrt(5.0f)) * 0.5f * _size;
-    
+
     vertices.push_back({{-1.0,  phi,  0.0}, {1.0, 1.0, 1.0}});
     vertices.push_back({{ 0.0,  phi,  0.0}, {1.0, 1.0, 1.0}});
     vertices.push_back({{ 0.0,  1.0, -phi}, {1.0, 1.0, 1.0}});
@@ -134,17 +134,17 @@ std::unique_ptr<RawMesh> icosahedron(float _size = 0.5f) {
     vertices.push_back({{ 0.0, -1.0,  phi}, {1.0, 1.0, 1.0}});
     vertices.push_back({{-1.0, -phi,  0.0}, {1.0, 1.0, 1.0}});
     vertices.push_back({{ 1.0, -phi,  0.0}, {1.0, 1.0, 1.0}});
-    
+
     std::vector<int> indices = {
         0, 1, 2, 0, 3, 1, 0, 4, 5,
         1, 7, 6, 1, 6, 2, 1, 3, 7,
         0, 2, 4, 0, 5, 3, 2, 6, 8,
-        2, 8, 4, 3, 5, 9, 3, 9, 7, 
+        2, 8, 4, 3, 5, 9, 3, 9, 7,
         11, 6, 7, 10, 5, 4, 10, 4, 8,
         10, 9, 5, 11, 8, 6, 11, 7, 9,
         10, 8, 11, 10, 11, 9
     };
-    
+
     mesh->addVertices(std::move(vertices), std::move(indices));
     return std::move(mesh);
 }
@@ -159,7 +159,7 @@ auto spiral(float _resolution = 1000.f, float _freq = 15.f) {
         {"position", 3, GL_FLOAT, false, 0},
         {"color", 4, GL_UNSIGNED_BYTE, true, 0},
     }));
-    
+
     auto mesh = std::unique_ptr<Mesh<LineVertex>>(new Mesh<LineVertex>(layout, GL_LINE_STRIP));
     std::vector<LineVertex> vertices;
 
@@ -168,7 +168,7 @@ auto spiral(float _resolution = 1000.f, float _freq = 15.f) {
         float s = cos(i * 2.0 * M_PI + M_PI) * 0.5f + 0.5f;
         vertices.push_back({{cos(i * M_PI * _freq) * s, i, sin(i * M_PI * _freq) * s}, 0xffffffff});
     }
- 
+
     mesh->addVertices(std::move(vertices), {});
     return std::move(mesh);
 }
