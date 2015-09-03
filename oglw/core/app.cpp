@@ -130,6 +130,7 @@ void App::run() {
     while (!glfwWindowShouldClose(m_window)) {
         double time = glfwGetTime();
         double dt = time - lastTime;
+        m_globalTime += dt;
 
         glfwGetCursorPos(m_window, &m_cursorX, &m_cursorY);
         glfwSetCursorPos(m_window, 0, 0);

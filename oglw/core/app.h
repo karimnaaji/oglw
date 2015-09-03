@@ -59,6 +59,7 @@ class App {
 
         double m_cursorX;
         double m_cursorY;
+        float m_globalTime = 0.f;
 
         fsuint displayText(float _size, glm::vec2 _position, const std::string& _text, bool _clear = false);
         void clearText(fsuint _id);
