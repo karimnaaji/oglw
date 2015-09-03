@@ -18,8 +18,9 @@ class TestApp : public App {
 
     private:
         uptr<Shader> m_shader;
-
         uptr<Mesh<glm::vec4>> m_geometry;
+        uptr<OGLW::Texture> m_texture;
+
         float m_xrot = 0.f, m_yrot = 0.f;
 };
 OGLWMain(TestApp);
@@ -28,6 +29,7 @@ void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
 
     m_shader = uptr<Shader>(new Shader("default.glsl"));
+    m_texture = uptr<OGLW::Texture>(new OGLW::Texture("perlin.png"));
 
     m_geometry = plane(5.f, 5.f, 100, 100);
 }
@@ -46,7 +48,10 @@ void TestApp::render(float _dt) {
 
     glm::mat4 mvp = m_camera.getProjectionMatrix() * view * model;
 
-    m_shader->setUniform("mvp", mvp);
+    m_texture->bind(0);
+
+    m_shader->setUniform("mvp", mvp);    
+    m_shader->setUniform("tex", 0);
 
     m_geometry->draw(*m_shader);
 }
