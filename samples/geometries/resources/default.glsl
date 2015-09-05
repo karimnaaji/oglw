@@ -6,16 +6,17 @@ layout (location = 0) in vec2 uv;
 
 uniform mat4 mvp;
 uniform sampler2D tex;
+uniform float t0;
+uniform float time;
 
-out vec2 uvs;
-
-float luminance(vec3 color) {
-    return dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
-}
+out vec2 fUV;
+out float fOffset;
 
 void main() {
-    gl_Position = mvp * vec4(position, luminance(texture(tex, uv).rgb) * 0.3, 1.0);
-    uvs = uv;
+    float offset = texture(tex, uv * 5.0).r;
+    float r = time * t0;
+    gl_Position = mvp * vec4(position, 2.f * offset, 1.0);
+    fOffset = offset;
 }
 
 #pragma end:vertex
@@ -23,13 +24,12 @@ void main() {
 #pragma begin:fragment
 #version 330
 
-uniform sampler2D tex;
-
 out vec4 outColour;
 
-in vec2 uvs;
+in float fOffset;
 
 void main(void) {
-    outColour = texture(tex, uvs);
+    outColour = vec4(vec3(1.0) * fOffset, 1.0);
 }
+
 #pragma end:fragment
