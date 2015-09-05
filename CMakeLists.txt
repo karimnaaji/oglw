@@ -15,6 +15,7 @@ add_definitions(-DOGLW_DEBUG)
 add_definitions(-DGLFONS_DEBUG)
 
 # load OGLW library
+set(OGLW_BUILD_SHARED ON)
 add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/)
 
 # include OGLW headers

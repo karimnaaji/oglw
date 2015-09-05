@@ -5,6 +5,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(OGLW)
 
+option(OGLW_BUILD_SHARED "Build OGLW as a shared library" OFF)
+
 # CXX Flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags -Wno-unused-function -std=c++1y")
 
@@ -105,7 +107,12 @@ find_sources_and_include_directories(core/*.h core/*.cpp)
 find_sources_and_include_directories(text/*.h text/*.cpp)
 include_directories(${PROJECT_SOURCE_DIR}/)
 
-add_library(OGLW STATIC ${SOURCES} ${HEADERS})
+if (OGLW_BUILD_SHARED)
+    add_library(OGLW SHARED ${SOURCES} ${HEADERS})
+    target_link_libraries(OGLW ${LIBRARIES})
+else()
+    add_library(OGLW STATIC ${SOURCES} ${HEADERS})
+endif()
 
 # Output variables
 set(OGLW_INCLUDE_DIRS ${INCLUDE_DIRS} CACHE INTERNAL "OGLW include directories" FORCE)
