@@ -75,16 +75,14 @@ bool Shader::getBundleShaderSource(std::string _type, std::string _bundle, std::
 }
 
 GLuint Shader::add(const std::string& _shaderSource, GLenum _kind) {
-  GLuint shader = compile(_shaderSource, _kind);
+    GLuint shader = compile(_shaderSource, _kind);
 
-    if (!shader) {
-        GL_CHECK(glDeleteShader(shader));
-        WARN("Failed to compile shader\n");
+    if (shader == -1) {
+        WARN("Failed to compile shader of type %s\n", Shader::stringFromKind(_kind).c_str());
         WARN("%s\n", _shaderSource.c_str());
-        return -1;
+    } else {
+        GL_CHECK(glAttachShader(m_program, shader));
     }
-
-    GL_CHECK(glAttachShader(m_program, shader));
 
     return shader;
 }
@@ -176,7 +174,7 @@ GLuint Shader::compile(const std::string& _src, GLenum _type) {
             DBG("%s", &infoLog[0]);
         }
         GL_CHECK(glDeleteShader(shader));
-        return 0;
+        return -1;
     }
 
     return shader;
@@ -294,6 +292,15 @@ GLuint Shader::getFragmentShader() const {
 
 GLuint Shader::getVertexShader() const {
     return m_vertexShader;
+}
+
+std::string Shader::stringFromKind(GLenum _kind) {
+    switch(_kind) {
+        case GL_GEOMETRY_SHADER: return "geometry shader";
+        case GL_FRAGMENT_SHADER: return "fragment shader";
+        case GL_VERTEX_SHADER: return "vertex shader";
+        default: return "unknown shader type";
+    }
 }
 
 } // OGLW

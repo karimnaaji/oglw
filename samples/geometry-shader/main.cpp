@@ -45,7 +45,6 @@ void TestApp::render(float _dt) {
     glm::mat4 mvp = m_camera.getProjectionMatrix() * view * model;
 
     m_shader->setUniform("mvp", mvp);
-    m_shader->setUniform("tex", 0);
 
     m_geometry->draw(*m_shader);
 }

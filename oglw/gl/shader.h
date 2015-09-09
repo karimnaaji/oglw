@@ -43,6 +43,8 @@ public:
     void setUniform(const std::string& _name, const glm::mat3& _value, bool transpose = false);
     void setUniform(const std::string& _name, const glm::mat4& _value, bool transpose = false);
 
+    static std::string stringFromKind(GLenum _kind);
+
 private:
     // compile and attach a shader to the shader program
     GLuint add(const std::string& _shaderSource, GLenum _kind);
