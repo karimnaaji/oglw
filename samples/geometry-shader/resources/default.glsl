@@ -1,4 +1,5 @@
 #pragma begin:vertex
+
 #version 330
 
 layout (location = 1) in vec2 position;
@@ -13,6 +14,7 @@ void main() {
 #pragma end:vertex
 
 #pragma begin:fragment
+
 #version 330
 
 out vec4 outColour;
@@ -20,4 +22,5 @@ out vec4 outColour;
 void main(void) {
     outColour = vec4(1.0);
 }
+
 #pragma end:fragment

@@ -54,24 +54,26 @@ bool Shader::getBundleShaderSource(std::string _type, std::string _bundle, std::
     size_t start = _bundle.find(startTag);
     start += startTag.length();
 
-    if (start == std::string::npos && !_opt) {
-        WARN("Missing tag %s in shader bundle\n", startTag.c_str());
+    if (start == std::string::npos) {
+        if (!_opt) {
+            WARN("Missing tag %s in shader bundle\n", startTag.c_str());
+        }
         return false;
     }
 
     size_t end = _bundle.find(endTag);
 
-    if (end < start) {
+    if ((end < start || end == std::string::npos)) {
+        if (!_opt) {
+            WARN("Missing tag %s in shader bundle\n", endTag.c_str());
+        }
         return false;
+    } else if (end > start) {
+        *_out = _bundle.substr(start, end - start);
+        return true;
     }
 
-    if (end == std::string::npos && !_opt) {
-        WARN("Missing tag %s in shader bundle\n", endTag.c_str());
-        return false;
-    }
-
-    *_out = _bundle.substr(start, end - start);
-    return true;
+    return false;
 }
 
 GLuint Shader::add(const std::string& _shaderSource, GLenum _kind) {
@@ -88,18 +90,29 @@ GLuint Shader::add(const std::string& _shaderSource, GLenum _kind) {
 }
 
 bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc, const std::string& _geomSrc) {
+    bool addShaders = true;
     m_program = glCreateProgram();
     GL_CHECK(void(0));
 
     // add vertex shader to shader program
     GLuint vert = add(_vertexSrc, GL_VERTEX_SHADER);
+    addShaders |= (vert != -1);
+
     // add fragment shader to shader program
     GLuint frag = add(_fragmentSrc, GL_FRAGMENT_SHADER);
+    addShaders |= (frag != -1);
 
     GLuint geom = -1;
     if (_geomSrc != "") {
         // add geometry shader to shader program
         geom = add(_geomSrc, GL_GEOMETRY_SHADER);
+        addShaders |= (geom != -1);
+    }
+
+    if (!addShaders) {
+        WARN("Delete shader program\n");
+        GL_CHECK(glDeleteProgram(m_program));
+        return false;
     }
 
     GL_CHECK(glLinkProgram(m_program));
@@ -125,7 +138,7 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
         GL_CHECK(glDeleteShader(vert));
         GL_CHECK(glDeleteShader(frag));
 
-        if (frag != -1) {
+        if (geom != -1) {
             GL_CHECK(glDeleteShader(geom));
         }
         return true;
