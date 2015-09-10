@@ -20,6 +20,7 @@ class TestApp : public App {
         uptr<Shader> m_shader;
 
         uptr<Mesh<glm::vec4>> m_geometry;
+        //uptr<RawMesh> m_geometry;
         float m_xrot = 0.f, m_yrot = 0.f;
 };
 OGLWMain(TestApp);
@@ -27,7 +28,8 @@ OGLWMain(TestApp);
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
     m_shader = uptr<Shader>(new Shader("default.glsl"));
-    m_geometry = plane(2.5f, 2.5f, 100, 100);
+    //m_geometry = cube(3.0);
+    m_geometry = plane(2.5f, 2.5f, 5, 5);
 }
 
 void TestApp::update(float _dt) {

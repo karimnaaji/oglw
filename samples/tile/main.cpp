@@ -46,17 +46,19 @@ class TestApp : public OGLW::App {
 
     private:
         uptr<OGLW::Shader> m_shader;
+        uptr<OGLW::Texture> m_texture;
         uptr<OGLW::RawMesh> m_mesh;
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
-OGLWMain(TestApp);
+OGLWMainGamma(TestApp, audioCB);
 
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
 
     m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.glsl"));
     m_mesh = OGLW::loadOBJ("tile.blend");
+    m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
 }
 
 void TestApp::update(float _dt) {
@@ -78,7 +80,9 @@ void TestApp::render(float _dt) {
     OGLW::RenderState::cullFace(GL_FRONT);
 
     m_shader->setUniform("mvp", mvp);
+    m_shader->setUniform("mv", model * view);
     m_shader->setUniform("normalmat", normalMat);
+    m_shader->setUniform("tex", 0);
 
     m_mesh->draw(*m_shader);
 }
