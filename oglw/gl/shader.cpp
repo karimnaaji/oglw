@@ -19,22 +19,34 @@ Shader::Shader(std::string _fragPath, std::string _vertPath, std::string _geomPa
     }
 }
 
+Shader::Shader() {}
+
 Shader::Shader(std::string _programBundlePath) {
-    std::string vert, frag, geom, bundle;
+    std::string bundle;
     stringFromPath(_programBundlePath, &bundle);
 
-    if (getBundleShaderSource("vertex", bundle, &vert) && 
-        getBundleShaderSource("fragment", bundle, &frag)) {
+    if (!loadBundleSource(bundle)) {
+        WARN("Failed to build shader program bundle %s\n", _programBundlePath.c_str());
+    }
+}
+
+bool Shader::loadBundleSource(const std::string& _bundleSource) {
+    std::string vert, frag, geom;
+
+    if (getBundleShaderSource("vertex", _bundleSource, &vert) && 
+        getBundleShaderSource("fragment", _bundleSource, &frag)) {
 
         // geometry shader is optionnal
-        getBundleShaderSource("geom", bundle, &geom, true);
+        getBundleShaderSource("geom", _bundleSource, &geom, true);
 
         if (!load(frag, vert, geom)) {
-            WARN("Failed to build shader program bundle %s\n", _programBundlePath.c_str());
+            return false;
         }
     } else {
-        WARN("Failed to load shader in program bundle %s\n", _programBundlePath.c_str());
+        return false;
     }
+
+    return true;
 }
 
 Shader::~Shader() {
