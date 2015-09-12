@@ -6,6 +6,41 @@
 
 namespace OGLW {
 
+std::unique_ptr<RawMesh> cube(float _size) {
+
+    auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
+        {"position", 3, GL_FLOAT, false, 0},
+        {"color", 3, GL_FLOAT, false, 0},
+        {"normal", 3, GL_FLOAT, false, 0},
+        {"uv", 2, GL_FLOAT, false, 0},
+    }));
+
+    auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_TRIANGLES));
+
+    std::vector<int> indices = {
+        5, 1, 3, 3, 7, 5, // +x
+        6, 2, 0, 0, 4, 6, // -x
+        2, 6, 7, 7, 3, 2, // +y
+        5, 4, 0, 0, 1, 5, // -y
+        0, 2, 3, 3, 1, 0, // +z
+        7, 6, 4, 4, 5, 7  // -z
+    };
+
+    std::vector<Vertex> vertices;
+
+    vertices.push_back({{-1.0 * _size, -1.0 * _size,  1.0 * _size}});
+    vertices.push_back({{ 1.0 * _size, -1.0 * _size,  1.0 * _size}});
+    vertices.push_back({{-1.0 * _size,  1.0 * _size,  1.0 * _size}});
+    vertices.push_back({{ 1.0 * _size,  1.0 * _size,  1.0 * _size}});
+    vertices.push_back({{-1.0 * _size, -1.0 * _size, -1.0 * _size}});
+    vertices.push_back({{ 1.0 * _size, -1.0 * _size, -1.0 * _size}});
+    vertices.push_back({{-1.0 * _size,  1.0 * _size, -1.0 * _size}});
+    vertices.push_back({{ 1.0 * _size,  1.0 * _size, -1.0 * _size}});
+
+    mesh->addVertices(std::move(vertices), std::move(indices));
+    return std::move(mesh);
+}
+
 std::unique_ptr<Mesh<glm::vec4>> quad(float _size) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
         {"position", 2, GL_FLOAT, false, 0},
@@ -37,7 +72,7 @@ std::unique_ptr<Mesh<glm::vec4>> plane(float _width, float _height, uint _nw, ui
         {"uv", 2, GL_FLOAT, false, 0},
     }));
 
-    auto mesh = std::unique_ptr<Mesh<glm::vec4>>(new Mesh<glm::vec4>(layout, GL_LINES));
+    auto mesh = std::unique_ptr<Mesh<glm::vec4>>(new Mesh<glm::vec4>(layout, GL_TRIANGLES));
 
     std::vector<glm::vec4> vertices;
     std::vector<int> indices;
