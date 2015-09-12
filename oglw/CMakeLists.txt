@@ -69,6 +69,7 @@ include_directories(${PROJECT_SOURCE_DIR}/3rdparty/glm)
 # Tiny obj loader
 message(STATUS "Add tinyobjloader")
 set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/tinyobjloader)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/tinyobjloader)
 add_library(tinyobjloader ${PROJECT_SOURCE_DIR}/3rdparty/tinyobjloader/tiny_obj_loader.cc)
 set(LIBRARIES ${LIBRARIES} tinyobjloader)
 
