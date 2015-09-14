@@ -190,10 +190,7 @@ void App::updateFreeFlyCamera(float _dt, char _back, char _forward, char _left, 
         m_camera.translate(_dt * _speed * m_camera.right());
     }
 
-    if (abs(m_cursorX) <= 1000 && abs(m_cursorY) <= 1000) {
-        m_camera.rotate(glm::vec2(_sensitivity * m_cursorY, _sensitivity * m_cursorX));
-    }
-
+    m_camera.rotate(glm::vec2(-_sensitivity * m_cursorY, -_sensitivity * m_cursorX));
     glfwSetCursorPos(m_window, 0, 0);
 }
 

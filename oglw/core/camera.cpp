@@ -79,8 +79,8 @@ void Camera::lookAt(glm::vec3 _point) {
 }
 
 void Camera::normalizeAngles() {
-    m_rotation.y = fmodf(m_rotation.y, 360.0f);
-    m_rotation.y = m_rotation.y < 0.0f ? m_rotation.y + 360.0f : m_rotation.y;
+    //m_rotation.y = fmodf(m_rotation.y, M_PI_2);
+    //m_rotation.y = m_rotation.y < 0.0f ? m_rotation.y + M_PI_2 : m_rotation.y;
 
     if (m_rotation.x > m_maxRotationX) {
         m_rotation.x = m_maxRotationX;

@@ -21,39 +21,28 @@ class TestApp : public App {
 
         uptr<Mesh<glm::vec4>> m_geometry;
         uptr<Skybox> m_skybox;
-        //uptr<RawMesh> m_geometry;
-        float m_xrot = 0.f, m_yrot = 0.f;
 };
 OGLWMain(TestApp);
 
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
     m_shader = uptr<Shader>(new Shader("default.glsl"));
-    //m_geometry = cube(3.0);
     m_geometry = plane(2.5f, 2.5f, 5, 5);
     m_skybox = uptr<Skybox>(new Skybox("fulllg.png"));
 }
 
 void TestApp::update(float _dt) {
-    m_xrot += m_cursorX;
-    m_yrot += m_cursorY;
-
     updateFreeFlyCamera(_dt, 'S', 'W', 'A', 'D', 1e-4f);
 }
 
 void TestApp::render(float _dt) {
     glm::mat4 model;
-    glm::mat4 view = m_camera.getViewMatrix();
-
-    //model = glm::rotate(model, m_xrot * 1e-2f, glm::vec3(0.0, 1.0, 0.0));
-    //model = glm::rotate(model, m_yrot * 1e-2f, glm::vec3(1.0, 0.0, 0.0));
-
-    glm::mat4 mvp = m_camera.getProjectionMatrix() * view * model;
+    glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * model;
 
     m_shader->setUniform("mvp", mvp);
 
     m_geometry->draw(*m_shader);
-    //RenderState::culling(GL_FALSE);
-    //m_skybox->draw(mvp, m_camera.getPosition());
+    RenderState::culling(GL_FALSE);
+    m_skybox->draw(mvp, m_camera.getPosition());
 }
 

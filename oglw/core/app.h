@@ -41,7 +41,7 @@ class App {
         virtual void render(float _dt) = 0;
         virtual void init() = 0;
         void updateFreeFlyCamera(float _dt, char _back, char _forward, char _left, char _right, 
-            float _sensitivity = 1e-4f, float _speed = 3.f);
+            float _sensitivity = 1e-2f, float _speed = 3.f);
 
         void run();
 
