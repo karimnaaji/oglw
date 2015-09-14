@@ -9,12 +9,13 @@
 
 #include "gl.h"
 #include "shader.h"
-#include "mesh.h"
 #include "tiny_obj_loader.h"
+#include "mesh.h"
 #include "camera.h"
 #include "texture.h"
 #include "geometries.h"
 #include "renderState.h"
+#include "skybox.h"
 
 // other
 #include "app.h"

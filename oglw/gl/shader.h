@@ -12,9 +12,13 @@ namespace OGLW {
 class Shader {
 
 public:
+    Shader();
     Shader(std::string _programBundlePath);
     Shader(std::string _fragPath, std::string _vertPath, std::string _geomPath = "");
     ~Shader();
+
+    // load a bundle shader program
+    bool loadBundleSource(const std::string& _bundleSource);
 
     // get the GL shader program handle
     GLuint getProgram() const;
