@@ -18,7 +18,6 @@ class TestApp : public App {
 
     private:
         uptr<Shader> m_shader;
-
         uptr<Mesh<glm::vec4>> m_geometry;
         uptr<Skybox> m_skybox;
 };
@@ -40,9 +39,7 @@ void TestApp::render(float _dt) {
     glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * model;
 
     m_shader->setUniform("mvp", mvp);
-
     m_geometry->draw(*m_shader);
-    RenderState::culling(GL_FALSE);
     m_skybox->draw(mvp, m_camera.getPosition());
 }
 
