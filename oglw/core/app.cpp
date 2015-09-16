@@ -22,6 +22,8 @@ App::App(std::string _name, int _width, int _height) :
 App::~App() {
     INFO("App destroy\n");
 
+    printGLTrace();
+
     if (m_textRendering) {
         glfonsDelete(m_fontContext);
     }
