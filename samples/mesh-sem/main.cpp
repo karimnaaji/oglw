@@ -55,7 +55,8 @@ class TestApp : public OGLW::App {
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
-OGLWMainGamma(TestApp, audioCB);
+// OGLWMainGamma(TestApp, audioCB);
+OGLWMain(TestApp);
 
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
@@ -67,6 +68,7 @@ void TestApp::init() {
     m_quad = OGLW::quad(1.f);
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
     OGLW::RenderTargetSetup setup;
+    // setup.useDepthTexture = true;
     setup.useDepth = true;
     m_renderTarget = std::make_unique<OGLW::RenderTarget>(setup);
     m_renderTarget->create(800, 600);
@@ -121,8 +123,10 @@ void TestApp::render(float _dt) {
 
     OGLW::RenderTarget::applyDefault(800, 600);
 
-    m_renderTarget->bindRenderTexture(0);
+    m_renderTarget->bindRenderTexture(0, 1);
     m_fullQuadShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
+    m_fullQuadShader->setUniform("near", m_camera.getNear());
+    m_fullQuadShader->setUniform("far", m_camera.getFar());
     m_fullQuadShader->setUniform("tex", 0);
     m_quad->draw(*m_fullQuadShader);
 }

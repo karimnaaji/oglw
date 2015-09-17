@@ -8,7 +8,12 @@ namespace OGLW {
 
 struct RenderTargetSetup {
     bool useDepth = false;
+    bool useDepthTexture = false;
     bool useStencil = false;
+
+    bool isValid() {
+        return !((useDepth || useStencil) && useDepthTexture);
+    }
 };
 
 class RenderTarget {
@@ -26,17 +31,21 @@ public:
     // apply the default render target
     static void applyDefault(uint _width, uint _height);
     // bind the render texture to the specified slot
-    void bindRenderTexture(GLuint _slot);
+    void bindRenderTexture(GLuint _slot, GLuint _depthTextureSlot = 0);
 
 private:
     // the render texture
     std::unique_ptr<Texture> m_texture;
+    // the render texture
+    std::unique_ptr<Texture> m_depthTexture;
     // the GL framebuffer handle
     GLuint m_fbo;
     // the render buffer depth/stencil
     GLuint m_renderBuffer;
     // the render target setup options
     RenderTargetSetup m_setup;
+    // whether the render target is valid
+    bool m_isValid;
 
 };
 

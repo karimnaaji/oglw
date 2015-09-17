@@ -8,11 +8,16 @@ RenderTarget::RenderTarget(RenderTargetSetup _setup) {
     m_renderBuffer = 0;
     m_fbo = 0;
     m_setup = _setup;
+    m_isValid = _setup.isValid();
 }
 
 void RenderTarget::create(uint _width, uint _height) {
-    if (m_fbo != 0) {
+    if (m_fbo) {
         return;
+    }
+
+    if (!m_isValid) {
+        WARN("Invalid render target\n");
     }
 
     GLint framebufferBound = 0;
@@ -20,7 +25,7 @@ void RenderTarget::create(uint _width, uint _height) {
 
     GL_CHECK(glGenFramebuffers(1, &m_fbo));
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
-    m_texture = std::make_unique<OGLW::Texture>(_width, _height);
+    m_texture = std::make_unique<Texture>(_width, _height);
     m_texture->update(0);
     GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->getGlHandle(), 0));
 
@@ -36,12 +41,22 @@ void RenderTarget::create(uint _width, uint _height) {
             GL_CHECK(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, _width, _height));
         }
         GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, renderBufferTarget, GL_RENDERBUFFER, m_renderBuffer));
+    } else if (m_setup.useDepthTexture) {
+        TextureOptions depthTextureOptions = {
+            GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT,
+            {GL_NEAREST, GL_NEAREST},
+            {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}
+        };
+        m_depthTexture = std::make_unique<Texture>(_width, _height, depthTextureOptions);
+        m_depthTexture->update(0);
+        GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture->getGlHandle(), 0));
     }
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     GL_CHECK(void(0));
     if (GL_FRAMEBUFFER_COMPLETE != status) {
         ERROR("Framebuffer incomplete\n");
+        m_isValid = false;
     }
 
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, framebufferBound));
@@ -58,20 +73,39 @@ void RenderTarget::applyDefault(uint _width, uint _height) {
     GL_CHECK(glClear(clearBufferBits));
 }
 
-void RenderTarget::bindRenderTexture(GLuint _slot) {
+void RenderTarget::bindRenderTexture(GLuint _slot, GLuint _depthTextureSlot) {
+    if (m_depthTexture && _slot == _depthTextureSlot) {
+        WARN("Binding render target textures to same slots\n");
+    }
+
     m_texture->bind(_slot);
+
+    if (m_depthTexture) {
+        m_depthTexture->bind(_depthTextureSlot);
+    }
 }
 
 void RenderTarget::apply(uint _width, uint _height) {
+    if (!m_isValid) {
+        WARN("Invalid render target\n");
+        return;
+    }
+
     m_texture->resize(_width, _height);
     m_texture->update(0);
+
+    if (m_depthTexture) {
+        m_depthTexture->resize(_width, _height);
+        m_depthTexture->update(0);
+    }
+
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
     GL_CHECK(glViewport(0, 0, _width, _height));
     GL_CHECK(glDisable(GL_SCISSOR_TEST));
     GLenum clearBufferBits = GL_COLOR_BUFFER_BIT;
     GL_CHECK(glClearColor(0.0, 0.0, 0.0, 0.0));
 
-    if (m_setup.useDepth) {
+    if (m_setup.useDepth || m_setup.useDepthTexture) {
         RenderState::depthWrite(m_setup.useDepth);
         RenderState::stencilWrite(m_setup.useStencil);
         GL_CHECK(glClearDepth(1.0));

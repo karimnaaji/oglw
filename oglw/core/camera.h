@@ -29,6 +29,9 @@ public:
 
     void lookAt(glm::vec3 _point);
     void normalizeAngles();
+    float getNear() const { return m_near; }
+    float getFar() const { return m_far; }
+    float getFov() const { return m_fov; }
 
 private:
     glm::vec3 m_position;
