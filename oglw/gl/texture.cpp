@@ -117,6 +117,10 @@ void Texture::update(GLuint _textureUnit) {
 }
 
 void Texture::resize(const uint _width, const uint _height) {
+    if (m_width == _width && m_height == _height) {
+        return;
+    }
+    
     m_width = _width;
     m_height = _height;
 

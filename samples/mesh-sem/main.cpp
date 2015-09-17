@@ -95,7 +95,7 @@ void TestApp::render(float _dt) {
 
     /// Apply first render target
     m_renderTarget->apply(800, 600);
-    
+
     OGLW::RenderState::depthWrite(GL_FALSE);
     OGLW::RenderState::cullFace(GL_BACK);
 
@@ -117,10 +117,14 @@ void TestApp::render(float _dt) {
 
     /// Draw to default frame buffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, 800, 600);
     m_renderTarget->getRenderTexture()->bind(0);
 
     OGLW::RenderState::depthWrite(GL_FALSE);
-    OGLW::RenderState::culling(GL_FALSE);
+    OGLW::RenderState::culling(GL_TRUE);
+    OGLW::RenderState::cullFace(GL_BACK);
+
     m_fullQuadShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
     m_fullQuadShader->setUniform("tex", 0);
     m_quad->draw(*m_fullQuadShader);

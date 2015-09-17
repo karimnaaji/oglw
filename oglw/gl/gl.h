@@ -10,6 +10,8 @@ namespace OGLW {
 #ifdef OGLW_DEBUG
 #ifdef OGLW_TRACE
 #define TRACE(STMT, FILE, LINE) _Trace::glTrace(STMT, FILE, LINE);
+#else
+#define TRACE(STMT, FILE, LINE)
 #endif
 #define GL_CHECK(STMT) do { \
     STMT; \

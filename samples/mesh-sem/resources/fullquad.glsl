@@ -19,7 +19,7 @@ out vec4 outColour;
 
 void main(void) {
     vec2 uv = gl_FragCoord.xy / resolution;
-    outColour = texture(tex, uv);
+    outColour = vec4(texture(tex, uv).rgb, 1.0);
 }
 
 #pragma end:fragment

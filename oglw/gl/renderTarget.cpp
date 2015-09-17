@@ -59,7 +59,7 @@ void RenderTarget::apply(unsigned int _width, unsigned int _height) {
     if (m_setup.useDepth) {
         RenderState::depthWrite(m_setup.useDepth);
         RenderState::stencilWrite(m_setup.useStencil);
-        GL_CHECK(glClearDepth(0.0));
+        GL_CHECK(glClearDepth(1.0));
         if (m_setup.useStencil) {
             GL_CHECK(glClearStencil(0));
         }
