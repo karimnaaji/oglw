@@ -8,6 +8,9 @@ namespace OGLW {
 
 struct RenderTargetSetup {
     bool useDepth = false;
+
+    // Using the depth texture as default render target 
+    // would disable color draw buffer read and write
     bool useDepthTexture = false;
     bool useStencil = false;
 

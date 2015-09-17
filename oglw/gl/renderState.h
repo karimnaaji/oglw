@@ -104,6 +104,8 @@ using DepthRange = StateWrap<FUN(glDepthRange), GLclampd, GLclampd>;
 using ShaderProgram = StateWrap<FUN(glUseProgram), GLuint>;
 using TextureUnit = StateWrap<FUN(activeTextureUnit), GLuint>;
 using Texture = StateWrap<FUN(bindTexture), GLenum, GLuint>;
+using DrawBuffer = StateWrap<FUN(glDrawBuffer), GLenum>;
+using ReadBuffer = StateWrap<FUN(glReadBuffer), GLenum>;
 
 extern DepthTest depthTest;
 extern DepthWrite depthWrite;
@@ -123,6 +125,8 @@ extern DepthRange depthRange;
 extern ShaderProgram shaderProgram;
 extern TextureUnit textureUnit;
 extern Texture texture;
+extern DrawBuffer drawBuffer;
+extern ReadBuffer readBuffer;
 
 } // RenderState
 } // OGLW

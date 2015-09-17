@@ -67,28 +67,9 @@ void Mesh<T>::setDirty(GLintptr _byteOffset, GLsizei _byteSize) {
         m_dirtyOffset = _byteOffset;
         m_dirty = true;
     } else {
-        GLsizei dBytes = std::abs(_byteOffset - m_dirtyOffset);
-        GLintptr nOff = _byteOffset + _byteSize;
-        GLintptr pOff = m_dirtySize + m_dirtyOffset;
-
-        if (_byteOffset < m_dirtyOffset) {
-            // update before the old buffer offset
-            m_dirtyOffset = _byteOffset;
-
-            // merge sizes
-            if (nOff > pOff) {
-                m_dirtySize = _byteSize;
-            } else {
-                m_dirtySize += dBytes;
-            }
-
-            m_dirty = true;
-
-        } else if (nOff > pOff) {
-            // update starting after the old buffer offset
-            m_dirtySize = dBytes + _byteSize;
-            m_dirty = true;
-        }
+        size_t end = std::max(m_dirtyOffset + m_dirtySize, _byteOffset + _byteSize);
+        m_dirtyOffset = std::min(m_dirtyOffset, _byteOffset);
+        m_dirtySize = end - m_dirtyOffset;
     }
 }
 

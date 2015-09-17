@@ -22,6 +22,8 @@ DepthRange depthRange;
 ShaderProgram shaderProgram;
 TextureUnit textureUnit;
 Texture texture;
+DrawBuffer drawBuffer;
+ReadBuffer readBuffer;
 GLint maxCombinedTextureUnits;
 
 GLuint getTextureUnit(GLuint _unit) {
@@ -52,6 +54,8 @@ void initialize() {
     RenderState::cullFace.init(GL_BACK);
     RenderState::frontFace.init(GL_CCW);
     RenderState::blending.init(false);
+    RenderState::drawBuffer.init(GL_BACK);
+    RenderState::readBuffer.init(GL_BACK);
     RenderState::shaderProgram.init(std::numeric_limits<unsigned int>::max(), false);
     RenderState::texture.init(GL_TEXTURE_2D, std::numeric_limits<unsigned int>::max(), false);
     RenderState::texture.init(GL_TEXTURE_CUBE_MAP, std::numeric_limits<unsigned int>::max(), false);

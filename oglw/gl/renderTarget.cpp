@@ -71,6 +71,10 @@ void RenderTarget::applyDefault(uint _width, uint _height) {
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
     GL_CHECK(glViewport(0, 0, _width, _height));
     GL_CHECK(glClear(clearBufferBits));
+
+    // enable back color buffer read/write
+    RenderState::drawBuffer(GL_BACK);
+    RenderState::readBuffer(GL_BACK);
 }
 
 void RenderTarget::bindRenderTexture(GLuint _slot, GLuint _depthTextureSlot) {
@@ -105,7 +109,7 @@ void RenderTarget::apply(uint _width, uint _height) {
     GLenum clearBufferBits = GL_COLOR_BUFFER_BIT;
     GL_CHECK(glClearColor(0.0, 0.0, 0.0, 0.0));
 
-    if (m_setup.useDepth || m_setup.useDepthTexture) {
+    if (m_setup.useDepth) {
         RenderState::depthWrite(m_setup.useDepth);
         RenderState::stencilWrite(m_setup.useStencil);
         GL_CHECK(glClearDepth(1.0));
@@ -113,6 +117,16 @@ void RenderTarget::apply(uint _width, uint _height) {
             GL_CHECK(glClearStencil(0));
         }
         clearBufferBits |= m_setup.useStencil ? GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT : GL_DEPTH_BUFFER_BIT;
+    }
+
+    if (m_setup.useDepthTexture) {
+        // disable render to color buffer and clear only depth buffer
+        clearBufferBits = GL_DEPTH_BUFFER_BIT;
+        RenderState::drawBuffer(GL_NONE);
+        RenderState::readBuffer(GL_NONE);
+    } else {
+        RenderState::drawBuffer(GL_BACK);
+        RenderState::readBuffer(GL_BACK);
     }
 
     GL_CHECK(glClear(clearBufferBits));
