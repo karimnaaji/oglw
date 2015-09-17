@@ -6,16 +6,13 @@ layout (location = 1) in vec3 normal;
 
 uniform mat4 mvp;
 uniform mat4 mv;
+uniform mat4 depthMVP;
 
-out vec3 incident;
-out vec3 n;
+out vec4 shadowCoord;
 
 void main() {
-    vec4 eyep = vec4(position, 1.0);
-    incident = normalize(vec3(mv * eyep));
-    n = normal;
-
     gl_Position = mvp * vec4(position, 1.0);
+    shadowCoord = depthMVP * vec4(position, 1);
 }
 
 #pragma end:vertex
@@ -23,25 +20,31 @@ void main() {
 #pragma begin:fragment
 #version 330
 
-uniform sampler2D tex;
 uniform mat3 normalmat;
+uniform sampler2D depthMap;
 
 out vec4 outColour;
+in vec4 shadowCoord;
 
-in vec3 incident;
-in vec3 n;
+float visibility(vec4 lightSpace) {
+    vec3 shadowPosition = lightSpace.xyz / lightSpace.w;
+    vec2 uvs;
+    uvs.x = 0.5 * shadowPosition.x + 0.5;
+    uvs.y = 0.5 * shadowPosition.y + 0.5;
+    float z = 0.5 * shadowPosition.z + 0.5;
+    float depth = texture(depthMap, uvs).x;
+
+    if (depth < (z - 0.05)) {
+        return 0.5;
+    } else {
+        return 1.0;
+    }
+}
 
 void main(void) {
-    vec3 r = reflect(incident, normalize(normalmat * n));
-
-    float m = 2.0 * sqrt(
-        pow(r.x, 2.0) +
-        pow(r.y, 2.0)  +
-        pow(r.z + 1.0, 2.0)
-    );
-    vec2 uv = r.xy / m + 0.5;
-
-    outColour = vec4(texture(tex, uv).rgb, 1.0);
+    outColour = vec4(vec3(visibility(shadowCoord)), 1.0);
+    //outColour = vec4(shadowCoord.xy, 0.0, 1.0);
+    //outColour = vec4(vec3(shadowCoord.z), 1.0);
 }
 
 #pragma end:fragment

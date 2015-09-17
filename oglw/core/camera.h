@@ -25,13 +25,15 @@ public:
 
     void translate(glm::vec3 _vec);
     void rotate(glm::vec2 _rotation);
-    void setFov(float _fov);
 
     void lookAt(glm::vec3 _point);
     void normalizeAngles();
     float getNear() const { return m_near; }
     float getFar() const { return m_far; }
     float getFov() const { return m_fov; }
+    void setNear(float _near) { m_near = _near; }
+    void setFar(float _far) { m_far = _far; }
+    void setFov(float _fov) { m_fov = _fov; }
 
 private:
     glm::vec3 m_position;

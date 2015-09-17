@@ -32,9 +32,9 @@ public:
     // get the render target texture handle
     const std::unique_ptr<Texture>& getRenderTexture() const { return m_texture; }
     // apply the default render target
-    static void applyDefault(uint _width, uint _height);
+    static void applyDefault(uint _width, uint _height, bool _clear = false);
     // bind the render texture to the specified slot
-    void bindRenderTexture(GLuint _slot, GLuint _depthTextureSlot = 0);
+    void bindRenderTexture(GLuint _slot);
 
 private:
     // the render texture
