@@ -74,11 +74,11 @@ void Texture::generate(GLuint _textureUnit) {
 
     bind(_textureUnit);
 
-    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, m_options.m_filtering.m_min));
-    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, m_options.m_filtering.m_mag));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, m_options.filtering.min));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, m_options.filtering.mag));
 
-    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_S, m_options.m_wrapping.m_wraps));
-    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_T, m_options.m_wrapping.m_wrapt));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_S, m_options.wrapping.wraps));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_T, m_options.wrapping.wrapt));
 }
 
 void Texture::update(GLuint _textureUnit) {
@@ -105,8 +105,8 @@ void Texture::update(GLuint _textureUnit) {
 
     // resize or push data
     if (data || m_shouldResize) {
-        GL_CHECK(glTexImage2D(m_target, 0, m_options.m_internalFormat, m_width, m_height, 0, m_options.m_format,
-                     m_options.m_type, data));
+        GL_CHECK(glTexImage2D(m_target, 0, m_options.internalFormat, m_width, m_height, 0, m_options.format,
+                     m_options.type, data));
         m_shouldResize = false;
 
         if (data && m_generateMipmaps) {

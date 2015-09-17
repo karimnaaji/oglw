@@ -42,11 +42,17 @@ void RenderTarget::create(uint _width, uint _height) {
         }
         GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, renderBufferTarget, GL_RENDERBUFFER, m_renderBuffer));
     } else if (m_setup.useDepthTexture) {
-        TextureOptions depthTextureOptions = {
-            GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_FLOAT,
-            {GL_NEAREST, GL_NEAREST},
-            {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}
-        };
+        DepthTextureOptions depthTextureOptions;
+
+        depthTextureOptions.internalFormat = GL_DEPTH_COMPONENT32;
+        depthTextureOptions.format = GL_DEPTH_COMPONENT;
+        depthTextureOptions.type = GL_FLOAT;
+        depthTextureOptions.filtering = { GL_NEAREST, GL_NEAREST };
+        depthTextureOptions.wrapping = { GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
+        depthTextureOptions.textureMode = GL_INTENSITY;
+        depthTextureOptions.compareMode = GL_TEXTURE_COMPARE_MODE;
+        depthTextureOptions.compareFunc = RenderState::depthFunc.get<0>();
+
         m_depthTexture = std::make_unique<Texture>(_width, _height, depthTextureOptions);
         m_depthTexture->update(0);
         GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture->getGlHandle(), 0));

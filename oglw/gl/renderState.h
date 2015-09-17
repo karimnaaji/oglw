@@ -55,7 +55,6 @@ struct StateWrap {
     using Type = std::tuple<Args...>;
     Type params;
 
-
     void init(Args... _param, bool _force = true) {
         params = std::make_tuple(_param...);
         if (_force) {
@@ -77,6 +76,10 @@ struct StateWrap {
         return _params == params;
     }
 
+    template<int S>
+    inline auto get() {
+        return std::get<S>(params);
+    }
 
     template<int ...S>
     inline void call(seq<S...>) {
