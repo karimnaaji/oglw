@@ -80,7 +80,7 @@ void TextureCube::update(GLuint _textureUnit) {
     for (int i = 0; i < 6; ++i) {
         Face& f = m_faces[i];
         GL_CHECK(glTexImage2D(CubeMapFace[i], 0, m_options.m_internalFormat, m_width, m_height, 0, m_options.m_format,
-                     GL_UNSIGNED_BYTE, f.m_data.data()));
+                     m_options.m_type, f.m_data.data()));
         f.m_data.clear();
     }
 }

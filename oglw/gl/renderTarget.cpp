@@ -43,7 +43,7 @@ void RenderTarget::create(uint _width, uint _height) {
         GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, renderBufferTarget, GL_RENDERBUFFER, m_renderBuffer));
     } else if (m_setup.useDepthTexture) {
         TextureOptions depthTextureOptions = {
-            GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT,
+            GL_DEPTH_COMPONENT32, GL_DEPTH_COMPONENT, GL_FLOAT,
             {GL_NEAREST, GL_NEAREST},
             {GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE}
         };

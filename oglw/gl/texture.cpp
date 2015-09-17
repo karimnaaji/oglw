@@ -106,7 +106,7 @@ void Texture::update(GLuint _textureUnit) {
     // resize or push data
     if (data || m_shouldResize) {
         GL_CHECK(glTexImage2D(m_target, 0, m_options.m_internalFormat, m_width, m_height, 0, m_options.m_format,
-                     GL_UNSIGNED_BYTE, data));
+                     m_options.m_type, data));
         m_shouldResize = false;
 
         if (data && m_generateMipmaps) {

@@ -22,6 +22,7 @@ struct TextureWrapping {
 struct TextureOptions {
     GLenum m_internalFormat = GL_RGBA8;
     GLenum m_format = GL_RGBA;
+    GLenum m_type = GL_UNSIGNED_BYTE;
     TextureFiltering m_filtering;
     TextureWrapping m_wrapping;
 };
