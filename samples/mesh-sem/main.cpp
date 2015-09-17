@@ -68,8 +68,8 @@ void TestApp::init() {
     m_quad = OGLW::quad(1.f);
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
     OGLW::RenderTargetSetup setup;
-    // setup.useDepthTexture = true;
-    setup.useDepth = true;
+    setup.useDepthTexture = true;
+    // setup.useDepth = true;
     m_renderTarget = std::make_unique<OGLW::RenderTarget>(setup);
     m_renderTarget->create(800, 600);
 

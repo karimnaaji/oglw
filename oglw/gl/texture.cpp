@@ -79,6 +79,12 @@ void Texture::generate(GLuint _textureUnit) {
 
     GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_S, m_options.wrapping.wraps));
     GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_T, m_options.wrapping.wrapt));
+
+    if (m_options.isDepthTexture) {
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, m_options.depthOptions.textureMode));
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, m_options.depthOptions.compareMode));
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, m_options.depthOptions.compareFunc));
+    }
 }
 
 void Texture::update(GLuint _textureUnit) {

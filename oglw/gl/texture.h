@@ -19,18 +19,20 @@ struct TextureWrapping {
     GLenum wrapt = GL_CLAMP_TO_EDGE;
 };
 
+struct DepthTextureOptions {
+    GLenum textureMode = GL_INTENSITY;
+    GLenum compareMode = GL_TEXTURE_COMPARE_MODE;
+    GLenum compareFunc = GL_LEQUAL;
+};
+
 struct TextureOptions {
     GLenum internalFormat = GL_RGBA8;
     GLenum format = GL_RGBA;
     GLenum type = GL_UNSIGNED_BYTE;
     TextureFiltering filtering;
     TextureWrapping wrapping;
-};
-
-struct DepthTextureOptions : TextureOptions {
-    GLenum textureMode = GL_INTENSITY;
-    GLenum compareMode = GL_TEXTURE_COMPARE_MODE;
-    GLenum compareFunc = GL_LEQUAL;
+    bool isDepthTexture = false;
+    DepthTextureOptions depthOptions;
 };
 
 class Texture {
