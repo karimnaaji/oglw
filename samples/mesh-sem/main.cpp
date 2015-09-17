@@ -126,4 +126,3 @@ void TestApp::render(float _dt) {
     m_fullQuadShader->setUniform("tex", 0);
     m_quad->draw(*m_fullQuadShader);
 }
-

@@ -85,13 +85,13 @@ void RenderTarget::apply(uint _width, uint _height) {
 }
 
 RenderTarget::~RenderTarget() {
-    if (m_fbo != 0) {
+    if (m_fbo) {
         GL_CHECK(glDeleteFramebuffers(1, &m_fbo));
     }
 
-    if (m_renderBuffer != 0) {
+    if (m_renderBuffer) {
         GL_CHECK(glDeleteRenderbuffers(1, &m_renderBuffer));
     }
 }
 
-}
+} // OGLW

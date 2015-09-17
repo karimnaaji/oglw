@@ -3,6 +3,7 @@
 #include "stb_image.h"
 #include "core/utils.h"
 #include "core/log.h"
+#include "renderState.h"
 
 namespace OGLW {
 
@@ -43,12 +44,18 @@ Texture(0, 0, _options, _generateMipmaps)
 }
 
 Texture::~Texture() {
-    GL_CHECK(glDeleteTextures(1, &m_glHandle));
+    if (m_glHandle) {
+        GL_CHECK(glDeleteTextures(1, &m_glHandle));
+
+        if (RenderState::texture.compare(m_target, m_glHandle)) {
+            RenderState::texture.init(m_target, 0, false);
+        }
+    }
 }
 
 void Texture::bind(GLuint _textureSlot) {
-    GL_CHECK(glActiveTexture(getTextureUnit(_textureSlot)));
-    GL_CHECK(glBindTexture(m_target, m_glHandle));
+    RenderState::textureUnit(_textureSlot);
+    RenderState::texture(m_target, m_glHandle);
 }
 
 void Texture::setData(const GLuint* _data, uint _dataSize) {
@@ -126,14 +133,6 @@ void Texture::resize(const uint _width, const uint _height) {
 
     m_shouldResize = true;
     m_dirty = true;
-}
-
-GLuint Texture::getTextureUnit(GLuint _unit) {
-    if (_unit >= GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS) {
-        WARN("trying to access unavailable texture unit\n");
-    }
-
-    return GL_TEXTURE0 + _unit;
 }
 
 } // OGLW

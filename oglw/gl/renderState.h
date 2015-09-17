@@ -8,6 +8,11 @@ namespace OGLW {
 
 namespace RenderState {
 
+void initialize();
+GLuint getTextureUnit(GLuint _unit);
+void activeTextureUnit(GLuint _unit);
+void bindTexture(GLenum _target, GLuint _textureId);
+
 template <typename T>
 class State {
 public:
@@ -97,6 +102,8 @@ using CullFace = StateWrap<FUN(glCullFace), GLenum>;
 using ClearDepth = StateWrap<FUN(glClearDepth), GLclampd>;
 using DepthRange = StateWrap<FUN(glDepthRange), GLclampd, GLclampd>;
 using ShaderProgram = StateWrap<FUN(glUseProgram), GLuint>;
+using TextureUnit = StateWrap<FUN(activeTextureUnit), GLuint>;
+using Texture = StateWrap<FUN(bindTexture), GLenum, GLuint>;
 
 extern DepthTest depthTest;
 extern DepthWrite depthWrite;
@@ -114,8 +121,8 @@ extern Culling culling;
 extern ClearDepth clearDepth;
 extern DepthRange depthRange;
 extern ShaderProgram shaderProgram;
-
-void initialize();
+extern TextureUnit textureUnit;
+extern Texture texture;
 
 } // RenderState
 } // OGLW

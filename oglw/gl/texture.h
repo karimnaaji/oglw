@@ -52,8 +52,6 @@ public:
 protected:
     // generate the gl handle and bind it at the specified unit
     void generate(GLuint _textureUnit);
-    // get the texture unit from a slot
-    static GLuint getTextureUnit(GLuint _slot);
 
     TextureOptions m_options;
     std::vector<GLuint> m_data;
@@ -67,3 +65,4 @@ protected:
 };
 
 } // OGLW
+
