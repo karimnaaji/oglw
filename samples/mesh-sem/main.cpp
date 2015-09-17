@@ -47,9 +47,11 @@ class TestApp : public OGLW::App {
     private:
         uptr<OGLW::Shader> m_shader;
         uptr<OGLW::Shader> m_backgroundShader;
+        uptr<OGLW::Shader> m_fullQuadShader;
         uptr<OGLW::Texture> m_texture;
         uptr<OGLW::RawMesh> m_mesh;
         uptr<OGLW::Mesh<glm::vec4>> m_quad;
+        uptr<OGLW::RenderTarget> m_renderTarget;
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
@@ -59,10 +61,15 @@ void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
 
     m_shader = uptr<OGLW::Shader>(new OGLW::Shader("default.glsl"));
+    m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.glsl"));
+    m_fullQuadShader = uptr<OGLW::Shader>(new OGLW::Shader("fullquad.glsl"));
     m_mesh = OGLW::loadOBJ("suzanne.blend");
     m_quad = OGLW::quad(1.f);
-    m_backgroundShader = uptr<OGLW::Shader>(new OGLW::Shader("background.glsl"));
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
+    OGLW::RenderTargetSetup setup;
+    setup.useDepth = true;
+    m_renderTarget = std::make_unique<OGLW::RenderTarget>(setup);
+    m_renderTarget->create(800, 600);
 
     displayText(30.f, {10.f, 30.f}, "OGLW");
     displayText(15.f, {10.f, 45.f}, "::TestApp");
@@ -76,6 +83,7 @@ void TestApp::update(float _dt) {
 }
 
 void TestApp::render(float _dt) {
+    /// Compute view matrices
     glm::mat4 model;
     glm::mat4 view = m_camera.getViewMatrix();
 
@@ -85,26 +93,36 @@ void TestApp::render(float _dt) {
     glm::mat4 mvp = m_camera.getProjectionMatrix() * view * model;
     glm::mat3 normalMat = glm::transpose(glm::inverse(glm::mat3(view)));
 
-    m_texture->bind(0);
+    /// Apply first render target
+    m_renderTarget->apply(800, 600);
 
     OGLW::RenderState::depthWrite(GL_FALSE);
     OGLW::RenderState::cullFace(GL_BACK);
 
+    m_texture->bind(0);
     m_backgroundShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
     m_backgroundShader->setUniform("tex", 0);
-
     m_quad->draw(*m_backgroundShader);
 
     OGLW::RenderState::depthWrite(GL_TRUE);
     OGLW::RenderState::culling(GL_FALSE);
-    OGLW::RenderState::cullFace(GL_FRONT);
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("mv", model * view);
     m_shader->setUniform("normalmat", normalMat);
     m_shader->setUniform("tex", 0);
     m_shader->setUniform("f", f);
-
     m_mesh->draw(*m_shader);
-}
 
+    /// Draw to default frame buffer
+    OGLW::RenderState::depthWrite(GL_FALSE);
+    OGLW::RenderState::culling(GL_TRUE);
+    OGLW::RenderState::cullFace(GL_BACK);
+
+    OGLW::RenderTarget::applyDefault(800, 600);
+
+    m_renderTarget->bindRenderTexture(0);
+    m_fullQuadShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
+    m_fullQuadShader->setUniform("tex", 0);
+    m_quad->draw(*m_fullQuadShader);
+}
