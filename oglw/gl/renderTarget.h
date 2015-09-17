@@ -18,11 +18,15 @@ public:
     ~RenderTarget();
 
     // creates the render target and initialize the renderTexture/renderBuffer
-    void create(unsigned int _width, unsigned int _height);
+    void create(uint _width, uint _height);
     // apply a render target for anything going to be rendered in the viewport
-    void apply(unsigned int _width, unsigned int _height);
+    void apply(uint _width, uint _height);
     // get the render target texture handle
     const std::unique_ptr<Texture>& getRenderTexture() const { return m_texture; }
+    // apply the default render target
+    static void applyDefault(uint _width, uint _height);
+    // bind the render texture to the specified slot
+    void bindRenderTexture(GLuint _slot);
 
 private:
     // the render texture

@@ -55,7 +55,7 @@ class TestApp : public OGLW::App {
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
-OGLWMain(TestApp);
+OGLWMainGamma(TestApp, audioCB);
 
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
@@ -106,7 +106,6 @@ void TestApp::render(float _dt) {
 
     OGLW::RenderState::depthWrite(GL_TRUE);
     OGLW::RenderState::culling(GL_FALSE);
-    OGLW::RenderState::cullFace(GL_FRONT);
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("mv", model * view);
@@ -116,15 +115,13 @@ void TestApp::render(float _dt) {
     m_mesh->draw(*m_shader);
 
     /// Draw to default frame buffer
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, 800, 600);
-    m_renderTarget->getRenderTexture()->bind(0);
-
     OGLW::RenderState::depthWrite(GL_FALSE);
     OGLW::RenderState::culling(GL_TRUE);
     OGLW::RenderState::cullFace(GL_BACK);
 
+    OGLW::RenderTarget::applyDefault(800, 600);
+
+    m_renderTarget->bindRenderTexture(0);
     m_fullQuadShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
     m_fullQuadShader->setUniform("tex", 0);
     m_quad->draw(*m_fullQuadShader);

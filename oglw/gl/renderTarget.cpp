@@ -10,7 +10,7 @@ RenderTarget::RenderTarget(RenderTargetSetup _setup) {
     m_setup = _setup;
 }
 
-void RenderTarget::create(unsigned int _width, unsigned int _height) {
+void RenderTarget::create(uint _width, uint _height) {
     if (m_fbo != 0) {
         return;
     }
@@ -47,7 +47,22 @@ void RenderTarget::create(unsigned int _width, unsigned int _height) {
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, framebufferBound));
 }
 
-void RenderTarget::apply(unsigned int _width, unsigned int _height) {
+void RenderTarget::applyDefault(uint _width, uint _height) {
+    GLenum clearBufferBits = GL_COLOR_BUFFER_BIT;
+
+    clearBufferBits |= RenderState::depthWrite.compare(GL_TRUE) ? clearBufferBits : GL_DEPTH_BUFFER_BIT;
+    clearBufferBits |= RenderState::stencilWrite.compare(GL_TRUE) ? clearBufferBits : GL_STENCIL_BUFFER_BIT;
+
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    GL_CHECK(glViewport(0, 0, _width, _height));
+    GL_CHECK(glClear(clearBufferBits));
+}
+
+void RenderTarget::bindRenderTexture(GLuint _slot) {
+    m_texture->bind(_slot);
+}
+
+void RenderTarget::apply(uint _width, uint _height) {
     m_texture->resize(_width, _height);
     m_texture->update(0);
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, m_fbo));
