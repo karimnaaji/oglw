@@ -76,7 +76,7 @@ void TestApp::render(float _dt) {
     glm::mat3 normalMat;
 
     /// Apply first render target to draw scene depth from light caster
-    glm::vec3 shadowCasterPos = glm::vec3(0.0, 0.1, 2.5);
+    glm::vec3 shadowCasterPos = glm::vec3(0.0 + cos(m_globalTime), 0.1 - sin(m_globalTime) * 0.5, 2.5 + 0.2 * cos(m_globalTime));
     m_shadowCasterCamera->setPosition(shadowCasterPos);
 
     glm::mat4 depthMVP = m_shadowCasterCamera->getProjectionMatrix() * m_shadowCasterCamera->getViewMatrix();

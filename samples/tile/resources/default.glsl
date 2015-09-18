@@ -42,7 +42,7 @@ float hardShadow(vec4 shadowCoord, float bias) {
 
 float PCF(vec2 texelSize, vec4 shadowCoord, float bias) {
     float result = 0.0;
-    vec2 offset = texelSize * shadowCoord.w;
+    vec2 offset = texelSize * shadowCoord.w * 3.0;
 
     result += hardShadow(shadowCoord + vec4(vec2(-1.5, -1.5) * offset, 0.0, 0.0), bias);
     result += hardShadow(shadowCoord + vec4(vec2(-1.5, -0.5) * offset, 0.0, 0.0), bias);
