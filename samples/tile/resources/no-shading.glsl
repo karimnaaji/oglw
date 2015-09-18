@@ -17,7 +17,7 @@ void main() {
 out vec4 outColour;
 
 void main(void) {
-    outColour = vec4(1.0);
+    outColour = vec4(0.0, 0.4, 0.4, 1.0);
 }
 
 #pragma end:fragment

@@ -47,7 +47,7 @@ void RenderTarget::create(uint _width, uint _height) {
     } else if (m_setup.useDepthTexture) {
         TextureOptions depthTextureOptions;
 
-        depthTextureOptions.internalFormat = GL_DEPTH_COMPONENT16;
+        depthTextureOptions.internalFormat = GL_DEPTH_COMPONENT32;
         depthTextureOptions.format = GL_DEPTH_COMPONENT;
         depthTextureOptions.type = GL_FLOAT;
         depthTextureOptions.filtering = { GL_NEAREST, GL_NEAREST };

@@ -35,9 +35,9 @@ void TestApp::init() {
 
     // shadow caster camera
     m_shadowCasterCamera = uptr<Camera>(new Camera);
-    m_shadowCasterCamera->setFov(55);
+    m_shadowCasterCamera->setFov(52);
     m_shadowCasterCamera->setNear(0.5f);
-    m_shadowCasterCamera->setFar(4.0f);
+    m_shadowCasterCamera->setFar(5.0f);
 
     // default camera
     m_camera.setPosition({0.0, 15.0, 3.0});
@@ -62,6 +62,9 @@ void TestApp::init() {
     m_plane = plane(30.f, 30.f, 1, 1);
     m_shadowCasterMesh = cube(0.05);
     m_quad = quad(1.f);
+
+    // temporary fix on unfind attributes
+    m_mesh->draw(*m_shader);
 }
 
 void TestApp::update(float _dt) {
@@ -73,12 +76,12 @@ void TestApp::render(float _dt) {
     glm::mat3 normalMat;
 
     /// Apply first render target to draw scene depth from light caster
-    glm::vec3 shadowCasterPos = glm::vec3(0.3, 0.0, 2.5);
+    glm::vec3 shadowCasterPos = glm::vec3(0.0, 0.1, 2.5);
     m_shadowCasterCamera->setPosition(shadowCasterPos);
 
     glm::mat4 depthMVP = m_shadowCasterCamera->getProjectionMatrix() * m_shadowCasterCamera->getViewMatrix();
 
-    m_renderTarget->apply(800, 600);
+    m_renderTarget->apply(2048, 2048);
     RenderState::depthWrite(GL_TRUE);
     RenderState::culling(GL_TRUE);
     RenderState::cullFace(GL_FRONT);
@@ -111,14 +114,15 @@ void TestApp::render(float _dt) {
 
     m_renderTarget->bindRenderTexture(0);
     m_shader->setUniform("mvp", mvp);
-    m_shader->setUniform("mv", model * view);
-    m_shader->setUniform("normalmat", normalMat);
     m_shader->setUniform("depthMVP", depthMVP);
     m_shader->setUniform("depthMap", 0);
+    m_shader->setUniform("normalMat", normalMat);
+    m_shader->setUniform("lightPos", shadowCasterPos);
 
     RenderState::culling(GL_TRUE);
     RenderState::cullFace(GL_FRONT);
     m_mesh->draw(*m_shader);
+    m_shader->setUniform("mvp", m_camera.getProjectionMatrix() * view * glm::translate(model, {0.0, 0.0, -0.01}));
     RenderState::culling(GL_FALSE);
     m_plane->draw(*m_shader);
 
