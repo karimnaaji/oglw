@@ -50,7 +50,7 @@ void RenderTarget::create(uint _width, uint _height) {
         depthTextureOptions.internalFormat = GL_DEPTH_COMPONENT32;
         depthTextureOptions.format = GL_DEPTH_COMPONENT;
         depthTextureOptions.type = GL_FLOAT;
-        depthTextureOptions.filtering = { GL_NEAREST, GL_NEAREST };
+        depthTextureOptions.filtering = { GL_LINEAR, GL_LINEAR };
         depthTextureOptions.wrapping = { GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE };
         //depthTextureOptions.depthOptions.textureMode = GL_INTENSITY;
         //depthTextureOptions.depthOptions.compareMode = GL_TEXTURE_COMPARE_MODE;

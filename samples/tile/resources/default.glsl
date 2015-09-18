@@ -16,13 +16,7 @@ void main() {
     pos = mvp * vec4(position, 1.0);
     gl_Position = pos;
     shadowCoord = depthMVP * vec4(position, 1);
-
-    // FIXME : add normals to plane
-    if (normal == vec3(0.0)) {
-        n = vec3(0.0);
-    } else {
-        n = normalMat * normal;
-    }
+    n = normalMat * normal;
 }
 
 #pragma end:vertex
@@ -44,7 +38,22 @@ float visibility(vec4 lightSpace) {
     uvs.x = 0.5 * shadowPosition.x + 0.5;
     uvs.y = 0.5 * shadowPosition.y + 0.5;
     float z = 0.5 * shadowPosition.z + 0.5;
-    float depth = texture(depthMap, uvs).x;
+    float depth = 0.0;
+
+    vec2 texelSize = 1.0 / vec2(2048.0);
+
+    // blur depth value
+    depth +=  3.0 * texture(depthMap, uvs).x;
+    depth +=  2.0 * texture(depthMap, uvs + vec2( texelSize.x,          0.0)).x;
+    depth +=  2.0 * texture(depthMap, uvs + vec2(-texelSize.x,          0.0)).x;
+    depth +=  2.0 * texture(depthMap, uvs + vec2(         0.0,  texelSize.y)).x;
+    depth +=  2.0 * texture(depthMap, uvs + vec2(         0.0, -texelSize.y)).x;
+    depth += 1.25 * texture(depthMap, uvs + vec2( texelSize.x,  texelSize.y)).x;
+    depth += 1.25 * texture(depthMap, uvs + vec2(-texelSize.x,  texelSize.y)).x;
+    depth += 1.25 * texture(depthMap, uvs + vec2(-texelSize.x, -texelSize.y)).x;
+    depth += 1.25 * texture(depthMap, uvs + vec2( texelSize.x, -texelSize.y)).x;
+
+    depth = depth / 16.0;
 
     float bias = 0.0025;
     if (depth < (z - bias)) {
@@ -58,6 +67,8 @@ void main(void) {
     vec3 surfaceToLight = normalize(lightPos - pos.xyz);
 
     float D = max(dot(n, surfaceToLight), 0.0);
+
+    // FIXME : add normals to plane
     if (n == vec3(0.0)) {
         D = 1.0;
     }
