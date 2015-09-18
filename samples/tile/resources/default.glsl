@@ -32,35 +32,39 @@ in vec4 shadowCoord;
 in vec3 n;
 in vec4 pos;
 
-float visibility(vec4 lightSpace) {
-    vec3 shadowPosition = lightSpace.xyz / lightSpace.w;
-    vec2 uvs;
-    uvs.x = 0.5 * shadowPosition.x + 0.5;
-    uvs.y = 0.5 * shadowPosition.y + 0.5;
+float hardShadow(vec4 shadowCoord, float bias) {
+    vec3 shadowPosition = shadowCoord.xyz / shadowCoord.w;
+    vec2 uvs = shadowPosition.xy * 0.5 + vec2(0.5);
     float z = 0.5 * shadowPosition.z + 0.5;
-    float depth = 0.0;
+    float depth = texture(depthMap, uvs).x;
+    return step(z - bias, depth);
+}
 
-    vec2 texelSize = 1.0 / vec2(2048.0);
+float PCF(vec2 texelSize, vec4 shadowCoord, float bias) {
+    float result = 0.0;
+    vec2 offset = texelSize * shadowCoord.w;
 
-    // blur depth value
-    depth +=  3.0 * texture(depthMap, uvs).x;
-    depth +=  2.0 * texture(depthMap, uvs + vec2( texelSize.x,          0.0)).x;
-    depth +=  2.0 * texture(depthMap, uvs + vec2(-texelSize.x,          0.0)).x;
-    depth +=  2.0 * texture(depthMap, uvs + vec2(         0.0,  texelSize.y)).x;
-    depth +=  2.0 * texture(depthMap, uvs + vec2(         0.0, -texelSize.y)).x;
-    depth += 1.25 * texture(depthMap, uvs + vec2( texelSize.x,  texelSize.y)).x;
-    depth += 1.25 * texture(depthMap, uvs + vec2(-texelSize.x,  texelSize.y)).x;
-    depth += 1.25 * texture(depthMap, uvs + vec2(-texelSize.x, -texelSize.y)).x;
-    depth += 1.25 * texture(depthMap, uvs + vec2( texelSize.x, -texelSize.y)).x;
+    result += hardShadow(shadowCoord + vec4(vec2(-1.5, -1.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(-1.5, -0.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(-1.5,  0.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(-1.5,  1.5) * offset, 0.0, 0.0), bias);
 
-    depth = depth / 16.0;
+    result += hardShadow(shadowCoord + vec4(vec2(-0.5, -1.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(-0.5, -0.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(-0.5,  0.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(-0.5,  1.5) * offset, 0.0, 0.0), bias);
 
-    float bias = 0.0025;
-    if (depth < (z - bias)) {
-        return 0.0;
-    } else {
-        return 1.0;
-    }
+    result += hardShadow(shadowCoord + vec4(vec2(0.5, -1.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(0.5, -0.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(0.5,  0.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(0.5,  1.5) * offset, 0.0, 0.0), bias);
+
+    result += hardShadow(shadowCoord + vec4(vec2(1.5, -1.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(1.5, -0.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(1.5,  0.5) * offset, 0.0, 0.0), bias);
+    result += hardShadow(shadowCoord + vec4(vec2(1.5,  1.5) * offset, 0.0, 0.0), bias);
+
+    return result / 16.0;
 }
 
 void main(void) {
@@ -72,14 +76,10 @@ void main(void) {
     if (n == vec3(0.0)) {
         D = 1.0;
     }
-    float shadow = visibility(shadowCoord);
-    if (shadow == 0.0) {
-        outColour = vec4(vec3(0.5) * vec3(D), 1.0);
-    } else {
-        outColour = vec4(vec3(D) * visibility(shadowCoord), 1.0);
-    }
-    //outColour = vec4(shadowCoord.xy, 0.0, 1.0);
-    //outColour = vec4(vec3(shadowCoord.z), 1.0);
+
+    // TODO : adaptive bias
+    float shadow = PCF(vec2(1.0 / 2048.0), shadowCoord, 0.0025);
+    outColour = vec4(vec3(D) * shadow, 1.0);
 }
 
 #pragma end:fragment

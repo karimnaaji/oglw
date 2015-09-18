@@ -40,7 +40,7 @@ void TestApp::init() {
     m_shadowCasterCamera->setFar(5.0f);
 
     // default camera
-    m_camera.setPosition({0.0, 15.0, 3.0});
+    m_camera.setPosition({0.0, 0.0, 15.0});
     m_camera.setFar(200.f);
     m_camera.setNear(0.1f);
     m_camera.setFov(50);
@@ -90,17 +90,6 @@ void TestApp::render(float _dt) {
     RenderState::cullFace(GL_BACK);
     m_depthWrite->setUniform("depthMVP", depthMVP);
     m_plane->draw(*m_depthWrite);
-
-
-    /// Debug shadow map drawing
-    //RenderTarget::applyDefault(400, 300);
-    //RenderState::depthWrite(GL_TRUE);
-    //RenderState::culling(GL_FALSE);
-    //m_renderTarget->bindRenderTexture(0);
-    //m_fullQuadShader->setUniform("tex", 0);
-    //m_fullQuadShader->setUniform("resolution", {m_width * m_dpiRatio * 0.5, m_height * m_dpiRatio * 0.5});
-    //m_quad->draw(*m_fullQuadShader);
-
 
     /// Default render target drawing
     RenderState::depthWrite(GL_TRUE);
