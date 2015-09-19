@@ -37,7 +37,13 @@ float hardShadow(vec4 shadowCoord, float bias) {
     vec2 uvs = shadowPosition.xy * 0.5 + vec2(0.5);
     float z = 0.5 * shadowPosition.z + 0.5;
     float depth = texture(depthMap, uvs).x;
-    return step(z - bias, depth);
+
+    if (shadowCoord.w <= 0.0 || uvs.x < 0.0 || uvs.y < 0.0 || uvs.x >= 1.0 || uvs.y >= 1.0) {
+        // not in frustrum
+        return 1.0;
+    } else {
+        return step(z - bias, depth);
+    }
 }
 
 float PCF(vec2 texelSize, vec4 shadowCoord, float bias) {
