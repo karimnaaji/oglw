@@ -86,6 +86,7 @@ void main(void) {
     // TODO : adaptive bias
     float shadow = PCF(vec2(1.0 / 2048.0), shadowCoord, 0.0025);
     outColour = vec4(vec3(D) * shadow, 1.0);
+    outColour.rgb = pow(outColour.rgb, vec3(0.4545));
 }
 
 #pragma end:fragment
