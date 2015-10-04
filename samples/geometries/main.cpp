@@ -50,7 +50,7 @@ void TestApp::init() {
     m_shader = uptr<Shader>(new Shader("default.glsl"));
 
     OGLW::TextureOptions options = {
-        GL_RGBA8, GL_RGBA,
+        GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,
         {GL_LINEAR, GL_LINEAR},
         {GL_REPEAT, GL_REPEAT}
     };

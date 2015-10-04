@@ -16,6 +16,7 @@
 #include "geometries.h"
 #include "renderState.h"
 #include "skybox.h"
+#include "renderTarget.h"
 
 // other
 #include "app.h"

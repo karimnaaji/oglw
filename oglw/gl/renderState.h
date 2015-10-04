@@ -8,6 +8,11 @@ namespace OGLW {
 
 namespace RenderState {
 
+void initialize();
+GLuint getTextureUnit(GLuint _unit);
+void activeTextureUnit(GLuint _unit);
+void bindTexture(GLenum _target, GLuint _textureId);
+
 template <typename T>
 class State {
 public:
@@ -50,7 +55,6 @@ struct StateWrap {
     using Type = std::tuple<Args...>;
     Type params;
 
-
     void init(Args... _param, bool _force = true) {
         params = std::make_tuple(_param...);
         if (_force) {
@@ -72,6 +76,10 @@ struct StateWrap {
         return _params == params;
     }
 
+    template<int S>
+    inline auto get() {
+        return std::get<S>(params);
+    }
 
     template<int ...S>
     inline void call(seq<S...>) {
@@ -97,6 +105,10 @@ using CullFace = StateWrap<FUN(glCullFace), GLenum>;
 using ClearDepth = StateWrap<FUN(glClearDepth), GLclampd>;
 using DepthRange = StateWrap<FUN(glDepthRange), GLclampd, GLclampd>;
 using ShaderProgram = StateWrap<FUN(glUseProgram), GLuint>;
+using TextureUnit = StateWrap<FUN(activeTextureUnit), GLuint>;
+using Texture = StateWrap<FUN(bindTexture), GLenum, GLuint>;
+using DrawBuffer = StateWrap<FUN(glDrawBuffer), GLenum>;
+using ReadBuffer = StateWrap<FUN(glReadBuffer), GLenum>;
 
 extern DepthTest depthTest;
 extern DepthWrite depthWrite;
@@ -114,8 +126,10 @@ extern Culling culling;
 extern ClearDepth clearDepth;
 extern DepthRange depthRange;
 extern ShaderProgram shaderProgram;
-
-void initialize();
+extern TextureUnit textureUnit;
+extern Texture texture;
+extern DrawBuffer drawBuffer;
+extern ReadBuffer readBuffer;
 
 } // RenderState
 } // OGLW

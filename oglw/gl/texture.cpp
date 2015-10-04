@@ -3,6 +3,7 @@
 #include "stb_image.h"
 #include "core/utils.h"
 #include "core/log.h"
+#include "renderState.h"
 
 namespace OGLW {
 
@@ -43,12 +44,18 @@ Texture(0, 0, _options, _generateMipmaps)
 }
 
 Texture::~Texture() {
-    GL_CHECK(glDeleteTextures(1, &m_glHandle));
+    if (m_glHandle) {
+        GL_CHECK(glDeleteTextures(1, &m_glHandle));
+
+        if (RenderState::texture.compare(m_target, m_glHandle)) {
+            RenderState::texture.init(m_target, 0, false);
+        }
+    }
 }
 
 void Texture::bind(GLuint _textureSlot) {
-    GL_CHECK(glActiveTexture(getTextureUnit(_textureSlot)));
-    GL_CHECK(glBindTexture(m_target, m_glHandle));
+    RenderState::textureUnit(_textureSlot);
+    RenderState::texture(m_target, m_glHandle);
 }
 
 void Texture::setData(const GLuint* _data, uint _dataSize) {
@@ -67,11 +74,17 @@ void Texture::generate(GLuint _textureUnit) {
 
     bind(_textureUnit);
 
-    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, m_options.m_filtering.m_min));
-    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, m_options.m_filtering.m_mag));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, m_options.filtering.min));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, m_options.filtering.mag));
 
-    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_S, m_options.m_wrapping.m_wraps));
-    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_T, m_options.m_wrapping.m_wrapt));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_S, m_options.wrapping.wraps));
+    GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_T, m_options.wrapping.wrapt));
+
+    if (m_options.isDepthTexture) {
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, m_options.depthOptions.textureMode));
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, m_options.depthOptions.compareMode));
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, m_options.depthOptions.compareFunc));
+    }
 }
 
 void Texture::update(GLuint _textureUnit) {
@@ -98,8 +111,8 @@ void Texture::update(GLuint _textureUnit) {
 
     // resize or push data
     if (data || m_shouldResize) {
-        GL_CHECK(glTexImage2D(m_target, 0, m_options.m_internalFormat, m_width, m_height, 0, m_options.m_format,
-                     GL_UNSIGNED_BYTE, data));
+        GL_CHECK(glTexImage2D(m_target, 0, m_options.internalFormat, m_width, m_height, 0, m_options.format,
+                     m_options.type, data));
         m_shouldResize = false;
 
         if (data && m_generateMipmaps) {
@@ -117,19 +130,15 @@ void Texture::update(GLuint _textureUnit) {
 }
 
 void Texture::resize(const uint _width, const uint _height) {
+    if (m_width == _width && m_height == _height) {
+        return;
+    }
+    
     m_width = _width;
     m_height = _height;
 
     m_shouldResize = true;
     m_dirty = true;
-}
-
-GLuint Texture::getTextureUnit(GLuint _unit) {
-    if (_unit >= GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS) {
-        WARN("trying to access unavailable texture unit\n");
-    }
-
-    return GL_TEXTURE0 + _unit;
 }
 
 } // OGLW

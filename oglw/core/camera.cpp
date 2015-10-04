@@ -6,7 +6,7 @@
 namespace OGLW {
 
 Camera::Camera()
-    : m_position(0.0f, 0.0f, 5.0f), m_rotation(0.0f, 0.0f), m_aspectRatio(4 / 3), m_fov(50.0f), m_near(0.01f),
+    : m_position(0.0f, 0.0f, 0.0f), m_rotation(0.0f, 0.0f), m_aspectRatio(4 / 3), m_fov(50.0f), m_near(0.01f),
       m_far(1000.0f) {
 }
 
@@ -58,10 +58,6 @@ void Camera::rotate(glm::vec2 _rotation) {
 
 glm::mat4 Camera::getProjectionMatrix() const {
     return glm::perspective(m_fov, m_aspectRatio, m_near, m_far);
-}
-
-void Camera::setFov(float _fov) {
-    m_fov = _fov;
 }
 
 glm::mat4 Camera::getViewMatrix() const {
