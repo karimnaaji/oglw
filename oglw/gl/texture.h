@@ -10,22 +10,34 @@
 namespace OGLW {
 
 struct TextureFiltering {
+    TextureFiltering() {}
+    TextureFiltering(GLenum _min, GLenum _mag) : min(_min), mag(_mag) {}
     GLenum min = GL_LINEAR;
     GLenum mag = GL_LINEAR;
 };
 
 struct TextureWrapping {
+    TextureWrapping() {}
+    TextureWrapping(GLenum _wraps, GLenum _wrapt) : wraps(_wraps), wrapt(_wrapt) {}
     GLenum wraps = GL_CLAMP_TO_EDGE;
     GLenum wrapt = GL_CLAMP_TO_EDGE;
 };
 
 struct DepthTextureOptions {
+    DepthTextureOptions() {}
+    DepthTextureOptions(GLenum _textureMode, GLenum _compareMode, GLenum _compareFunc) :
+    textureMode(_textureMode), compareMode(_compareMode), compareFunc(_compareFunc) {} 
     GLenum textureMode = GL_INTENSITY;
     GLenum compareMode = GL_TEXTURE_COMPARE_MODE;
     GLenum compareFunc = GL_LEQUAL;
 };
 
 struct TextureOptions {
+    TextureOptions() {}
+    TextureOptions(GLenum _internalFormat, GLenum _format, GLenum _type, TextureFiltering _filtering, 
+        TextureWrapping _wrapping, bool _isDepthTexture = false, DepthTextureOptions _depthOptions = {}) :
+    internalFormat(_internalFormat), format(_format), type(_type), filtering(_filtering), wrapping(_wrapping),
+    isDepthTexture(_isDepthTexture), depthOptions(_depthOptions) {}
     GLenum internalFormat = GL_RGBA8;
     GLenum format = GL_RGBA;
     GLenum type = GL_UNSIGNED_BYTE;
