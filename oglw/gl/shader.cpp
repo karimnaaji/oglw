@@ -170,12 +170,21 @@ bool Shader::linkShaderProgram(GLuint _program) {
 
 void Shader::bindVertexLayout(const VertexLayout& _layout) {
     auto locations = _layout.getLocations();
+    bool needLink = false;
 
     for (const auto& loc : locations) {
-        GL_CHECK(glBindAttribLocation(m_program, loc.second, loc.first.c_str()));
+        auto attributePair = m_attributes.find(loc.first);
+
+        if (attributePair == m_attributes.end() || attributePair->second != loc.second) {
+            GL_CHECK(glBindAttribLocation(m_program, loc.second, loc.first.c_str()));
+            m_attributes[loc.first] = loc.second;
+            needLink = true;
+        }
     }
 
-    Shader::linkShaderProgram(m_program);
+    if (needLink) {
+        Shader::linkShaderProgram(m_program);
+    }
 }
 
 GLint Shader::getAttribLocation(const std::string& _attribute) {

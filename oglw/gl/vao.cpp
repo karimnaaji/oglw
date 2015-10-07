@@ -13,9 +13,9 @@ Vao::~Vao() {
 }
 
 void Vao::init(GLuint _vertexBuffer, VertexLayout& _layout, const std::unordered_map<std::string, GLuint>& _locations, size_t _offset) {
-	if (m_glVertexArray == 0) {
-		GL_CHECK(glGenVertexArrays(1, &m_glVertexArray));
-	}
+    if (m_glVertexArray == 0) {
+        GL_CHECK(glGenVertexArrays(1, &m_glVertexArray));
+    }
 
     // Bind the vertex array for initialization
     bind();
@@ -27,8 +27,8 @@ void Vao::init(GLuint _vertexBuffer, VertexLayout& _layout, const std::unordered
 
     _layout.enable(_locations, _offset);
 
-	// Make sure VAO is not modified outside
-	unbind();
+    // Make sure VAO is not modified outside
+    unbind();
 }
 
 void Vao::bind() const {
