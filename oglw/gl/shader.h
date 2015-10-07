@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include "gl/gl.h"
+#include "gl/vertexLayout.h"
 #include "glm/glm.hpp"
 
 namespace OGLW {
@@ -34,6 +35,8 @@ public:
 
     // retrieve the attribute location for a given attribute name
     GLint getAttribLocation(const std::string& _attribute);
+    // binds a vertex layout to the shader
+    void bindVertexLayout(const VertexLayout& _layout);
     // set uniforms for the given name
     void setUniform(const std::string& _name, int _x);
     void setUniform(const std::string& _name, float _x);
@@ -50,6 +53,8 @@ public:
     static std::string stringFromKind(GLenum _kind);
 
 private:
+    static bool linkShaderProgram(GLuint _program);
+
     // compile and attach a shader to the shader program
     GLuint add(const std::string& _shaderSource, GLenum _kind);
     // retrive a shader source from a program bundle

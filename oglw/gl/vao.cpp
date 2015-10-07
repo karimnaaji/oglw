@@ -17,15 +17,15 @@ void Vao::init(GLuint _vertexBuffer, VertexLayout& _layout, const std::unordered
 		GL_CHECK(glGenVertexArrays(1, &m_glVertexArray));
 	}
 
-	// Bind the vertex array for initialization
-	bind();
+    // Bind the vertex array for initialization
+    bind();
 
-	// Bind the vertex buffer
-	GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer));
+    // Bind the vertex buffer
+    GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer));
     
     // TODO : keep layout, test if other layout was enabled
 
-	_layout.enable(_locations, _offset);
+    _layout.enable(_locations, _offset);
 
 	// Make sure VAO is not modified outside
 	unbind();

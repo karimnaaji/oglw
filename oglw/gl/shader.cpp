@@ -127,34 +127,55 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
         return false;
     }
 
-    GL_CHECK(glLinkProgram(m_program));
+    bool linkStatus = Shader::linkShaderProgram(m_program);
 
+    GL_CHECK(glDeleteShader(vert));
+    GL_CHECK(glDeleteShader(frag));
+
+    if (geom != -1) {
+        GL_CHECK(glDeleteShader(geom));
+    }
+
+    if (!linkStatus) {
+        GL_CHECK(glDeleteProgram(m_program));
+        return false;
+    }
+
+    return true;
+}
+
+bool Shader::linkShaderProgram(GLuint _program) {
     GLint isLinked;
-    GL_CHECK(glGetProgramiv(m_program, GL_LINK_STATUS, &isLinked));
+
+    GL_CHECK(glLinkProgram(_program));
+    GL_CHECK(glGetProgramiv(_program, GL_LINK_STATUS, &isLinked));
 
     if (isLinked == GL_FALSE) {
         GLint infoLength = 0;
-        GL_CHECK(glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &infoLength));
+        GL_CHECK(glGetProgramiv(_program, GL_INFO_LOG_LENGTH, &infoLength));
 
         if (infoLength > 1) {
             std::vector<GLchar> infoLog(infoLength);
-            GL_CHECK(glGetProgramInfoLog(m_program, infoLength, NULL, &infoLog[0]));
+            GL_CHECK(glGetProgramInfoLog(_program, infoLength, NULL, &infoLog[0]));
             std::string error(infoLog.begin(), infoLog.end());
             DBG("Error linking shader program\n");
             DBG("%s", error.c_str());
         }
 
-        GL_CHECK(glDeleteProgram(m_program));
         return false;
-    } else {
-        GL_CHECK(glDeleteShader(vert));
-        GL_CHECK(glDeleteShader(frag));
-
-        if (geom != -1) {
-            GL_CHECK(glDeleteShader(geom));
-        }
-        return true;
     }
+
+    return true;
+}
+
+void Shader::bindVertexLayout(const VertexLayout& _layout) {
+    auto locations = _layout.getLocations();
+
+    for (const auto& loc : locations) {
+        GL_CHECK(glBindAttribLocation(m_program, loc.second, loc.first.c_str()));
+    }
+
+    Shader::linkShaderProgram(m_program);
 }
 
 GLint Shader::getAttribLocation(const std::string& _attribute) {

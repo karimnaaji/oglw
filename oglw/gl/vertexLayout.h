@@ -23,6 +23,8 @@ public:
     GLint getStride() const { return m_stride; };
     // get the vertex attributes of the vertex layout
     const std::vector<VertexAttrib>& getAttributes() { return m_attribs; };
+    // get the vertex layout locations
+    std::unordered_map<std::string, GLuint> getLocations() const;
 
 private:
     std::vector<VertexAttrib> m_attribs;

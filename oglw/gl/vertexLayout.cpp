@@ -32,6 +32,17 @@ VertexLayout::~VertexLayout() {
     m_attribs.clear();
 }
 
+std::unordered_map<std::string, GLuint> VertexLayout::getLocations() const {
+    std::unordered_map<std::string, GLuint> map;
+    GLuint location = 0;
+
+    for (auto& attribute : m_attribs) {
+        map[attribute.name] = location++;
+    }
+
+    return map;
+}
+
 void VertexLayout::enable(const std::unordered_map<std::string, GLuint>& _locations, size_t byteOffset) {
     for (auto& attrib : m_attribs) {
         auto it = _locations.find(attrib.name);
