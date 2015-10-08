@@ -87,13 +87,6 @@ bool VboMesh::upload() {
     m_glVertexData = nullptr;
     m_isUploaded = true;
 
-    // if VAO not yet created, initialized it and capture related states
-    if (!m_vao) {
-        m_vao = std::unique_ptr<Vao>(new Vao());
-        const auto& locations = m_vertexLayout->getLocations();
-        m_vao->init(m_glVertexBuffer, m_glIndexBuffer, *m_vertexLayout, locations, 0);
-    }
-
     return true;
 }
 
@@ -144,17 +137,34 @@ void VboMesh::draw(Shader& _shader) {
         subDataUpload();
     }
 
-    m_vao->bind();
+    // if VAO not yet created, initialized it and capture related states
+    if (!m_vao) {
+        m_vao = std::unique_ptr<Vao>(new Vao());
+        const auto& locations = m_vertexLayout->getLocations();
+        std::vector<size_t> offsets;
 
-    _shader.use();
+        offsets.push_back(0);
+
+        for (auto offset : m_vertexOffsets) {
+            offsets.push_back(offset.second);
+        }
+
+        m_vao->init(m_glVertexBuffer, m_glIndexBuffer, *m_vertexLayout, locations, offsets);
+    }
+
     _shader.bindVertexLayout(*m_vertexLayout);
+    _shader.use();
 
     size_t indiceOffset = 0;
     size_t vertexOffset = 0;
 
-    for (auto& o : m_vertexOffsets) {
-        uint32_t nIndices = o.first;
-        uint32_t nVertices = o.second;
+    for (int i = 0; i < m_vertexOffsets.size(); ++i) {
+        const auto& offset = m_vertexOffsets[i];
+
+        uint32_t nIndices = offset.first;
+        uint32_t nVertices = offset.second;
+
+        m_vao->bind(i);
 
         if (nIndices > 0) {
             GL_CHECK(glDrawElements(m_drawMode, nIndices, GL_UNSIGNED_SHORT, (void*)(indiceOffset * sizeof(GLushort))));
