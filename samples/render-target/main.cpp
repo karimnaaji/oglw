@@ -28,7 +28,7 @@ void TestApp::init() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     m_camera.setPosition({0.0, -0.5, 14.0});
     m_plane = plane(30.f, 30.f, 1, 1);
-    for (int i = 0; i < 64; ++i) {
+    for (int i = 0; i < 1024; ++i) {
         m_cubes.push_back(std::move(cube(0.3)));
     }
     m_shader = uptr<Shader>(new Shader("default.glsl"));
@@ -46,9 +46,9 @@ void TestApp::render(float _dt) {
     proj = m_camera.getProjectionMatrix();
 
     int i = 0;
-    for (int x = 0; x < 4; x++) {
-        for (int y = 0; y < 4; y++) {
-            for (int z = 0; z < 4; z++) {
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            for (int z = 0; z < 8; z++) {
                 const auto& cube = m_cubes[i++];
                 model = glm::translate(glm::mat4(), glm::vec3(x, y, z));
                 mvp = proj * view * model;
