@@ -12,7 +12,8 @@ public:
 	~Vao();
 
 	// init a vertex layout
-	void init(GLuint _vertexBuffer, VertexLayout& _layout, const std::unordered_map<std::string, GLuint>& _locations, size_t _offset);
+	void init(GLuint _vertexBuffer, GLuint _indexBuffer, VertexLayout& _layout, 
+        const std::unordered_map<std::string, GLuint>& _locations, size_t _offset);
 	// bind the vertex array object
 	void bind() const;
 	// usefull fot the VAO not to be modified outside

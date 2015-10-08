@@ -39,7 +39,7 @@ public:
     GLintptr getDirtyOffset() const { return m_dirtyOffset; }
 
 protected:
-    bool upload(Shader& _shader);
+    bool upload();
     bool subDataUpload();
 
     std::vector<std::pair<uint32_t, uint32_t>> m_vertexOffsets;

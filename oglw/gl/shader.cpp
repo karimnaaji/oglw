@@ -176,6 +176,7 @@ void Shader::bindVertexLayout(const VertexLayout& _layout) {
         auto attributePair = m_attributes.find(loc.first);
 
         if (attributePair == m_attributes.end() || attributePair->second != loc.second) {
+            WARN("Binding location %d for attribute %s\n", loc.second, loc.first.c_str());
             GL_CHECK(glBindAttribLocation(m_program, loc.second, loc.first.c_str()));
             m_attributes[loc.first] = loc.second;
             needLink = true;
@@ -183,6 +184,7 @@ void Shader::bindVertexLayout(const VertexLayout& _layout) {
     }
 
     if (needLink) {
+        WARN("Relink shader\n");
         Shader::linkShaderProgram(m_program);
     }
 }
@@ -243,12 +245,8 @@ GLint Shader::getUniformLocation(const std::string& _uniformName) {
         GL_CHECK(void(0));
 
         if (loc == -1) {
-            static bool notified = false;
             // not to overflow log, notify once
-            if (!notified) {
-                WARN("Shader uniform %s not found on shader program: %d\n", _uniformName.c_str(), m_program);
-                notified = true;
-            }
+            WARN("Shader uniform %s not found on shader program: %d\n", _uniformName.c_str(), m_program);
         } else {
             m_uniforms[_uniformName] = loc;
         }

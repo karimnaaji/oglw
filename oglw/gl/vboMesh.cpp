@@ -52,7 +52,7 @@ void VboMesh::setDrawMode(GLenum _drawMode) {
     }
 }
 
-bool VboMesh::upload(Shader& _shader) {
+bool VboMesh::upload() {
     if (m_isUploaded) {
         return false;
     }
@@ -60,23 +60,6 @@ bool VboMesh::upload(Shader& _shader) {
     // Create vertex Buffer if needed
     if (m_glVertexBuffer == 0) {
         GL_CHECK(glGenBuffers(1, &m_glVertexBuffer));
-    }
-
-    // if VAO not yet created, initialized it and capture related states
-    if (!m_vao) {
-        m_vao = std::unique_ptr<Vao>(new Vao());
-        std::unordered_map<std::string, GLuint> locations;
-        
-        auto& layoutAttributes = m_vertexLayout->getAttributes();
-
-        for (auto& attribute : layoutAttributes) {
-            GLint location = _shader.getAttribLocation(attribute.name);
-            if (location != -1) {
-                locations[attribute.name] = location;
-            }
-        }
-
-        m_vao->init(m_glVertexBuffer, *m_vertexLayout, locations, 0);
     }
 
     if (!m_isCompiled) {
@@ -93,12 +76,8 @@ bool VboMesh::upload(Shader& _shader) {
             GL_CHECK(glGenBuffers(1, &m_glIndexBuffer));
         }
 
-        m_vao->bind();
-
         GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer));
         GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_nIndices * sizeof(GLushort), m_glIndexData, GL_STATIC_DRAW));
-
-        m_vao->unbind();
 
         delete[] m_glIndexData;
         m_glIndexData = nullptr;
@@ -107,6 +86,13 @@ bool VboMesh::upload(Shader& _shader) {
     delete[] m_glVertexData;
     m_glVertexData = nullptr;
     m_isUploaded = true;
+
+    // if VAO not yet created, initialized it and capture related states
+    if (!m_vao) {
+        m_vao = std::unique_ptr<Vao>(new Vao());
+        const auto& locations = m_vertexLayout->getLocations();
+        m_vao->init(m_glVertexBuffer, m_glIndexBuffer, *m_vertexLayout, locations, 0);
+    }
 
     return true;
 }
@@ -120,7 +106,6 @@ bool VboMesh::subDataUpload() {
         WARN("wrong usage hint provided to the Vbo\n");
     }
 
-    //m_vao->bind();
     GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_glVertexBuffer));
 
     long vertexBytes = m_nVertices * m_vertexLayout->getStride();
@@ -154,7 +139,7 @@ bool VboMesh::subDataUpload() {
 
 void VboMesh::draw(Shader& _shader) {
     if (!m_isUploaded) {
-        upload(_shader);
+        upload();
     } else if (m_dirty) {
         subDataUpload();
     }
@@ -162,6 +147,7 @@ void VboMesh::draw(Shader& _shader) {
     m_vao->bind();
 
     _shader.use();
+    _shader.bindVertexLayout(*m_vertexLayout);
 
     size_t indiceOffset = 0;
     size_t vertexOffset = 0;
