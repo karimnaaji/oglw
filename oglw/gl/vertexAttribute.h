@@ -5,6 +5,13 @@
 
 namespace OGLW {
 
+enum AttributeLocation : char {
+    position = 0,
+    uv,
+    color,
+    normal
+};
+
 struct VertexAttrib {
     std::string name;
     GLint size;

@@ -9,10 +9,10 @@ namespace OGLW {
 static std::unique_ptr<RawMesh> cube(float _size = 1.f) {
 
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
-        {"position", 3, GL_FLOAT, false, 0, 0},
-        {"color", 3, GL_FLOAT, false, 0, 2},
-        {"normal", 3, GL_FLOAT, false, 0, 3},
-        {"uv", 2, GL_FLOAT, false, 0, 1},
+        {"position", 3, GL_FLOAT, false, 0, AttributeLocation::position},
+        {"color", 3, GL_FLOAT, false, 0, AttributeLocation::color},
+        {"normal", 3, GL_FLOAT, false, 0, AttributeLocation::normal},
+        {"uv", 2, GL_FLOAT, false, 0, AttributeLocation::uv},
     }));
 
     auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_TRIANGLES));
@@ -44,8 +44,8 @@ static std::unique_ptr<RawMesh> cube(float _size = 1.f) {
 
 static std::unique_ptr<Mesh<glm::vec4>> quad(float _size) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
-        {"position", 2, GL_FLOAT, false, 0, 0},
-        {"uv", 2, GL_FLOAT, false, 0, 1},
+        {"position", 2, GL_FLOAT, false, 0, AttributeLocation::position},
+        {"uv", 2, GL_FLOAT, false, 0, AttributeLocation::uv},
     }));
 
     auto mesh = std::unique_ptr<Mesh<glm::vec4>>(new Mesh<glm::vec4>(layout, GL_TRIANGLES));
@@ -69,8 +69,8 @@ static std::unique_ptr<Mesh<glm::vec4>> quad(float _size) {
 
 static std::unique_ptr<Mesh<glm::vec4>> plane(float _width, float _height, uint _nw, uint _nh) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
-        {"position", 2, GL_FLOAT, false, 0, 0},
-        {"uv", 2, GL_FLOAT, false, 0, 1},
+        {"position", 2, GL_FLOAT, false, 0, AttributeLocation::position},
+        {"uv", 2, GL_FLOAT, false, 0, AttributeLocation::uv},
     }));
 
     auto mesh = std::unique_ptr<Mesh<glm::vec4>>(new Mesh<glm::vec4>(layout, GL_TRIANGLES));
@@ -122,10 +122,10 @@ static std::unique_ptr<Mesh<glm::vec4>> plane(float _width, float _height, uint 
 static std::unique_ptr<RawMesh> axis() {
 
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
-        {"position", 3, GL_FLOAT, false, 0, 0},
-        {"color", 3, GL_FLOAT, false, 0, 2},
-        {"normal", 3, GL_FLOAT, false, 0, 3},
-        {"uv", 2, GL_FLOAT, false, 0, 1},
+        {"position", 3, GL_FLOAT, false, 0, AttributeLocation::position},
+        {"color", 3, GL_FLOAT, false, 0, AttributeLocation::color},
+        {"normal", 3, GL_FLOAT, false, 0, AttributeLocation::normal},
+        {"uv", 2, GL_FLOAT, false, 0, AttributeLocation::uv},
     }));
 
     auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_LINES));
@@ -147,10 +147,10 @@ static std::unique_ptr<RawMesh> axis() {
 
 static std::unique_ptr<RawMesh> icosahedron(float _size = 0.5f) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
-        {"position", 3, GL_FLOAT, false, 0, 0},
-        {"color", 3, GL_FLOAT, false, 0, 2},
-        {"normal", 3, GL_FLOAT, false, 0, 3},
-        {"uv", 2, GL_FLOAT, false, 0, 1},
+        {"position", 3, GL_FLOAT, false, 0, AttributeLocation::position},
+        {"color", 3, GL_FLOAT, false, 0, AttributeLocation::color},
+        {"normal", 3, GL_FLOAT, false, 0, AttributeLocation::normal},
+        {"uv", 2, GL_FLOAT, false, 0, AttributeLocation::uv},
     }));
 
     auto mesh = std::unique_ptr<RawMesh>(new RawMesh(layout, GL_LINE_STRIP));
@@ -194,8 +194,8 @@ struct LineVertex {
 
 static auto spiral(float _resolution = 1000.f, float _freq = 15.f) {
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
-        {"position", 3, GL_FLOAT, false, 0, 0},
-        {"color", 4, GL_UNSIGNED_BYTE, true, 0, 1},
+        {"position", 3, GL_FLOAT, false, 0, AttributeLocation::position},
+        {"color", 4, GL_UNSIGNED_BYTE, true, 0, AttributeLocation::color},
     }));
 
     auto mesh = std::unique_ptr<Mesh<LineVertex>>(new Mesh<LineVertex>(layout, GL_LINE_STRIP));
