@@ -18,7 +18,7 @@ struct VertexAttrib {
     GLenum type;
     GLboolean normalized;
     GLvoid* offset;
-    GLuint location = -1;
+    GLuint location;
 };
 
 } // OGLW

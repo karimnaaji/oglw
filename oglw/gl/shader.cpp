@@ -33,7 +33,7 @@ Shader::Shader(std::string _programBundlePath) {
 bool Shader::loadBundleSource(const std::string& _bundleSource) {
     std::string vert, frag, geom;
 
-    if (getBundleShaderSource("vertex", _bundleSource, &vert) && 
+    if (getBundleShaderSource("vertex", _bundleSource, &vert) &&
         getBundleShaderSource("fragment", _bundleSource, &frag)) {
 
         // geometry shader is optionnal
@@ -88,37 +88,34 @@ bool Shader::getBundleShaderSource(std::string _type, std::string _bundle, std::
     return false;
 }
 
-GLuint Shader::add(const std::string& _shaderSource, GLenum _kind) {
-    GLuint shader = compile(_shaderSource, _kind);
-
-    if (shader == -1) {
+bool Shader::add(const std::string& _shaderSource, GLenum _kind, GLuint& _shader) {
+    if (!compile(_shaderSource, _kind, _shader)) {
         WARN("Failed to compile shader of type %s\n", Shader::stringFromKind(_kind).c_str());
         WARN("%s\n", _shaderSource.c_str());
-    } else {
-        GL_CHECK(glAttachShader(m_program, shader));
+        return false;
     }
 
-    return shader;
+    GL_CHECK(glAttachShader(m_program, _shader));
+
+    return true;
 }
 
 bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc, const std::string& _geomSrc) {
     bool addShaders = true;
+    GLuint vert = 0, frag = 0, geom = 0;
+
     m_program = glCreateProgram();
     GL_CHECK(void(0));
 
     // add vertex shader to shader program
-    GLuint vert = add(_vertexSrc, GL_VERTEX_SHADER);
-    addShaders |= (vert != -1);
+    addShaders |= add(_vertexSrc, GL_VERTEX_SHADER, vert);
 
     // add fragment shader to shader program
-    GLuint frag = add(_fragmentSrc, GL_FRAGMENT_SHADER);
-    addShaders |= (frag != -1);
+    addShaders |=  add(_fragmentSrc, GL_FRAGMENT_SHADER, frag);
 
-    GLuint geom = -1;
-    if (_geomSrc != "") {
+    if (!_geomSrc.empty()) {
         // add geometry shader to shader program
-        geom = add(_geomSrc, GL_GEOMETRY_SHADER);
-        addShaders |= (geom != -1);
+        addShaders |= add(_geomSrc, GL_GEOMETRY_SHADER, geom);
     }
 
     if (!addShaders) {
@@ -132,7 +129,7 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
     GL_CHECK(glDeleteShader(vert));
     GL_CHECK(glDeleteShader(frag));
 
-    if (geom != -1) {
+    if (!_geomSrc.empty()) {
         GL_CHECK(glDeleteShader(geom));
     }
 
@@ -211,30 +208,30 @@ void Shader::use() const {
     RenderState::shaderProgram(m_program);
 }
 
-GLuint Shader::compile(const std::string& _src, GLenum _type) {
-    GLuint shader = glCreateShader(_type);
+bool Shader::compile(const std::string& _src, GLenum _type, GLuint& _shader) {
+    _shader = glCreateShader(_type);
     const GLchar* source = (const GLchar*)_src.c_str();
 
-    GL_CHECK(glShaderSource(shader, 1, &source, NULL));
-    GL_CHECK(glCompileShader(shader));
+    GL_CHECK(glShaderSource(_shader, 1, &source, NULL));
+    GL_CHECK(glCompileShader(_shader));
 
     GLint isCompiled;
-    GL_CHECK(glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled));
+    GL_CHECK(glGetShaderiv(_shader, GL_COMPILE_STATUS, &isCompiled));
 
     if (isCompiled == GL_FALSE) {
         GLint infoLength = 0;
-        GL_CHECK(glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLength));
+        GL_CHECK(glGetShaderiv(_shader, GL_INFO_LOG_LENGTH, &infoLength));
         if (infoLength > 1) {
             std::vector<GLchar> infoLog(infoLength);
-            GL_CHECK(glGetShaderInfoLog(shader, infoLength, NULL, &infoLog[0]));
+            GL_CHECK(glGetShaderInfoLog(_shader, infoLength, NULL, &infoLog[0]));
             DBG("Compilation error\n");
             DBG("%s", &infoLog[0]);
         }
-        GL_CHECK(glDeleteShader(shader));
-        return -1;
+        GL_CHECK(glDeleteShader(_shader));
+        return false;
     }
 
-    return shader;
+    return true;
 }
 
 GLint Shader::getUniformLocation(const std::string& _uniformName) {
