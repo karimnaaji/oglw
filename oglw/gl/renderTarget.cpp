@@ -98,7 +98,7 @@ void RenderTarget::bindRenderTexture(GLuint _slot) {
     }
 }
 
-void RenderTarget::apply(uint _width, uint _height) {
+void RenderTarget::apply(uint _width, uint _height, uint _clearColor) {
     if (!m_isValid) {
         WARN("Invalid render target\n");
         return;
@@ -136,7 +136,12 @@ void RenderTarget::apply(uint _width, uint _height) {
         RenderState::drawBuffer(GL_NONE);
         RenderState::readBuffer(GL_NONE);
     } else {
-        GL_CHECK(glClearColor(0.0, 0.0, 0.0, 0.0));
+        float r = (_clearColor >> 24) & 0xff;
+        float g = (_clearColor >> 16) & 0xff;
+        float b = (_clearColor >>  8) & 0xff;
+        float a = (_clearColor >>  0) & 0xff;
+
+        GL_CHECK(glClearColor(r / 255.0, g / 255.0, b / 255.0, a / 255.0));
         RenderState::drawBuffer(GL_BACK);
         RenderState::readBuffer(GL_BACK);
     }
