@@ -113,10 +113,10 @@ static std::unique_ptr<RawMesh> loadOBJ(std::string _path) {
     }
 
     auto layout = std::shared_ptr<OGLW::VertexLayout>(new OGLW::VertexLayout({
-        {"position", 3, GL_FLOAT, false, 0},
-        {"color", 3, GL_FLOAT, false, 0},
-        {"normal", 3, GL_FLOAT, false, 0},
-        {"uv", 2, GL_FLOAT, false, 0},
+        {"position", 3, GL_FLOAT, false, 0, AttributeLocation::position},
+        {"color", 3, GL_FLOAT, false, 0, AttributeLocation::color},
+        {"normal", 3, GL_FLOAT, false, 0, AttributeLocation::normal},
+        {"uv", 2, GL_FLOAT, false, 0, AttributeLocation::uv},
     }));
 
     std::vector<std::unique_ptr<RawMesh>> meshes;

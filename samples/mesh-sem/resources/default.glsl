@@ -1,10 +1,10 @@
 #pragma begin:vertex
 #version 330
 
-layout (location = 0) in vec3 position;
-layout (location = 1) in vec3 color;
-layout (location = 2) in vec3 normal;
-layout (location = 3) in vec2 uv;
+in vec3 position;
+in vec3 color;
+in vec3 normal;
+in vec2 uv;
 
 uniform mat4 mvp;
 uniform mat4 mv;

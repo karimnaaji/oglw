@@ -29,7 +29,7 @@ void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});
     m_shader = uptr<Shader>(new Shader("default.glsl"));
     //m_geometry = cube(3.0);
-    m_geometry = plane(2.5f, 2.5f, 5, 5);
+    m_geometry = plane(2.5f, 2.5f, 100, 100);
 }
 
 void TestApp::update(float _dt) {

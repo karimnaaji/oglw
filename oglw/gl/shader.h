@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_map>
 #include "gl/gl.h"
+#include "gl/vertexLayout.h"
 #include "glm/glm.hpp"
 
 namespace OGLW {
@@ -34,6 +35,8 @@ public:
 
     // retrieve the attribute location for a given attribute name
     GLint getAttribLocation(const std::string& _attribute);
+    // binds a vertex layout to the shader
+    void bindVertexLayout(const VertexLayout& _layout);
     // set uniforms for the given name
     void setUniform(const std::string& _name, int _x);
     void setUniform(const std::string& _name, float _x);
@@ -50,14 +53,16 @@ public:
     static std::string stringFromKind(GLenum _kind);
 
 private:
+    static bool linkShaderProgram(GLuint _program);
+
     // compile and attach a shader to the shader program
-    GLuint add(const std::string& _shaderSource, GLenum _kind);
+    bool add(const std::string& _shaderSource, GLenum _kind, GLuint& _shader);
     // retrive a shader source from a program bundle
     bool getBundleShaderSource(std::string _type, std::string _bundle, std::string* _out, bool _opt = false) const;
     // load a shader program
     bool load(const std::string& _fragmentSrc, const std::string& _vertexSrc, const std::string& _geomSrc);
     // compile the shader program for the specified type
-    GLuint compile(const std::string& _src, GLenum _type);
+    bool compile(const std::string& _src, GLenum _type, GLuint& _shader);
     // retrieve the uniform location for a given name, lazily access the driver to request for uniform location
     GLint getUniformLocation(const std::string& _uniformName);
 

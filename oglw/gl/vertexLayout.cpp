@@ -1,6 +1,7 @@
 #include "vertexLayout.h"
 #include "core/types.h"
 #include "gl/shader.h"
+#include "core/log.h"
 
 namespace OGLW {
 
@@ -30,6 +31,19 @@ VertexLayout::VertexLayout(std::vector<VertexAttrib> _attribs) : m_attribs(_attr
 
 VertexLayout::~VertexLayout() {
     m_attribs.clear();
+}
+
+std::unordered_map<std::string, GLuint> VertexLayout::getLocations() const {
+    std::unordered_map<std::string, GLuint> map;
+
+    for (auto& attribute : m_attribs) {            
+        if (attribute.location == -1) {
+            WARN("Attribute location not set for attribute %s\n", attribute.name.c_str());
+        }
+        map[attribute.name] = attribute.location;
+    }
+
+    return map;
 }
 
 void VertexLayout::enable(const std::unordered_map<std::string, GLuint>& _locations, size_t byteOffset) {
