@@ -4,16 +4,25 @@ macro(load_oglw_sample SAMPLE_NAME)
     # cmake output configuration
     set(EXECUTABLE_NAME ${SAMPLE_NAME})
 
-    # find resources
     file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/resources/*)
+    file(GLOB_RECURSE FOUND_HEADERS ${PROJECT_SOURCE_DIR}/*.h)
+    file(GLOB_RECURSE FOUND_SOURCES ${PROJECT_SOURCE_DIR}/*.cpp)
+
+    set(INCLUDES ${INCLUDES} "")
+    foreach(_headerFile ${FOUND_HEADERS})
+        get_filename_component(_dir ${_headerFile} PATH)
+        list(APPEND INCLUDES ${_dir})
+    endforeach()
+    list(REMOVE_DUPLICATES INCLUDES)
+    include_directories(${INCLUDES})
 
     # create executable
     if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${PROJECT_SOURCE_DIR}/main.cpp ${RESOURCES})
-        set_target_properties(${EXECUTABLE_NAME} PROPERTIES RESOURCE "${RESOURCES}")    
+        add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE ${FOUND_SOURCES} ${RESOURCES})
+        set_target_properties(${EXECUTABLE_NAME} PROPERTIES RESOURCE "${RESOURCES}")
     else()
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE_NAME})
-        add_executable(${EXECUTABLE_NAME} ${PROJECT_SOURCE_DIR}/main.cpp)
+        add_executable(${EXECUTABLE_NAME} ${FOUND_SOURCES})
         file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/resources/*)
         foreach(_resource ${RESOURCES})
             file(COPY ${_resource} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
