@@ -11,8 +11,6 @@
 
 namespace OGLW {
 
-#define MAX_INDEX_VALUE 65535
-
 class VboMesh {
 
 public:
@@ -42,7 +40,6 @@ protected:
     bool upload();
     bool subDataUpload();
 
-    std::vector<std::pair<uint32_t, uint32_t>> m_vertexOffsets;
     std::shared_ptr<VertexLayout> m_vertexLayout;
 
     int m_nVertices;
@@ -52,7 +49,7 @@ protected:
 
     int m_nIndices;
     GLuint m_glIndexBuffer;
-    GLushort* m_glIndexData = nullptr;
+    GLuint* m_glIndexData = nullptr;
     GLenum m_hint;
     GLenum m_drawMode;
 
@@ -73,17 +70,16 @@ protected:
         std::swap(_vertices, vertices);
         std::swap(_indices, indices);
 
-        int vertexOffset = 0, indexOffset = 0;
-
         // Buffer positions: vertex byte and index short
         int vPos = 0, iPos = 0;
+        int vertexOffset = 0;
 
         int stride = m_vertexLayout->getStride();
         m_glVertexData = new GLbyte[stride * m_nVertices];
 
         bool useIndices = m_nIndices > 0;
         if (useIndices) {
-            m_glIndexData = new GLushort[m_nIndices];
+            m_glIndexData = new GLuint[m_nIndices];
         }
 
         for (size_t i = 0; i < vertices.size(); i++) {
@@ -95,21 +91,13 @@ protected:
             vPos += nBytes;
 
             if (useIndices) {
-                if (vertexOffset + nVertices > MAX_INDEX_VALUE) {
-                    m_vertexOffsets.emplace_back(indexOffset, vertexOffset);
-                    vertexOffset = 0;
-                    indexOffset = 0;
-                }
-
                 for (int idx : indices[i]) {
                     m_glIndexData[iPos++] = idx + vertexOffset;
                 }
-                indexOffset += indices[i].size();
             }
+
             vertexOffset += nVertices;
         }
-
-        m_vertexOffsets.emplace_back(indexOffset, vertexOffset);
 
         m_isCompiled = true;
     }

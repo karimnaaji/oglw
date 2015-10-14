@@ -77,7 +77,7 @@ bool VboMesh::upload() {
         }
 
         GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glIndexBuffer));
-        GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_nIndices * sizeof(GLushort), m_glIndexData, GL_STATIC_DRAW));
+        GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_nIndices * sizeof(GLuint), m_glIndexData, GL_STATIC_DRAW));
 
         delete[] m_glIndexData;
         m_glIndexData = nullptr;
@@ -141,39 +141,19 @@ void VboMesh::draw(Shader& _shader) {
     if (!m_vao) {
         m_vao = std::unique_ptr<Vao>(new Vao());
         const auto& locations = m_vertexLayout->getLocations();
-        std::vector<size_t> offsets;
 
-        offsets.push_back(0);
-
-        for (auto offset : m_vertexOffsets) {
-            offsets.push_back(offset.second);
-        }
-
-        m_vao->init(m_glVertexBuffer, m_glIndexBuffer, *m_vertexLayout, locations, offsets);
+        m_vao->init(m_glVertexBuffer, m_glIndexBuffer, *m_vertexLayout, locations);
     }
 
     _shader.bindVertexLayout(*m_vertexLayout);
     _shader.use();
 
-    size_t indiceOffset = 0;
-    size_t vertexOffset = 0;
+    m_vao->bind();
 
-    for (int i = 0; i < m_vertexOffsets.size(); ++i) {
-        const auto& offset = m_vertexOffsets[i];
-
-        uint32_t nIndices = offset.first;
-        uint32_t nVertices = offset.second;
-
-        m_vao->bind(i);
-
-        if (nIndices > 0) {
-            GL_CHECK(glDrawElements(m_drawMode, nIndices, GL_UNSIGNED_SHORT, (void*)(indiceOffset * sizeof(GLushort))));
-        } else if (nVertices > 0) {
-            GL_CHECK(glDrawArrays(m_drawMode, 0, nVertices));
-        }
-
-        vertexOffset += nVertices;
-        indiceOffset += nIndices;
+    if (m_nIndices > 0) {
+        GL_CHECK(glDrawElements(m_drawMode, m_nIndices, GL_UNSIGNED_INT, NULL));
+    } else if (m_nVertices > 0) {
+        GL_CHECK(glDrawArrays(m_drawMode, 0, m_nVertices));
     }
 
     m_vao->unbind();

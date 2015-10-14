@@ -36,7 +36,7 @@ VertexLayout::~VertexLayout() {
 std::unordered_map<std::string, GLuint> VertexLayout::getLocations() const {
     std::unordered_map<std::string, GLuint> map;
 
-    for (auto& attribute : m_attribs) {            
+    for (auto& attribute : m_attribs) {
         if (attribute.location == -1) {
             WARN("Attribute location not set for attribute %s\n", attribute.name.c_str());
         }
@@ -49,11 +49,11 @@ std::unordered_map<std::string, GLuint> VertexLayout::getLocations() const {
 void VertexLayout::enable(const std::unordered_map<std::string, GLuint>& _locations, size_t byteOffset) {
     for (auto& attrib : m_attribs) {
         auto it = _locations.find(attrib.name);
-        
+
         if (it == _locations.end()) {
             continue;
         }
-        
+
         const GLint location = it->second;
 
         GL_CHECK(glEnableVertexAttribArray(location));
@@ -65,7 +65,7 @@ void VertexLayout::enable(const std::unordered_map<std::string, GLuint>& _locati
 void VertexLayout::disable(const std::unordered_map<std::string, GLuint>& _locations) {
     for (auto& attrib : m_attribs) {
         auto it = _locations.find(attrib.name);
-        
+
         if (it == _locations.end()) {
             continue;
         }
