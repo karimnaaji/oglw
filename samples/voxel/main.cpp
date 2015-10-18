@@ -2,7 +2,6 @@
 #include <string>
 #include <memory>
 #include "oglw.h"
-#include "simplex.h"
 
 template <class T>
 using uptr = std::unique_ptr<T>;
@@ -29,31 +28,31 @@ static std::unique_ptr<Mesh<VoxelVert>> voxels(std::vector<VoxelVert>& _vertices
 // OGLW App
 class TestApp : public App {
     public:
-        TestApp() : App("OGLW::TestApp", 800, 600) {}
+        TestApp() : App("OGLW::TestApp", 1168, 720) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
 
     private:
         uptr<Shader> m_shader;
+        uptr<Shader> m_lightShader;
+        uptr<RawMesh> m_lightMesh;
         uptr<Mesh<VoxelVert>> m_geometry;
+        uptr<Skybox> m_skybox;
 };
 OGLWMain(TestApp);
 
 void TestApp::init() {
     m_camera.setPosition({0.0, 0.0, 10.0});
+    m_camera.setNear(2.0);
+    m_camera.setFar(500.0);
+    m_camera.setFov(55);
     m_shader = uptr<Shader>(new Shader("default.glsl"));
+    m_lightShader = uptr<Shader>(new Shader("no-shading.glsl"));
+    m_lightMesh = cube(0.5);
+    m_skybox = uptr<Skybox>(new Skybox("grimmnight_large.jpg"));
 
     std::vector<VoxelVert> vertices;
-
-    //for (int x = 0; x < 10; x++) {
-    //    for (int y = 0; y < 50; ++y) {
-    //        for (int z = 0; z < 100; ++z) {
-    //            float n = simplex_noise(1, x, y, z);
-    //            vertices.push_back({{x, y, z}, {n, n, n}});
-    //        }
-    //    }
-    //}
 
     uint size;
     uchar* data = bytesFromPath("terrain.png", &size);
@@ -67,7 +66,7 @@ void TestApp::init() {
     float heightScale = 4.0;
 
     for (int i = 0; i < width; i += comp) {
-        for (int j = 0; j < height * 2; j += comp) {
+        for (int j = 0; j < height; j += comp) {
             uint value = pixels[j * width + i];
             int height = floor(value / heightScale);
             int j0 = (j - comp) * width + i;
@@ -130,18 +129,36 @@ void TestApp::init() {
 }
 
 void TestApp::update(float _dt) {
-    updateFreeFlyCamera(_dt, 'S', 'W', 'A', 'D', 1e-3f);
+    updateFreeFlyCamera(_dt, 'S', 'W', 'A', 'D', 1e-3f, 55.f);
 }
 
 void TestApp::render(float _dt) {
+    glm::vec3 lightPos = glm::vec3(cos(m_globalTime) * 5.f + 10.f, 2.f, sin(m_globalTime) * 5.f + 10.f);
     glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix();
+    glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(mvp)));
+
+    m_skybox->draw(mvp, m_camera.getPosition());
 
     RenderState::culling(GL_FALSE);
     RenderState::depthTest(GL_TRUE);
     RenderState::depthWrite(GL_TRUE);
 
     m_shader->setUniform("mvp", mvp);
+    m_shader->setUniform("view", m_camera.getViewMatrix());
+    m_shader->setUniform("normalMatrix", normalMatrix);
+    m_shader->setUniform("viewPos", m_camera.getPosition());
+
+    m_shader->setUniform("light.position", lightPos);
+    m_shader->setUniform("light.color", glm::vec3(0.6, 0.68, 0.68));
+    m_shader->setUniform("light.ambiant", glm::vec3(0.7));
+    m_shader->setUniform("light.diffuseIntensity", 0.5f);
+    m_shader->setUniform("light.specularIntensity", 5.0f);
 
     m_geometry->draw(*m_shader);
+
+    glm::mat4 model = glm::translate(glm::mat4(), lightPos);
+    mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * model;
+    m_lightShader->setUniform("mvp", mvp);
+    m_lightMesh->draw(*m_lightShader);
 }
 
