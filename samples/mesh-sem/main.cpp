@@ -55,8 +55,7 @@ class TestApp : public OGLW::App {
 
         float m_xrot = 0.f, m_yrot = 0.f;
 };
-// OGLWMainGamma(TestApp, audioCB);
-OGLWMain(TestApp);
+OGLWMainGamma(TestApp, audioCB);
 
 void TestApp::init() {
     m_camera.setPosition({0.0, -0.5, 14.0});

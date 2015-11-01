@@ -9,7 +9,7 @@ namespace OGLW {
 struct RenderTargetSetup {
     bool useDepth = false;
 
-    // Using the depth texture as default render target 
+    // Using the depth texture as default render target
     // would disable color draw buffer read and write
     bool useDepthTexture = false;
     bool useStencil = false;
@@ -21,14 +21,14 @@ struct RenderTargetSetup {
 
 class RenderTarget {
 
-public:  
+public:
     RenderTarget(RenderTargetSetup _setup = {});
     ~RenderTarget();
 
     // creates the render target and initialize the renderTexture/renderBuffer
     void create(uint _width, uint _height);
     // apply a render target for anything going to be rendered in the viewport
-    void apply(uint _width, uint _height);
+    void apply(uint _width, uint _height, uint _clearColor = 0x0);
     // get the render target texture handle
     const std::unique_ptr<Texture>& getRenderTexture() const { return m_texture; }
     // apply the default render target
