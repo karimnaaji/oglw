@@ -38,9 +38,10 @@ void TestApp::init() {
     m_shadowCasterCamera->setFov(52);
     m_shadowCasterCamera->setNear(0.5f);
     m_shadowCasterCamera->setFar(5.0f);
+    m_shadowCasterCamera->rotate({-M_PI_2, 0.0});
 
     // default camera
-    m_camera.setPosition({0.0, 0.0, 15.0});
+    m_camera.setPosition({0.0, -3.0, 5.0});
     m_camera.setFar(200.f);
     m_camera.setNear(0.1f);
     m_camera.setFov(50);
@@ -73,13 +74,14 @@ void TestApp::update(float _dt) {
 
 void TestApp::render(float _dt) {
     glm::mat4 model, mvp, view;
+    model = glm::rotate(model, (float) M_PI_2, glm::vec3(1, 0, 0));
     glm::mat3 normalMat;
 
     /// Apply first render target to draw scene depth from light caster
-    glm::vec3 shadowCasterPos = glm::vec3(-0.3 + cos(m_globalTime) * 0.3, -0.3 - sin(m_globalTime) * 0.2, 2.5 + 0.2 * cos(m_globalTime));
+    glm::vec3 shadowCasterPos = glm::vec3(0.3 * sin(m_globalTime), -3.0, 0.3 * cos(m_globalTime));
     m_shadowCasterCamera->setPosition(shadowCasterPos);
 
-    glm::mat4 depthMVP = m_shadowCasterCamera->getProjectionMatrix() * m_shadowCasterCamera->getViewMatrix();
+    glm::mat4 depthMVP = m_shadowCasterCamera->getProjectionMatrix() * m_shadowCasterCamera->getViewMatrix() * model;
 
     m_renderTarget->apply(2048, 2048);
     RenderState::depthWrite(GL_TRUE);
@@ -96,9 +98,8 @@ void TestApp::render(float _dt) {
 
     RenderTarget::applyDefault(800, 600, false);
 
-    model = glm::mat4();
     view = m_camera.getViewMatrix();
-    mvp = m_camera.getProjectionMatrix() * view;
+    mvp = m_camera.getProjectionMatrix() * view * model;
     normalMat = glm::transpose(glm::inverse(glm::mat3(view)));
 
     m_renderTarget->bindRenderTexture(0);
@@ -117,6 +118,7 @@ void TestApp::render(float _dt) {
 
     /// Draw shadow caster position
     model = glm::translate(glm::mat4(), shadowCasterPos);
+    model = glm::rotate(model,(float) M_PI_2, glm::vec3(1, 0, 0));
     mvp = m_camera.getProjectionMatrix() * view * model;
     m_shadowCasterShader->setUniform("mvp", mvp);
     m_shadowCasterMesh->draw(*m_shadowCasterShader);
