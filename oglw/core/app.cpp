@@ -177,7 +177,7 @@ void App::run() {
     }
 }
 
-void App::updateFreeFlyCamera(float _dt, char _back, char _forward, char _left, char _right, 
+void App::updateFreeFlyCamera(float _dt, char _back, char _forward, char _left, char _right,
     float _sensitivity, float _speed) {
 
     if (glfwGetKey(m_window, _back)) {
@@ -187,9 +187,9 @@ void App::updateFreeFlyCamera(float _dt, char _back, char _forward, char _left, 
     }
 
     if (glfwGetKey(m_window, _right)) {
-        m_camera.translate(_dt * _speed * -m_camera.right());
-    } else if (glfwGetKey(m_window, _left)) {
         m_camera.translate(_dt * _speed * m_camera.right());
+    } else if (glfwGetKey(m_window, _left)) {
+        m_camera.translate(_dt * _speed * -m_camera.right());
     }
 
     m_camera.rotate(glm::vec2(-_sensitivity * m_cursorY, -_sensitivity * m_cursorX));
