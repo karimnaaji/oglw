@@ -67,20 +67,19 @@ void TestApp::init() {
     m_quad = OGLW::quad(1.f);
     m_texture = uptr<OGLW::Texture>(new OGLW::Texture("lightprobe.jpg"));
     OGLW::RenderTargetSetup setup;
-    // setup.useDepthTexture = true;
     setup.useDepth = true;
     m_renderTarget = std::make_unique<OGLW::RenderTarget>(setup);
     m_renderTarget->create(800, 600);
 
-    displayText(30.f, {10.f, 30.f}, "OGLW");
-    displayText(15.f, {10.f, 45.f}, "::TestApp");
+    oglwDisplayText(30.f, {10.f, 30.f}, "OGLW");
+    oglwDisplayText(15.f, {10.f, 45.f}, "::TestApp");
 }
 
 void TestApp::update(float _dt) {
     m_xrot += m_cursorX;
     m_yrot += m_cursorY;
 
-    displayText(15.f, {m_width - 80.f, 20.f}, std::to_string(_dt) + std::string("ms"), true);
+    oglwDisplayText(15.f, {m_width - 80.f, 20.f}, std::to_string(_dt) + std::string("ms"), true);
 }
 
 void TestApp::render(float _dt) {

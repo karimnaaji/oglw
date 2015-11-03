@@ -91,7 +91,7 @@ void App::initGLFW() {
 }
 
 
-fsuint App::displayText(float _size, glm::vec2 _position, const std::string& _text, bool _clear) {
+fsuint App::oglwDisplayText(float _size, glm::vec2 _position, const std::string& _text, bool _clear) {
     if (!m_textRendering) {
         return 0;
     }
@@ -177,7 +177,7 @@ void App::run() {
     }
 }
 
-void App::updateFreeFlyCamera(float _dt, char _back, char _forward, char _left, char _right,
+void App::oglwUpdateFreeFlyCamera(float _dt, char _back, char _forward, char _left, char _right,
     float _sensitivity, float _speed) {
 
     if (glfwGetKey(m_window, _back)) {

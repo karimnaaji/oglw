@@ -40,15 +40,13 @@ class App {
         virtual void update(float _dt) = 0;
         virtual void render(float _dt) = 0;
         virtual void init() = 0;
-        void updateFreeFlyCamera(float _dt, char _back, char _forward, char _left, char _right, 
-            float _sensitivity = 1e-2f, float _speed = 3.f);
 
         void run();
 
     protected:
         std::string m_name;
         std::string m_font;
-        
+
         Camera m_camera;
         GLFWwindow* m_window;
         FONScontext* m_fontContext;
@@ -63,8 +61,9 @@ class App {
         double m_cursorY;
         float m_globalTime = 0.f;
 
-        fsuint displayText(float _size, glm::vec2 _position, const std::string& _text, bool _clear = false);
-        void clearText(fsuint _id);
+        fsuint oglwDisplayText(float _size, glm::vec2 _position, const std::string& _text, bool _clear = false);
+        void oglwUpdateFreeFlyCamera(float _dt, char _back, char _forward, char _left, char _right,
+            float _sensitivity = 1e-2f, float _speed = 3.f);
 
         struct Text {
             fsuint m_textId;
@@ -73,6 +72,7 @@ class App {
         };
 
     private:
+        void clearText(fsuint _id);
         void initGLFW();
 
         std::vector<Text> m_texts;

@@ -31,7 +31,7 @@ void TestApp::init() {
 }
 
 void TestApp::update(float _dt) {
-    updateFreeFlyCamera(_dt, 'S', 'W', 'A', 'D', 1e-4f);
+    oglwUpdateFreeFlyCamera(_dt, 'S', 'W', 'A', 'D', 1e-4f);
 }
 
 void TestApp::render(float _dt) {
