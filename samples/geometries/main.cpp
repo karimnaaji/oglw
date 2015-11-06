@@ -45,8 +45,8 @@ void TestApp::init() {
 
     m_texture = uptr<OGLW::Texture>(new Texture("perlin.png", options));
 
-    m_geometry = plane(40.f, 40.f, 350, 350);
-    m_waterGeometry = plane(40.f, 40.f, 250, 250);
+    m_geometry = plane(20.f, 20.f, 350, 350);
+    m_waterGeometry = plane(20.f, 20.f, 250, 250);
 }
 
 void TestApp::update(float _dt) {

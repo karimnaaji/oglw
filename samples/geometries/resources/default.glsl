@@ -11,7 +11,7 @@ out float fOffset;
 out vec3 fPos;
 
 void main() {
-    float offset = texture(tex, uv * 5.0).r;
+    float offset = texture(tex, uv * 2.0).r;
     vec3 pos = vec3(position, 4.0 * offset);
     gl_Position = mvp * vec4(pos, 1.0);
     fPos = pos;
@@ -39,7 +39,7 @@ void main(void) {
     vec3 surfaceColor = vec3(0.53,0.36, 0.33);
     float ambientIntensity = 0.7;
 
-    vec3 surfaceToLight = normalize(modelView * vec4(0.0, 15.0, 0.0, 0.0)).xyz;
+    vec3 surfaceToLight = normalize(modelView * vec4(0.0, 5.0, 0.0, 0.0)).xyz;
     vec3 surfaceToCamera = normalize(-modelView * vec4(fPos, 0.0)).xyz;
 
     vec3 ambient = ambientIntensity * surfaceColor;
@@ -49,7 +49,7 @@ void main(void) {
     vec3 lightFactor = ambient + diffuse;
 
     outColour = vec4(lightFactor * clamp(fOffset, 0.2, 1.0), 1.0);
-    outColour.rgb = pow(outColour.rgb, vec3(0.4545));
+    //outColour.rgb = pow(outColour.rgb, vec3(0.4545));
 }
 
 #pragma end:fragment

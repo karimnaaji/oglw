@@ -24,11 +24,14 @@ float addWave(float xSource, float ySource, float speed, float amplitude, float 
 }
 
 void main() {
+    float a0 = addWave(uv.x * 0.5, uv.x * 0.5, waveSpeed * 10.0, waveAmplitude * 2.0, 0.1 * waveFreq, 2.0);
     float a1 = addWave(uv.x, uv.y, waveSpeed, waveAmplitude, waveFreq, 3.0);
-    float a2 = addWave(0.0, uv.y, waveSpeed, waveAmplitude, waveFreq, 3.0);
-    float a3 = addWave(uv.x, 0.0, waveSpeed, waveAmplitude, waveFreq, 3.0);
+    float a2 = addWave(0.0, uv.y, waveSpeed, waveAmplitude, 0.5 * waveFreq, 1.0);
+    float a3 = addWave(uv.x, 0.0, waveSpeed, waveAmplitude, 0.5 * waveFreq, 2.0);
+    float a4 = addWave(uv.x * 0.5, uv.y * 0.5, waveSpeed, waveAmplitude, 0.5 * waveFreq, 2.0);
+    float a5 = addWave(0.0, 0.0, waveSpeed, waveAmplitude, .5 * waveFreq, 2.0);
 
-    vec3 pos = vec3(position, 1.0 + 0.2 * (a1 + a2 + a3));
+    vec3 pos = vec3(position, 1.0 + 0.3 * (a0 + a1 + a2 + a3 + a4 + a5));
     gl_Position = mvp * vec4(pos, 1.0);
 
     fUV = uv;
@@ -66,7 +69,6 @@ void main(void) {
     vec3 lightFactor = ambient + diffuse;
 
     outColour = vec4(lightFactor, 0.3 + 0.2 * diffuseCoefficient);
-    outColour.rgb = pow(outColour.rgb, vec3(0.4545));
 }
 
 #pragma end:fragment
