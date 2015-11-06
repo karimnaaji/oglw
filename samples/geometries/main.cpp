@@ -18,17 +18,24 @@ class TestApp : public App {
 
     private:
         uptr<Shader> m_shader;
+        uptr<Shader> m_waterShader;
         uptr<Mesh<glm::vec4>> m_geometry;
+        uptr<Mesh<glm::vec4>> m_waterGeometry;
         uptr<OGLW::Texture> m_texture;
 };
 OGLWMain(TestApp);
 
 void TestApp::init() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
-    m_camera.setPosition({0.0, 0.0, 5.0});
-    m_camera.setFov(45.f);
+
+    // default camera
+    m_camera.setPosition({0.0, -3.0, 5.0});
+    m_camera.setFar(200.f);
+    m_camera.setNear(0.1f);
+    m_camera.setFov(30);
 
     m_shader = uptr<Shader>(new Shader("default.glsl"));
+    m_waterShader = uptr<Shader>(new Shader("water.glsl"));
 
     OGLW::TextureOptions options = {
         GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE,
@@ -36,9 +43,10 @@ void TestApp::init() {
         {GL_REPEAT, GL_REPEAT}
     };
 
-    m_texture = uptr<OGLW::Texture>(new OGLW::Texture("perlin.png", options));
+    m_texture = uptr<OGLW::Texture>(new Texture("perlin.png", options));
 
     m_geometry = plane(40.f, 40.f, 350, 350);
+    m_waterGeometry = plane(40.f, 40.f, 250, 250);
 }
 
 void TestApp::update(float _dt) {
@@ -46,17 +54,35 @@ void TestApp::update(float _dt) {
 }
 
 void TestApp::render(float _dt) {
-    glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix();
+    glm::mat4 model = glm::rotate(glm::mat4(), (float) M_PI_2, glm::vec3(1.0, 0.0, 0.0));
+    glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * model;
+
+    glm::vec3 camPos = m_camera.getPosition();
+    std::cout << camPos.x << " " << camPos.y << " " << camPos.z << std::endl;
 
     m_texture->bind(0);
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("tex", 0);
-    m_shader->setUniform("time", m_globalTime);
+    m_shader->setUniform("modelView", m_camera.getViewMatrix() * model);
+    m_shader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
 
     RenderState::depthTest(GL_TRUE);
-    RenderState::culling(GL_FALSE);
+    RenderState::culling(GL_TRUE);
+    RenderState::cullFace(GL_BACK);
+    RenderState::blending(GL_FALSE);
 
     m_geometry->draw(*m_shader);
+    mvp = glm::translate(mvp, glm::vec3(0.0, 0.0, 0.8));
+
+    m_waterShader->setUniform("mvp", mvp);
+    m_waterShader->setUniform("time", m_globalTime);
+    m_waterShader->setUniform("modelView", m_camera.getViewMatrix() * model);
+    m_waterShader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
+
+    RenderState::blending(GL_TRUE);
+    RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    m_waterGeometry->draw(*m_waterShader);
 }
 
