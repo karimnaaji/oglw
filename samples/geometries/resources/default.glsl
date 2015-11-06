@@ -49,7 +49,7 @@ void main(void) {
     vec3 lightFactor = ambient + diffuse;
 
     outColour = vec4(lightFactor * clamp(fOffset, 0.2, 1.0), 1.0);
-    //outColour.rgb = pow(outColour.rgb, vec3(0.4545));
+    outColour.rgb = pow(outColour.rgb, vec3(0.4545));
 }
 
 #pragma end:fragment
