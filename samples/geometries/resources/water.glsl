@@ -66,6 +66,7 @@ void main(void) {
     vec3 lightFactor = ambient + diffuse;
 
     outColour = vec4(lightFactor, 0.3 + 0.2 * diffuseCoefficient);
+    outColour.rgb = pow(outColour.rgb, vec3(0.4545));
 }
 
 #pragma end:fragment
