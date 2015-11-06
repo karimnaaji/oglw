@@ -6,13 +6,16 @@ in vec2 uv;
 
 uniform mat4 mvp;
 uniform sampler2D tex;
+uniform float extrude;
+uniform float yOffset;
+uniform float scale;
 
 out float fOffset;
 out vec3 fPos;
 
 void main() {
-    float offset = texture(tex, uv * 2.0).r;
-    vec3 pos = vec3(position, 4.0 * offset);
+    float offset = texture(tex, uv * scale).r;
+    vec3 pos = vec3(position, offset * extrude - yOffset);
     gl_Position = mvp * vec4(pos, 1.0);
     fPos = pos;
     fOffset = offset;
@@ -30,13 +33,14 @@ in vec3 fPos;
 
 uniform mat3 normalMatrix;
 uniform mat4 modelView;
+uniform vec3 color;
 
 void main(void) {
     vec3 p0 = dFdx(fPos);
     vec3 p1 = dFdy(fPos);
     vec3 n = normalMatrix * normalize(cross(p0, p1));
 
-    vec3 surfaceColor = vec3(0.53,0.36, 0.33);
+    vec3 surfaceColor = color;
     float ambientIntensity = 0.7;
 
     vec3 surfaceToLight = normalize(modelView * vec4(0.0, 5.0, 0.0, 0.0)).xyz;
