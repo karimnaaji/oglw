@@ -11,7 +11,7 @@ using namespace OGLW;
 // OGLW App
 class TestApp : public App {
     public:
-        TestApp() : App("OGLW::TestApp", 1024, 720) {}
+        TestApp() : App("OGLW::TestApp", /*"Roboto-Regular.ttf", */1024, 720) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
@@ -24,6 +24,7 @@ class TestApp : public App {
         uptr<Texture> m_texture;
         uptr<RenderTarget> m_renderTarget;
         uptr<Camera> m_reflectionCamera;
+        uptr<QuadRenderer> m_quadRenderer;
 };
 OGLWMain(TestApp);
 
@@ -59,10 +60,18 @@ void TestApp::init() {
     m_renderTarget = std::make_unique<OGLW::RenderTarget>(setup);
     m_renderTarget->create(1024, 720);
 
+    m_quadRenderer = uptr<QuadRenderer>(new QuadRenderer());
+    m_quadRenderer->init();
 }
 
 void TestApp::update(float _dt) {
+
     oglwUpdateFreeFlyCamera(_dt, 'S', 'W', 'A', 'D', 1e-3f, 20.f);
+
+    glm::vec2 camRotation = m_camera.rotation();
+    float theta = camRotation.x * (180.0 / M_PI);
+    float phi = camRotation.y * (180.0 / M_PI);
+    //oglwDisplayText(24.f, {20.f, 40.f}, "X:" + std::to_string(theta) + " Y: " + std::to_string(phi), true);
 }
 
 void TestApp::render(float _dt) {
@@ -85,11 +94,11 @@ void TestApp::render(float _dt) {
     RenderState::cullFace(GL_BACK);
     RenderState::blending(GL_FALSE);
 
-    //m_renderTarget->apply(1024, 720, 0xffffffff);
+    m_renderTarget->apply(1024, 720, 0xffffffff);
 
     m_geometry->draw(*m_shader);
 
-    //RenderTarget::applyDefault(1024, 720, 0xffffffff);
+    RenderTarget::applyDefault(1024, 720, 0xffffffff);
 
     mvp = glm::translate(mvp, glm::vec3(0.0, 0.0, 0.8));
 
@@ -103,5 +112,7 @@ void TestApp::render(float _dt) {
     RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     m_waterGeometry->draw(*m_waterShader);
+
+    m_quadRenderer->render(*m_renderTarget->getRenderTexture(), getResolution(), glm::vec2(0.0), 0.35);
 }
 

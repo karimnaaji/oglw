@@ -18,6 +18,7 @@ public:
     glm::vec3 forward() const;
     glm::vec3 up() const;
     glm::vec3 right() const;
+    glm::vec2 rotation() const;
     glm::mat4 getViewMatrix() const;
     glm::mat4 getRotationMatrix() const;
     glm::mat4 getProjectionMatrix() const;

@@ -43,6 +43,10 @@ glm::vec3 Camera::right() const {
     return glm::vec3(right);
 }
 
+glm::vec2 Camera::rotation() const {
+    return m_rotation;
+}
+
 glm::vec3 Camera::getPosition() const {
     return m_position;
 }

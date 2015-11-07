@@ -42,6 +42,7 @@ class App {
         virtual void init() = 0;
 
         void run();
+        glm::vec2 getResolution() { return glm::vec2(m_width, m_height); }
 
     protected:
         std::string m_name;
