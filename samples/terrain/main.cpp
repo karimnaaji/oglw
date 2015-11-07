@@ -76,11 +76,43 @@ void TestApp::update(float _dt) {
 
 void TestApp::render(float _dt) {
     float yWaterPlane = 1.0f;
-    glm::mat4 model = glm::rotate(glm::mat4(), (float) M_PI_2, glm::vec3(1.0, 0.0, 0.0));
-    glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * model;
+    glm::mat4 model;
+    glm::mat4 mvp;
 
-    glm::vec3 camPos = m_camera.getPosition();
-    std::cout << camPos.x << " " << camPos.y << " " << camPos.z << std::endl;
+    m_texture->bind(0);
+
+    glEnable(GL_CLIP_PLANE0);
+
+    glm::vec3 camPosition = m_camera.getPosition();
+    camPosition.y *= -1.0f;
+    camPosition.y -= 2.0; //yWaterPlane;
+    m_reflectionCamera->setPosition(camPosition);
+    m_reflectionCamera->setRotationX(-m_camera.getRotation().x);
+    m_reflectionCamera->setRotationY(m_camera.getRotation().y);
+
+    model = glm::rotate(glm::mat4(), (float) M_PI_2, glm::vec3(1.0, 0.0, 0.0));
+    mvp = m_reflectionCamera->getProjectionMatrix() * m_reflectionCamera->getViewMatrix() * model;
+
+    m_shader->setUniform("mvp", mvp);
+    m_shader->setUniform("tex", 0);
+    m_shader->setUniform("modelView", m_reflectionCamera->getViewMatrix() * model);
+    m_shader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
+
+    RenderState::depthTest(GL_TRUE);
+    RenderState::culling(GL_TRUE);
+    RenderState::cullFace(GL_BACK);
+    RenderState::blending(GL_FALSE);
+
+    m_renderTarget->apply(1024, 720, 0xffffffff);
+
+    m_geometry->draw(*m_shader);
+
+
+    RenderTarget::applyDefault(1024, 720, 0xffffffff);
+
+    /// Draw terrain
+
+    mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * model;
 
     m_texture->bind(0);
 
@@ -94,14 +126,12 @@ void TestApp::render(float _dt) {
     RenderState::cullFace(GL_BACK);
     RenderState::blending(GL_FALSE);
 
-    m_renderTarget->apply(1024, 720, 0xffffffff);
-
     m_geometry->draw(*m_shader);
-
-    RenderTarget::applyDefault(1024, 720, 0xffffffff);
 
     mvp = glm::translate(mvp, glm::vec3(0.0, 0.0, 0.8));
 
+
+    /// Draw water
     m_waterShader->setUniform("mvp", mvp);
     m_waterShader->setUniform("time", m_globalTime);
     m_waterShader->setUniform("modelView", m_camera.getViewMatrix() * model);
@@ -113,6 +143,8 @@ void TestApp::render(float _dt) {
 
     m_waterGeometry->draw(*m_waterShader);
 
+
+    /// Debug draw camera framebuffer
     m_quadRenderer->render(*m_renderTarget->getRenderTexture(), getResolution(), glm::vec2(0.0), 0.35);
 }
 

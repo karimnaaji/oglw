@@ -26,6 +26,10 @@ public:
 
     void translate(glm::vec3 _vec);
     void rotate(glm::vec2 _rotation);
+    void setRotationX(float _rotX) { m_rotation.x = _rotX; }
+    void setRotationY(float _rotY) { m_rotation.y = _rotY; }
+    void setRotation(glm::vec2 _rotation) { m_rotation = _rotation; }
+    glm::vec2 getRotation() const { return m_rotation; }
 
     void lookAt(glm::vec3 _point);
     void normalizeAngles();

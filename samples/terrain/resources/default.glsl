@@ -16,6 +16,7 @@ void main() {
     gl_Position = mvp * vec4(pos, 1.0);
     fPos = pos;
     fOffset = offset;
+    gl_ClipDistance[0] = pos.z;
 }
 
 #pragma end:vertex
