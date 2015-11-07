@@ -108,6 +108,7 @@ void TestApp::render(float _dt) {
 
     m_geometry->draw(*m_shader);
 
+    glDisable(GL_CLIP_PLANE0);
 
     RenderTarget::applyDefault(1024, 720, 0xffffffff);
 
@@ -129,11 +130,16 @@ void TestApp::render(float _dt) {
     m_geometry->draw(*m_shader);
 
     /// Draw water
+
+    m_renderTarget->getRenderTexture()->bind(0);
+
     m_waterShader->setUniform("mvp", mvp);
     m_waterShader->setUniform("time", m_globalTime);
     m_waterShader->setUniform("modelView", m_camera.getViewMatrix() * model);
     m_waterShader->setUniform("yWaterPlane", yWaterPlane);
     m_waterShader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
+    m_waterShader->setUniform("screenResolution", getResolution());
+    m_waterShader->setUniform("reflectionTexture", 0);
 
     RenderState::blending(GL_TRUE);
     RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

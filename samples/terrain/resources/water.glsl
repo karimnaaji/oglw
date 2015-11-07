@@ -51,6 +51,8 @@ in vec3 fPos;
 
 uniform mat3 normalMatrix;
 uniform mat4 modelView;
+uniform vec2 screenResolution;
+uniform sampler2D reflectionTexture;
 
 void main(void) {
     vec3 p0 = dFdx(fPos);
@@ -70,6 +72,11 @@ void main(void) {
     vec3 lightFactor = ambient + diffuse;
 
     outColour = vec4(lightFactor, 0.3 + 0.2 * diffuseCoefficient);
+
+
+    vec2 uv = gl_FragCoord.xy / screenResolution;
+    uv.y = 1.0 - uv.y;
+    outColour *= texture(reflectionTexture, uv);
 }
 
 #pragma end:fragment
