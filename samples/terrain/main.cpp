@@ -15,6 +15,9 @@ class TestApp : public App {
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
+        void captureReflectionTexture(float _yWaterPlane, glm::mat4 _model);
+        void drawTerrain(glm::mat4 _model);
+        void drawWater(glm::mat4 _model, float _yWaterPlane);
 
     private:
         uptr<Shader> m_shader;
@@ -22,7 +25,8 @@ class TestApp : public App {
         uptr<Mesh<glm::vec4>> m_geometry;
         uptr<Mesh<glm::vec4>> m_waterGeometry;
         uptr<Texture> m_texture;
-        uptr<RenderTarget> m_renderTarget;
+        uptr<RenderTarget> m_reflectionRenderTarget;
+        uptr<RenderTarget> m_depthRenderTarget;
         uptr<Camera> m_reflectionCamera;
         uptr<QuadRenderer> m_quadRenderer;
 };
@@ -57,8 +61,13 @@ void TestApp::init() {
 
     RenderTargetSetup setup;
     setup.useDepth = true;
-    m_renderTarget = std::make_unique<OGLW::RenderTarget>(setup);
-    m_renderTarget->create(1024, 720);
+    m_reflectionRenderTarget = std::make_unique<OGLW::RenderTarget>(setup);
+    m_reflectionRenderTarget->create(1024, 720);
+
+    RenderTargetSetup depthSetup;
+    depthSetup.useDepthTexture = true;
+    m_depthRenderTarget = std::make_unique<OGLW::RenderTarget>(depthSetup);
+    m_depthRenderTarget->create(1024, 720);
 
     m_quadRenderer = uptr<QuadRenderer>(new QuadRenderer());
     m_quadRenderer->init();
@@ -74,9 +83,7 @@ void TestApp::update(float _dt) {
     //oglwDisplayText(24.f, {20.f, 40.f}, "X:" + std::to_string(theta) + " Y: " + std::to_string(phi), true);
 }
 
-void TestApp::render(float _dt) {
-    float yWaterPlane = 1.5f;
-    glm::mat4 model;
+void TestApp::captureReflectionTexture(float _yWaterPlane, glm::mat4 _model) {
     glm::mat4 mvp;
 
     m_texture->bind(0);
@@ -85,18 +92,18 @@ void TestApp::render(float _dt) {
 
     glm::vec3 camPosition = m_camera.getPosition();
     camPosition.y *= -1.0f;
-    camPosition.y -= 2.0 * yWaterPlane;
+    camPosition.y -= 2.0 * _yWaterPlane;
+
     m_reflectionCamera->setPosition(camPosition);
     m_reflectionCamera->setRotationX(-m_camera.getRotation().x);
     m_reflectionCamera->setRotationY(m_camera.getRotation().y);
 
-    model = glm::rotate(glm::mat4(), (float) M_PI_2, glm::vec3(1.0, 0.0, 0.0));
-    mvp = m_reflectionCamera->getProjectionMatrix() * m_reflectionCamera->getViewMatrix() * model;
+    mvp = m_reflectionCamera->getProjectionMatrix() * m_reflectionCamera->getViewMatrix() * _model;
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("tex", 0);
-    m_shader->setUniform("clipPlane", glm::vec4(0.0, 0.0, 1.0, -yWaterPlane));
-    m_shader->setUniform("modelView", m_reflectionCamera->getViewMatrix() * model);
+    m_shader->setUniform("clipPlane", glm::vec4(0.0, 0.0, 1.0, -_yWaterPlane));
+    m_shader->setUniform("_modelView", m_reflectionCamera->getViewMatrix() * _model);
     m_shader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
 
     RenderState::depthTest(GL_TRUE);
@@ -104,22 +111,23 @@ void TestApp::render(float _dt) {
     RenderState::cullFace(GL_BACK);
     RenderState::blending(GL_FALSE);
 
-    m_renderTarget->apply(1024, 720, 0xffffffff);
+    m_reflectionRenderTarget->apply(1024, 720, 0xffffffff);
 
     m_geometry->draw(*m_shader);
 
     glDisable(GL_CLIP_PLANE0);
 
     RenderTarget::applyDefault(1024, 720, 0xffffffff);
+}
 
-    /// Draw terrain
+void TestApp::drawTerrain(glm::mat4 _model) {
 
-    mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * model;
+    glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * _model;
 
     m_texture->bind(0);
 
     m_shader->setUniform("mvp", mvp);
-    m_shader->setUniform("modelView", m_camera.getViewMatrix() * model);
+    m_shader->setUniform("modelView", m_camera.getViewMatrix() * _model);
     m_shader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
 
     RenderState::depthTest(GL_TRUE);
@@ -129,25 +137,48 @@ void TestApp::render(float _dt) {
 
     m_geometry->draw(*m_shader);
 
-    /// Draw water
+}
 
-    m_renderTarget->getRenderTexture()->bind(0);
+void TestApp::drawWater(glm::mat4 _model, float _yWaterPlane) {
+
+    glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix() * _model;
+
+    m_reflectionRenderTarget->getRenderTexture()->bind(0);
+    m_depthRenderTarget->getDepthRenderTexture()->bind(1);
 
     m_waterShader->setUniform("mvp", mvp);
     m_waterShader->setUniform("time", m_globalTime);
-    m_waterShader->setUniform("modelView", m_camera.getViewMatrix() * model);
-    m_waterShader->setUniform("yWaterPlane", yWaterPlane);
+    m_waterShader->setUniform("modelView", m_camera.getViewMatrix() * _model);
+    m_waterShader->setUniform("yWaterPlane", _yWaterPlane);
     m_waterShader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
     m_waterShader->setUniform("screenResolution", getResolution());
     m_waterShader->setUniform("reflectionTexture", 0);
+    m_waterShader->setUniform("depthMap", 1);
 
     RenderState::blending(GL_TRUE);
     RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     m_waterGeometry->draw(*m_waterShader);
 
+}
+
+
+void TestApp::render(float _dt) {
+    float yWaterPlane = 1.5f;
+    glm::mat4 model = glm::rotate(glm::mat4(), (float) M_PI_2, glm::vec3(1.0, 0.0, 0.0));
+
+    captureReflectionTexture(yWaterPlane, model);
+
+    /// Draw terrain
+
+    drawTerrain(model);
+
+    /// Draw water
+
+    drawWater(model, yWaterPlane);
 
     /// Debug draw camera framebuffer
-    m_quadRenderer->render(*m_renderTarget->getRenderTexture(), getResolution(), glm::vec2(0.0), 0.35);
+
+    m_quadRenderer->render(*m_reflectionRenderTarget->getRenderTexture(), getResolution(), glm::vec2(0.0), 0.35);
 }
 
