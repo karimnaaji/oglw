@@ -6,6 +6,7 @@ in vec2 uv;
 
 uniform mat4 mvp;
 uniform sampler2D tex;
+uniform vec4 clipPlane;
 
 out float fOffset;
 out vec3 fPos;
@@ -16,7 +17,7 @@ void main() {
     gl_Position = mvp * vec4(pos, 1.0);
     fPos = pos;
     fOffset = offset;
-    gl_ClipDistance[0] = pos.z;
+    gl_ClipDistance[0] = dot(vec4(pos, 1.0), clipPlane);
 }
 
 #pragma end:vertex

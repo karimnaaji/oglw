@@ -6,6 +6,7 @@ in vec2 uv;
 
 uniform mat4 mvp;
 uniform float time;
+uniform float yWaterPlane;
 
 out vec2 fUV;
 out vec3 fPos;
@@ -31,7 +32,7 @@ void main() {
     float a4 = addWave(uv.x * 0.5, uv.y * 0.5, waveSpeed, waveAmplitude, 0.5 * waveFreq, 2.0);
     float a5 = addWave(0.0, 0.0, waveSpeed, waveAmplitude, .5 * waveFreq, 2.0);
 
-    vec3 pos = vec3(position, 1.0 + 0.3 * (a0 + a1 + a2 + a3 + a4 + a5));
+    vec3 pos = vec3(position, yWaterPlane + 0.3 * (a0 + a1 + a2 + a3 + a4 + a5));
     gl_Position = mvp * vec4(pos, 1.0);
 
     fUV = uv;

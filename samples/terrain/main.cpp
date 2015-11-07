@@ -75,7 +75,7 @@ void TestApp::update(float _dt) {
 }
 
 void TestApp::render(float _dt) {
-    float yWaterPlane = 1.0f;
+    float yWaterPlane = 1.5f;
     glm::mat4 model;
     glm::mat4 mvp;
 
@@ -85,7 +85,7 @@ void TestApp::render(float _dt) {
 
     glm::vec3 camPosition = m_camera.getPosition();
     camPosition.y *= -1.0f;
-    camPosition.y -= 2.0; //yWaterPlane;
+    camPosition.y -= 2.0 * yWaterPlane;
     m_reflectionCamera->setPosition(camPosition);
     m_reflectionCamera->setRotationX(-m_camera.getRotation().x);
     m_reflectionCamera->setRotationY(m_camera.getRotation().y);
@@ -95,6 +95,7 @@ void TestApp::render(float _dt) {
 
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("tex", 0);
+    m_shader->setUniform("clipPlane", glm::vec4(0.0, 0.0, 1.0, -yWaterPlane));
     m_shader->setUniform("modelView", m_reflectionCamera->getViewMatrix() * model);
     m_shader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
 
@@ -117,7 +118,6 @@ void TestApp::render(float _dt) {
     m_texture->bind(0);
 
     m_shader->setUniform("mvp", mvp);
-    m_shader->setUniform("tex", 0);
     m_shader->setUniform("modelView", m_camera.getViewMatrix() * model);
     m_shader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
 
@@ -127,9 +127,6 @@ void TestApp::render(float _dt) {
     RenderState::blending(GL_FALSE);
 
     m_geometry->draw(*m_shader);
-
-    mvp = glm::translate(mvp, glm::vec3(0.0, 0.0, 0.8));
-
 
     /// Draw water
     m_waterShader->setUniform("mvp", mvp);
