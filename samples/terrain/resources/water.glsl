@@ -54,6 +54,12 @@ uniform mat4 modelView;
 uniform vec2 screenResolution;
 uniform sampler2D reflectionTexture;
 uniform sampler2D depthMap;
+uniform float near;
+uniform float far;
+
+float linearizeDepth(float depth) {
+    return 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
+}
 
 void main(void) {
     vec3 p0 = dFdx(fPos);
@@ -75,8 +81,13 @@ void main(void) {
     outColour = vec4(lightFactor, 0.4 + 0.2 * diffuseCoefficient);
 
     vec2 uv = gl_FragCoord.xy / screenResolution;
-    uv.y = 1.0 - uv.y;
-    outColour.rgb = mix(texture(reflectionTexture, uv).rgb, outColour.rgb, 0.6);
+    vec2 reflectionUV = vec2(uv.x, 1.0 - uv.y);
+
+    float depth = texture(depthMap, uv).x;
+    float waterDepth = linearizeDepth(depth) - linearizeDepth(gl_FragCoord.z);
+
+    outColour.rgb = mix(texture(reflectionTexture, reflectionUV).rgb, outColour.rgb, 0.6);
+    outColour.a *= clamp(waterDepth * 1.5, 0.0, 1.0);
 }
 
 #pragma end:fragment

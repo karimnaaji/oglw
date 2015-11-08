@@ -36,8 +36,8 @@ void TestApp::init() {
 
     // default camera
     m_camera.setPosition({0.0, -3.0, 5.0});
-    m_camera.setFar(200.f);
-    m_camera.setNear(0.1f);
+    m_camera.setFar(30.f);
+    m_camera.setNear(0.5f);
     m_camera.setFov(30);
 
     m_reflectionCamera = uptr<Camera>(new Camera());
@@ -154,6 +154,8 @@ void TestApp::drawWater(glm::mat4 _model, float _yWaterPlane) {
     m_waterShader->setUniform("screenResolution", getResolution());
     m_waterShader->setUniform("reflectionTexture", 0);
     m_waterShader->setUniform("depthMap", 1);
+    m_waterShader->setUniform("near", m_camera.getNear());
+    m_waterShader->setUniform("far", m_camera.getFar());
 
     RenderState::blending(GL_TRUE);
     RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -164,7 +166,7 @@ void TestApp::drawWater(glm::mat4 _model, float _yWaterPlane) {
 
 
 void TestApp::render(float _dt) {
-    float yWaterPlane = 1.5f;
+    float yWaterPlane = 1.8f;
     glm::mat4 model = glm::rotate(glm::mat4(), (float) M_PI_2, glm::vec3(1.0, 0.0, 0.0));
 
     captureReflectionTexture(yWaterPlane, model);
