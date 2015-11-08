@@ -14,7 +14,7 @@ public:
 
     void init();
     void render(Texture& _texture, const glm::vec2& _resolution,
-            const glm::vec2& _position = glm::vec2(0.0), const float _quadSize = 1.0f);
+            const glm::vec2& _position = glm::vec2(0.0), const float _quadSize = 256);
 
 private:
 

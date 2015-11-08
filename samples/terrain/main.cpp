@@ -171,6 +171,12 @@ void TestApp::render(float _dt) {
 
     /// Draw terrain
 
+    m_depthRenderTarget->apply(1024, 720, 0xffffffff);
+
+    drawTerrain(model);
+
+    RenderTarget::applyDefault(1024, 720, 0xffffffff);
+
     drawTerrain(model);
 
     /// Draw water
@@ -179,6 +185,7 @@ void TestApp::render(float _dt) {
 
     /// Debug draw camera framebuffer
 
-    m_quadRenderer->render(*m_reflectionRenderTarget->getRenderTexture(), getResolution(), glm::vec2(0.0), 0.35);
+    m_quadRenderer->render(*m_reflectionRenderTarget->getRenderTexture(), getResolution(), glm::vec2(0.0, 0.0), 256);
+    m_quadRenderer->render(*m_depthRenderTarget->getDepthRenderTexture(), getResolution(), glm::vec2(0.0, 256), 256);
 }
 

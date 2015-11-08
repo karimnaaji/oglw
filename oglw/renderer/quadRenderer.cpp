@@ -12,14 +12,10 @@ void QuadRenderer::init() {
         #pragma begin:vertex
         #version 330
 
-        uniform vec2 screenPosition;
-        uniform float quadSize;
-
         in vec2 position;
 
         void main() {
-            vec2 offset = vec2(1.0) - quadSize;
-            gl_Position = vec4(position * quadSize - offset + screenPosition * 2.0, 0.0, 1.0);
+            gl_Position = vec4(position, 0.0, 1.0);
         }
         #pragma end:vertex
 
@@ -28,12 +24,12 @@ void QuadRenderer::init() {
 
         uniform sampler2D tex;
         uniform vec2 resolution;
-        uniform float quadSize;
+        uniform vec2 screenPosition;
 
         out vec4 outColour;
 
         void main(void) {
-            vec2 uv = gl_FragCoord.xy / (resolution * quadSize);
+            vec2 uv = (gl_FragCoord.xy - screenPosition) / resolution;
             outColour = texture(tex, uv);
         }
 
@@ -50,6 +46,10 @@ void QuadRenderer::render(Texture& _texture, const glm::vec2& _resolution,
 
     RenderTarget::applyDefault(_resolution.x, _resolution.y);
 
+    glm::vec2 quadSize(_quadSize * (4.0 / 3.0));
+
+    glViewport(_position.x, _position.y, quadSize.x, quadSize.y);
+
     _texture.bind(0);
 
     RenderState::depthTest(GL_FALSE);
@@ -57,9 +57,8 @@ void QuadRenderer::render(Texture& _texture, const glm::vec2& _resolution,
     RenderState::cullFace(GL_BACK);
     RenderState::blending(GL_FALSE);
 
+    m_shader->setUniform("resolution", quadSize);
     m_shader->setUniform("screenPosition", _position);
-    m_shader->setUniform("quadSize", _quadSize);
-    m_shader->setUniform("resolution", _resolution);
     m_shader->setUniform("tex", 0);
 
     m_quad->draw(*m_shader);
