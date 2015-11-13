@@ -4,7 +4,7 @@ macro(load_oglw_sample SAMPLE_NAME)
     # cmake output configuration
     set(EXECUTABLE_NAME ${SAMPLE_NAME})
 
-    file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/resources/*)
+    file(GLOB_RECURSE RESOURCES FOLLOW_SYMLINKS ${PROJECT_SOURCE_DIR}/resources/*)
     file(GLOB_RECURSE FOUND_HEADERS ${PROJECT_SOURCE_DIR}/*.h)
     file(GLOB_RECURSE FOUND_SOURCES ${PROJECT_SOURCE_DIR}/*.cpp)
 
