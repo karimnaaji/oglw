@@ -24,7 +24,9 @@ macro(load_oglw_sample SAMPLE_NAME)
         set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE_NAME})
         add_executable(${EXECUTABLE_NAME} ${FOUND_SOURCES})
         foreach(_resource ${RESOURCES})
-            file(COPY ${_resource} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+            add_custom_command(
+                TARGET ${EXECUTABLE_NAME}
+                COMMAND POST_BUILD cp -P ${_resource} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
         endforeach()
     endif()
 
