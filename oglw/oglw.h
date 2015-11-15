@@ -17,6 +17,7 @@
 #include "renderState.h"
 #include "skybox.h"
 #include "renderTarget.h"
+#include "quadRenderer.h"
 
 // other
 #include "app.h"

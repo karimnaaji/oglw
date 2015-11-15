@@ -50,11 +50,11 @@ void Skybox::draw(const glm::mat4& _mvp, const glm::vec3& _camPosition) {
     m_shader->setUniform("mvp", _mvp);
     m_shader->setUniform("camPosition", _camPosition);
     m_shader->setUniform("tex", 0);
-    
+
     RenderState::blending(GL_FALSE);
     RenderState::depthTest(GL_TRUE);
 
     m_mesh->draw(*m_shader);
 }
 
-}   
+}

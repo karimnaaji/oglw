@@ -29,8 +29,10 @@ public:
     void create(uint _width, uint _height);
     // apply a render target for anything going to be rendered in the viewport
     void apply(uint _width, uint _height, uint _clearColor = 0x0);
-    // get the render target texture handle
+    // get the render target texture
     const std::unique_ptr<Texture>& getRenderTexture() const { return m_texture; }
+    // get the depth render target texture
+    const std::unique_ptr<Texture>& getDepthRenderTexture() const { return m_depthTexture; }
     // apply the default render target
     static void applyDefault(uint _width, uint _height, bool _clear = false);
     // bind the render texture to the specified slot
