@@ -54,11 +54,21 @@ uniform mat4 modelView;
 uniform vec2 screenResolution;
 uniform sampler2D reflectionTexture;
 uniform sampler2D depthMap;
+uniform vec3 lightPosition;
 uniform float near;
 uniform float far;
+uniform float time;
 
 float linearizeDepth(float depth) {
     return 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
+}
+
+#define FOG_DENSITY 0.1
+#define FOG_COLOR vec3(1.0)
+
+float expFog(const float dist, const float density) {
+    float d = density * dist;
+    return exp2(d * d * -1.44);
 }
 
 void main(void) {
@@ -66,10 +76,10 @@ void main(void) {
     vec3 p1 = dFdy(fPos);
     vec3 n = normalMatrix * normalize(cross(p0, p1));
 
-    vec3 surfaceColor = vec3(0.6, 0.8, 0.96);
+    vec3 surfaceColor = vec3(0.54, 0.74, 0.38);
     float ambientIntensity = 1.0;
 
-    vec3 surfaceToLight = normalize(modelView * vec4(0.0, -15.0, 0.0, 0.0)).xyz;
+    vec3 surfaceToLight = normalize(modelView * vec4(lightPosition, 0.0)).xyz;
     vec3 surfaceToCamera = normalize(-modelView * vec4(fPos, 0.0)).xyz;
 
     vec3 ambient = ambientIntensity * surfaceColor;
@@ -78,16 +88,22 @@ void main(void) {
 
     vec3 lightFactor = ambient + diffuse;
 
-    outColour = vec4(lightFactor, 0.4 + 0.2 * diffuseCoefficient);
-
     vec2 uv = gl_FragCoord.xy / screenResolution;
     vec2 reflectionUV = vec2(uv.x, 1.0 - uv.y);
 
     float depth = texture(depthMap, uv).x;
     float waterDepth = linearizeDepth(depth) - linearizeDepth(gl_FragCoord.z);
 
-    outColour.rgb = mix(texture(reflectionTexture, reflectionUV).rgb, outColour.rgb, 0.6);
+    outColour = vec4(lightFactor, 0.4 + 0.2 * diffuseCoefficient);
+
+    // mix with reflection texture
+    outColour.rgb = mix(texture(reflectionTexture, reflectionUV).rgb, outColour.rgb, 0.2);
+
+    // smooth edges
     outColour.a *= clamp(waterDepth * 1.5, 0.0, 1.0);
+
+    // add fog
+    outColour.rgb = mix(outColour.rgb, FOG_COLOR, 1.0 - expFog(gl_FragCoord.z / gl_FragCoord.w, FOG_DENSITY));
 }
 
 #pragma end:fragment

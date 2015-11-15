@@ -57,7 +57,7 @@ void TestApp::init() {
     m_texture = uptr<OGLW::Texture>(new Texture("perlin.png", options));
 
     m_geometry = plane(20.f, 20.f, 350, 350);
-    m_waterGeometry = plane(20.f, 20.f, 250, 250);
+    m_waterGeometry = plane(20.f, 20.f, 150, 150);
 
     RenderTargetSetup setup;
     setup.useDepth = true;
@@ -77,9 +77,6 @@ void TestApp::update(float _dt) {
 
     oglwUpdateFreeFlyCamera(_dt, 'S', 'W', 'A', 'D', 1e-3f, 20.f);
 
-    glm::vec2 camRotation = m_camera.rotation();
-    float theta = camRotation.x * (180.0 / M_PI);
-    float phi = camRotation.y * (180.0 / M_PI);
     //oglwDisplayText(24.f, {20.f, 40.f}, "X:" + std::to_string(theta) + " Y: " + std::to_string(phi), true);
 }
 
@@ -103,8 +100,9 @@ void TestApp::captureReflectionTexture(float _yWaterPlane, glm::mat4 _model) {
     m_shader->setUniform("mvp", mvp);
     m_shader->setUniform("tex", 0);
     m_shader->setUniform("clipPlane", glm::vec4(0.0, 0.0, 1.0, -_yWaterPlane));
-    m_shader->setUniform("_modelView", m_reflectionCamera->getViewMatrix() * _model);
+    m_shader->setUniform("modelView", m_reflectionCamera->getViewMatrix() * _model);
     m_shader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
+    m_shader->setUniform("lightPosition", glm::vec3(0.0, 0.0, -5.0));
 
     RenderState::depthTest(GL_TRUE);
     RenderState::culling(GL_TRUE);
@@ -156,6 +154,7 @@ void TestApp::drawWater(glm::mat4 _model, float _yWaterPlane) {
     m_waterShader->setUniform("depthMap", 1);
     m_waterShader->setUniform("near", m_camera.getNear());
     m_waterShader->setUniform("far", m_camera.getFar());
+    m_waterShader->setUniform("lightPosition", glm::vec3(0.0, 0.0, -5.0));
 
     RenderState::blending(GL_TRUE);
     RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -166,7 +165,7 @@ void TestApp::drawWater(glm::mat4 _model, float _yWaterPlane) {
 
 
 void TestApp::render(float _dt) {
-    float yWaterPlane = 1.8f;
+    float yWaterPlane = 2.0f;
     glm::mat4 model = glm::rotate(glm::mat4(), (float) M_PI_2, glm::vec3(1.0, 0.0, 0.0));
 
     captureReflectionTexture(yWaterPlane, model);

@@ -32,16 +32,25 @@ in vec3 fPos;
 
 uniform mat3 normalMatrix;
 uniform mat4 modelView;
+uniform vec3 lightPosition;
+
+#define FOG_DENSITY 0.1
+#define FOG_COLOR vec3(1.0)
+
+float expFog(const float dist, const float density) {
+    float d = density * dist;
+    return exp2(d * d * -1.44);
+}
 
 void main(void) {
     vec3 p0 = dFdx(fPos);
     vec3 p1 = dFdy(fPos);
     vec3 n = normalMatrix * normalize(cross(p0, p1));
 
-    vec3 surfaceColor = vec3(0.53,0.36, 0.33);
-    float ambientIntensity = 0.7;
+    vec3 surfaceColor = vec3(0.89,0.64, 0.26);
+    float ambientIntensity = 0.2;
 
-    vec3 surfaceToLight = normalize(modelView * vec4(0.0, 5.0, 0.0, 0.0)).xyz;
+    vec3 surfaceToLight = normalize(modelView * vec4(lightPosition, 0.0)).xyz;
     vec3 surfaceToCamera = normalize(-modelView * vec4(fPos, 0.0)).xyz;
 
     vec3 ambient = ambientIntensity * surfaceColor;
@@ -50,7 +59,8 @@ void main(void) {
 
     vec3 lightFactor = ambient + diffuse;
 
-    outColour = vec4(lightFactor * clamp(fOffset, 0.2, 1.0), 1.0);
+    outColour = vec4(lightFactor, 1.0);
+    outColour.rgb = mix(outColour.rgb, FOG_COLOR, 1.0 - expFog(gl_FragCoord.z / gl_FragCoord.w, FOG_DENSITY));
     //outColour.rgb = pow(outColour.rgb, vec3(0.4545));
 }
 
