@@ -12,6 +12,7 @@ namespace OGLW {
 // forward
 class Camera;
 
+#ifdef OGLW_GAMMA
 #define OGLWMainGamma(OGLWApp, audioCB) \
 int main() { \
     OGLWApp app; \
@@ -21,7 +22,8 @@ int main() { \
     io.start(); \
     app.run(); \
     return 0; \
-} \
+}
+#endif
 
 #define OGLWMain(OGLWApp) \
 int main() { \

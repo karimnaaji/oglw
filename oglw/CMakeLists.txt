@@ -6,6 +6,7 @@ cmake_minimum_required(VERSION 2.8)
 project(OGLW)
 
 option(OGLW_BUILD_SHARED "Build OGLW as a shared library" OFF)
+option(OGLW_BUILD_WITH_GAMMA "Build OGLW with gamma library" OFF)
 
 # CXX Flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags -Wno-unused-function -std=c++1y")
@@ -87,12 +88,15 @@ include_directories(${PROJECT_SOURCE_DIR}/3rdparty/stb)
 set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/stb)
 
 # Add gamma
-message(STATUS "Add Gamma")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/3rdparty/Gamma/cmake_modules)
-add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
-include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
-set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
-set(LIBRARIES ${LIBRARIES} Gamma)
+if (OGLW_BUILD_WITH_GAMMA)
+    message(STATUS "Building with GAMMA dependency")
+    add_definitions(-DOGLW_GAMMA)
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/3rdparty/Gamma/cmake_modules)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+    include_directories(${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+    set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/Gamma)
+    set(LIBRARIES ${LIBRARIES} Gamma)
+endif()
 
 # OGLW Include dirs
 set(INCLUDE_DIRS

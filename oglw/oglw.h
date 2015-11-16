@@ -24,5 +24,7 @@
 #include "utils.h"
 
 // gamma
+#ifdef OGLW_GAMMA
 #define GAMMA_H_INC_ALL
 #include "Gamma/Gamma.h"
+#endif
