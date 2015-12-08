@@ -28,3 +28,6 @@
 #define GAMMA_H_INC_ALL
 #include "Gamma/Gamma.h"
 #endif
+
+#include "variant.hpp"
+

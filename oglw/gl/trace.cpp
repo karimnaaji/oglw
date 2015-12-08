@@ -16,5 +16,5 @@ void printGLTrace() {
     }
 }
 
-}
-}
+} // _Trace
+} // OGLW

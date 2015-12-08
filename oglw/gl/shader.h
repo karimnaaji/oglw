@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include "gl/gl.h"
 #include "gl/vertexLayout.h"
-#include "glm/glm.hpp"
+#include "uniform.h"
 
 namespace OGLW {
 
@@ -53,7 +53,7 @@ public:
     static std::string stringFromKind(GLenum _kind);
 
 private:
-    static bool linkShaderProgram(GLuint _program);
+    bool linkShaderProgram(GLuint _program);
 
     // compile and attach a shader to the shader program
     bool add(const std::string& _shaderSource, GLenum _kind, GLuint& _shader);
@@ -75,6 +75,27 @@ private:
 
     std::unordered_map<std::string, GLuint> m_uniforms;
     std::unordered_map<std::string, GLuint> m_attributes;
+
+    // Map of uniform cache associated with a transpose flag
+    std::unordered_map<GLint, std::pair<UniformValue, bool>> m_uniformCache;
+
+    template <class T>
+    inline bool getFromCache(GLint _location, T _value, bool _transpose = false) {
+        using uniformPair = std::pair<UniformValue, bool>;
+        const auto& v = m_uniformCache.find(_location);
+        bool cached = false;
+        if (v != m_uniformCache.end()) {
+            if (v->second.first.is<T>()) {
+                T& value = v->second.first.get<T>();
+                cached = (value == _value) && (v->second.second == _transpose);
+                if (!cached) {
+                    value = _value;
+                    v->second.second = _transpose;
+                }
+            }
+        } else { m_uniformCache[_location] = uniformPair(_value, _transpose); }
+        return cached;
+    }
 };
 
 } // OGLW
