@@ -81,9 +81,12 @@ void Texture::generate(GLuint _textureUnit) {
     GL_CHECK(glTexParameteri(m_target, GL_TEXTURE_WRAP_T, m_options.wrapping.wrapt));
 
     if (m_options.isDepthTexture) {
-        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, m_options.depthOptions.textureMode));
-        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, m_options.depthOptions.compareMode));
-        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, m_options.depthOptions.compareFunc));
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE,
+                    m_options.depthOptions.textureMode));
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE,
+                    m_options.depthOptions.compareMode));
+        GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC,
+                    m_options.depthOptions.compareFunc));
     }
 }
 
@@ -111,8 +114,8 @@ void Texture::update(GLuint _textureUnit) {
 
     // resize or push data
     if (data || m_shouldResize) {
-        GL_CHECK(glTexImage2D(m_target, 0, m_options.internalFormat, m_width, m_height, 0, m_options.format,
-                     m_options.type, data));
+        GL_CHECK(glTexImage2D(m_target, 0, m_options.internalFormat, m_width, m_height, 0,
+                    m_options.format, m_options.type, data));
         m_shouldResize = false;
 
         if (data && m_generateMipmaps) {
@@ -133,7 +136,7 @@ void Texture::resize(const uint _width, const uint _height) {
     if (m_width == _width && m_height == _height) {
         return;
     }
-    
+
     m_width = _width;
     m_height = _height;
 

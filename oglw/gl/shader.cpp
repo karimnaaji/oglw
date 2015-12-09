@@ -124,7 +124,7 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
         return false;
     }
 
-    bool linkStatus = Shader::linkShaderProgram(m_program);
+    bool linkStatus = linkShaderProgram(m_program);
 
     GL_CHECK(glDeleteShader(vert));
     GL_CHECK(glDeleteShader(frag));
@@ -143,6 +143,8 @@ bool Shader::load(const std::string& _fragmentSrc, const std::string& _vertexSrc
 
 bool Shader::linkShaderProgram(GLuint _program) {
     GLint isLinked;
+
+    m_uniformCache.clear();
 
     GL_CHECK(glLinkProgram(_program));
     GL_CHECK(glGetProgramiv(_program, GL_LINK_STATUS, &isLinked));
@@ -182,7 +184,7 @@ void Shader::bindVertexLayout(const VertexLayout& _layout) {
 
     if (needLink) {
         WARN("Relink shader\n");
-        Shader::linkShaderProgram(m_program);
+        linkShaderProgram(m_program);
     }
 }
 
@@ -259,7 +261,10 @@ void Shader::setUniform(const std::string& _name, int _x) {
     use();
     GLint location = getUniformLocation(_name);
     if (location >= 0) {
-        GL_CHECK(glUniform1i(location, _x));
+        bool cached = getFromCache(location, _x);
+        if (!cached) {
+            GL_CHECK(glUniform1i(location, _x));
+        }
     }
 }
 
@@ -268,7 +273,10 @@ void Shader::setUniform(const std::string& _name, float _x) {
     use();
     GLint location = getUniformLocation(_name);
     if (location >= 0) {
-        GL_CHECK(glUniform1f(location, _x));
+        bool cached = getFromCache(location, _x);
+        if (!cached) {
+            GL_CHECK(glUniform1f(location, _x));
+        }
     }
 }
 
@@ -276,7 +284,10 @@ void Shader::setUniform(const std::string& _name, float _x, float _y) {
     use();
     GLint location = getUniformLocation(_name);
     if (location >= 0) {
-        GL_CHECK(glUniform2f(location, _x, _y));
+        bool cached = getFromCache(location, glm::vec2(_x, _y));
+        if (!cached) {
+            GL_CHECK(glUniform2f(location, _x, _y));
+        }
     }
 }
 
@@ -284,7 +295,10 @@ void Shader::setUniform(const std::string& _name, float _x, float _y, float _z) 
     use();
     GLint location = getUniformLocation(_name);
     if (location >= 0) {
-        GL_CHECK(glUniform3f(location, _x, _y, _z));
+        bool cached = getFromCache(location, glm::vec3(_x, _y, _z));
+        if (!cached) {
+            GL_CHECK(glUniform3f(location, _x, _y, _z));
+        }
     }
 }
 
@@ -292,7 +306,10 @@ void Shader::setUniform(const std::string& _name, float _x, float _y, float _z, 
     use();
     GLint location = getUniformLocation(_name);
     if (location >= 0) {
-        GL_CHECK(glUniform4f(location, _x, _y, _z, _w));
+        bool cached = getFromCache(location, glm::vec4(_x, _y, _z, _w));
+        if (!cached) {
+            GL_CHECK(glUniform4f(location, _x, _y, _z, _w));
+        }
     }
 }
 
@@ -300,7 +317,10 @@ void Shader::setUniform(const std::string& _name, const glm::mat2& _value, bool 
     use();
     GLint location = getUniformLocation(_name);
     if (location >= 0) {
-        GL_CHECK(glUniformMatrix2fv(location, 1, _transpose, &_value[0][0]));
+        bool cached = getFromCache(location, _value, _transpose);
+        if (!cached) {
+            GL_CHECK(glUniformMatrix2fv(location, 1, _transpose, &_value[0][0]));
+        }
     }
 }
 
@@ -308,7 +328,10 @@ void Shader::setUniform(const std::string& _name, const glm::mat3& _value, bool 
     use();
     GLint location = getUniformLocation(_name);
     if (location >= 0) {
-        GL_CHECK(glUniformMatrix3fv(location, 1, _transpose, &_value[0][0]));
+        bool cached = getFromCache(location, _value, _transpose);
+        if (!cached) {
+            GL_CHECK(glUniformMatrix3fv(location, 1, _transpose, &_value[0][0]));
+        }
     }
 }
 
@@ -316,7 +339,10 @@ void Shader::setUniform(const std::string& _name, const glm::mat4& _value, bool 
     use();
     GLint location = getUniformLocation(_name);
     if (location >= 0) {
-        GL_CHECK(glUniformMatrix4fv(location, 1, _transpose, &_value[0][0]));
+        bool cached = getFromCache(location, _value, _transpose);
+        if (!cached) {
+            GL_CHECK(glUniformMatrix4fv(location, 1, _transpose, &_value[0][0]));
+        }
     }
 }
 

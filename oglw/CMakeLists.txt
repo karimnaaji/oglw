@@ -98,6 +98,10 @@ if (OGLW_BUILD_WITH_GAMMA)
     set(LIBRARIES ${LIBRARIES} Gamma)
 endif()
 
+# Variant
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/variant)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/variant)
+
 # OGLW Include dirs
 set(INCLUDE_DIRS
     ${INCLUDE_DIRS}
