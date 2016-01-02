@@ -11,7 +11,7 @@ using namespace OGLW;
 // OGLW App
 class TestApp : public App {
     public:
-        TestApp() : App("OGLW::TestApp", 800, 600) {}
+        TestApp() : App({"OGLW::TestApp", false, false, 800, 600}) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;

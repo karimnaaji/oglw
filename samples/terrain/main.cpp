@@ -11,7 +11,7 @@ using namespace OGLW;
 // OGLW App
 class TestApp : public App {
     public:
-        TestApp() : App("OGLW::TestApp", /*"Roboto-Regular.ttf", */1024, 720) {}
+        TestApp() : App({"OGLW::TestApp", false, false, 1024, 720}) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
@@ -149,7 +149,7 @@ void TestApp::drawWater(glm::mat4 _model, float _yWaterPlane) {
     m_waterShader->setUniform("modelView", m_camera.getViewMatrix() * _model);
     m_waterShader->setUniform("yWaterPlane", _yWaterPlane);
     m_waterShader->setUniform("normalMatrix", glm::inverse(glm::transpose(glm::mat3(mvp))));
-    m_waterShader->setUniform("screenResolution", getResolution());
+    m_waterShader->setUniform("screenResolution", resolution());
     m_waterShader->setUniform("reflectionTexture", 0);
     m_waterShader->setUniform("depthMap", 1);
     m_waterShader->setUniform("near", m_camera.getNear());
@@ -186,7 +186,7 @@ void TestApp::render(float _dt) {
 
     /// Debug draw camera framebuffer
 
-    m_quadRenderer->render(*m_reflectionRenderTarget->getRenderTexture(), getResolution(), glm::vec2(0.0, 0.0), 256);
-    m_quadRenderer->render(*m_depthRenderTarget->getDepthRenderTexture(), getResolution(), glm::vec2(0.0, 256), 256);
+    m_quadRenderer->render(*m_reflectionRenderTarget->getRenderTexture(), resolution(), glm::vec2(0.0, 0.0), 256);
+    m_quadRenderer->render(*m_depthRenderTarget->getDepthRenderTexture(), resolution(), glm::vec2(0.0, 256), 256);
 }
 

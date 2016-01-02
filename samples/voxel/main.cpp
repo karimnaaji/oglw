@@ -28,7 +28,7 @@ static std::unique_ptr<Mesh<VoxelVert>> voxels(std::vector<VoxelVert>& _vertices
 // OGLW App
 class TestApp : public App {
     public:
-        TestApp() : App("OGLW::TestApp", 1168, 720) {}
+        TestApp() : OGLW::App({"OGLW::TestApp", false, false, 1168, 720}) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
