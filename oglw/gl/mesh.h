@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include "tiny_obj_loader.h"
+#include "core/log.h"
 
 namespace OGLW {
 
@@ -126,8 +127,8 @@ static std::unique_ptr<RawMesh> loadOBJ(std::string _path) {
     for (size_t i = 0; i < shapes.size(); i++) {
         std::vector<Vertex> vertices;
         std::vector<int> indices;
-        bool hasNormals;
-        bool hasUVs;
+        bool hasNormals = true;
+        bool hasUVs = true;
 
         assert((shapes[i].mesh.indices.size() % 3) == 0);
         for (size_t f = 0; f < shapes[i].mesh.indices.size() / 3; f++) {
@@ -144,7 +145,6 @@ static std::unique_ptr<RawMesh> loadOBJ(std::string _path) {
         if (shapes[i].mesh.texcoords.size() == 0) {
             hasUVs = false;
         }
-
         for (size_t v = 0; v < shapes[i].mesh.positions.size() / 3; v++) {
             glm::vec2 uv;
             glm::vec3 normal;
@@ -153,8 +153,8 @@ static std::unique_ptr<RawMesh> loadOBJ(std::string _path) {
 
             if (hasUVs) {
                 uv = {
-                    shapes[i].mesh.texcoords[3 * v + 0],
-                    shapes[i].mesh.texcoords[3 * v + 1]
+                    shapes[i].mesh.texcoords[2 * v + 0],
+                    shapes[i].mesh.texcoords[2 * v + 1]
                 };
             }
 
@@ -168,7 +168,7 @@ static std::unique_ptr<RawMesh> loadOBJ(std::string _path) {
 
             position = {
                 shapes[i].mesh.positions[3 * v + 0],
-               -shapes[i].mesh.positions[3 * v + 1],
+                shapes[i].mesh.positions[3 * v + 1],
                 shapes[i].mesh.positions[3 * v + 2]
             };
 
