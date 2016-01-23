@@ -11,7 +11,7 @@ using namespace OGLW;
 // OGLW App
 class TestApp : public App {
     public:
-        TestApp() : App("OGLW::TestApp", 800, 600) {}
+        TestApp() : App({"OGLW::TestApp", false, false, 800, 600}) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
@@ -41,10 +41,11 @@ void TestApp::init() {
     m_shadowCasterCamera->rotate({-M_PI_2, 0.0});
 
     // default camera
-    m_camera.setPosition({0.0, -3.0, 5.0});
+    m_camera.setPosition({0.0, -3.0, -5.0});
+    m_camera.rotate({0.0, M_PI});
     m_camera.setFar(200.f);
     m_camera.setNear(0.1f);
-    m_camera.setFov(50);
+    m_camera.setFov(30);
 
     /// Setup shaders
     m_shader = uptr<Shader>(new Shader("default.glsl"));
@@ -86,10 +87,9 @@ void TestApp::render(float _dt) {
     m_renderTarget->apply(2048, 2048);
     RenderState::depthWrite(GL_TRUE);
     RenderState::culling(GL_TRUE);
-    RenderState::cullFace(GL_FRONT);
+    RenderState::cullFace(GL_BACK);
     m_depthWrite->setUniform("depthMVP", depthMVP);
     m_mesh->draw(*m_depthWrite);
-    RenderState::cullFace(GL_BACK);
     m_depthWrite->setUniform("depthMVP", depthMVP);
     m_plane->draw(*m_depthWrite);
 
@@ -110,7 +110,7 @@ void TestApp::render(float _dt) {
     m_shader->setUniform("lightPos", shadowCasterPos);
 
     RenderState::culling(GL_TRUE);
-    RenderState::cullFace(GL_FRONT);
+    RenderState::cullFace(GL_BACK);
     m_mesh->draw(*m_shader);
     m_shader->setUniform("mvp", m_camera.getProjectionMatrix() * view * glm::translate(model, {0.0, 0.0, -0.01}));
     RenderState::culling(GL_FALSE);

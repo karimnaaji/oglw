@@ -39,7 +39,7 @@ void audioCB(gam::AudioIOData& io) {
 // OGLW App
 class TestApp : public OGLW::App {
     public:
-        TestApp() : OGLW::App("OGLW::TestApp", "Roboto-Regular.ttf", 800, 600) {}
+        TestApp() : OGLW::App({"OGLW::TestApp", false, false, 800, 600}) {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
@@ -70,16 +70,11 @@ void TestApp::init() {
     setup.useDepth = true;
     m_renderTarget = std::make_unique<OGLW::RenderTarget>(setup);
     m_renderTarget->create(800, 600);
-
-    oglwDisplayText(30.f, {10.f, 30.f}, "OGLW");
-    oglwDisplayText(15.f, {10.f, 45.f}, "::TestApp");
 }
 
 void TestApp::update(float _dt) {
     m_xrot += m_cursorX;
     m_yrot += m_cursorY;
-
-    oglwDisplayText(15.f, {m_width - 80.f, 20.f}, std::to_string(_dt) + std::string("ms"), true);
 }
 
 void TestApp::render(float _dt) {
@@ -98,9 +93,10 @@ void TestApp::render(float _dt) {
 
     OGLW::RenderState::depthWrite(GL_FALSE);
     OGLW::RenderState::cullFace(GL_BACK);
+    OGLW::RenderState::culling(GL_TRUE);
 
     m_texture->bind(0);
-    m_backgroundShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
+    m_backgroundShader->setUniform("resolution", resolution());
     m_backgroundShader->setUniform("tex", 0);
     m_quad->draw(*m_backgroundShader);
 
@@ -122,7 +118,7 @@ void TestApp::render(float _dt) {
     OGLW::RenderTarget::applyDefault(800, 600);
 
     m_renderTarget->bindRenderTexture(0);
-    m_fullQuadShader->setUniform("resolution", {m_width * m_dpiRatio, m_height * m_dpiRatio});
+    m_fullQuadShader->setUniform("resolution", resolution());
     m_fullQuadShader->setUniform("near", m_camera.getNear());
     m_fullQuadShader->setUniform("far", m_camera.getFar());
     m_fullQuadShader->setUniform("tex", 0);
