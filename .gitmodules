@@ -16,3 +16,6 @@
 [submodule "oglw/3rdparty/Gamma"]
 	path = oglw/3rdparty/Gamma
 	url = https://github.com/AlloSphere-Research-Group/Gamma.git
+[submodule "oglw/3rdparty/debug-draw"]
+	path = oglw/3rdparty/debug-draw
+	url = https://github.com/glampert/debug-draw
