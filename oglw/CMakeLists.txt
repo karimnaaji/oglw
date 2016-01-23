@@ -106,7 +106,6 @@ set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/variant)
 set(INCLUDE_DIRS
     ${INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/gl
-    ${PROJECT_SOURCE_DIR}/text
     ${PROJECT_SOURCE_DIR}/renderer
     ${PROJECT_SOURCE_DIR}/core
     ${PROJECT_SOURCE_DIR}/)
@@ -115,7 +114,6 @@ set(INCLUDE_DIRS
 find_sources_and_include_directories(gl/*.h gl/*.cpp)
 find_sources_and_include_directories(renderer/*.h renderer/*.cpp)
 find_sources_and_include_directories(core/*.h core/*.cpp)
-find_sources_and_include_directories(text/*.h text/*.cpp)
 include_directories(${PROJECT_SOURCE_DIR}/)
 
 if (OGLW_BUILD_SHARED)

@@ -16,7 +16,7 @@ out vec3 n;
 out float ratio;
 
 void main() {
-    vec3 p = position + normal * -abs(f);
+    vec3 p = position + normal * abs(f);
     vec4 eyep = vec4(p, 1.0);
     incident = normalize(vec3(mv * eyep));
     n = normal;

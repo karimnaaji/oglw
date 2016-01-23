@@ -93,6 +93,7 @@ void TestApp::render(float _dt) {
 
     OGLW::RenderState::depthWrite(GL_FALSE);
     OGLW::RenderState::cullFace(GL_BACK);
+    OGLW::RenderState::culling(GL_TRUE);
 
     m_texture->bind(0);
     m_backgroundShader->setUniform("resolution", resolution());
