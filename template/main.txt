@@ -15,14 +15,14 @@ class $project_name : public App {
 };
 OGLWMain($project_name);
 
-void TestApp::init() {
+void $project_name::init() {
     /// Initialization code goes here
 }
 
-void TestApp::update(float _dt) {
+void $project_name::update(float _dt) {
     /// Update code goes here
 }
 
-void TestApp::render(float _dt) {
+void $project_name::render(float _dt) {
     /// Render code goes here
 }
