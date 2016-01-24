@@ -1,0 +1,28 @@
+#include "oglw.h"
+
+template <class T>
+using uptr = std::unique_ptr<T>;
+using namespace OGLW;
+
+// ------------------------------------------------------------------------------
+// OGLW App
+class $project_name : public App {
+    public:
+        $project_name() : App({"OGLW::$project_name", false, false, 800, 600}) {}
+        void update(float _dt) override;
+        void render(float _dt) override;
+        void init() override;
+};
+OGLWMain($project_name);
+
+void TestApp::init() {
+    /// Initialization code goes here
+}
+
+void TestApp::update(float _dt) {
+    /// Update code goes here
+}
+
+void TestApp::render(float _dt) {
+    /// Render code goes here
+}
