@@ -102,17 +102,23 @@ endif()
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/variant)
 set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/variant)
 
+# Debug draw
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/debug-draw)
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/debug-draw)
+
 # OGLW Include dirs
 set(INCLUDE_DIRS
     ${INCLUDE_DIRS}
     ${PROJECT_SOURCE_DIR}/gl
     ${PROJECT_SOURCE_DIR}/renderer
     ${PROJECT_SOURCE_DIR}/core
+    ${PROJECT_SOURCE_DIR}/debug
     ${PROJECT_SOURCE_DIR}/)
 
 # Add OGLW files and include directories
 find_sources_and_include_directories(gl/*.h gl/*.cpp)
 find_sources_and_include_directories(renderer/*.h renderer/*.cpp)
+find_sources_and_include_directories(debug/*.h debug/*.cpp)
 find_sources_and_include_directories(core/*.h core/*.cpp)
 include_directories(${PROJECT_SOURCE_DIR}/)
 

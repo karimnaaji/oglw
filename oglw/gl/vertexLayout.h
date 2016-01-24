@@ -16,7 +16,7 @@ public:
     ~VertexLayout();
 
     // enable the vertex layout for a set of locations keyed by name
-    void enable(const std::unordered_map<std::string, GLuint>& _locations, size_t byteOffset = 0);
+    void enable(const std::unordered_map<std::string, GLuint>& _locations, size_t byteOffset = 0, void* _ptr = nullptr);
     // disable the vertex layout for a set of locations keyed by name
     void disable(const std::unordered_map<std::string, GLuint>& _locations);
     // get the stride of the vertex layout in bytes

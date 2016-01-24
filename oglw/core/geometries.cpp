@@ -1,5 +1,6 @@
 #include "geometries.h"
 
+
 namespace OGLW {
 
 std::unique_ptr<RawMesh> cube(float _size) {

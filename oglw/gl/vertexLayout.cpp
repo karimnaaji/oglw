@@ -46,7 +46,10 @@ std::unordered_map<std::string, GLuint> VertexLayout::getLocations() const {
     return map;
 }
 
-void VertexLayout::enable(const std::unordered_map<std::string, GLuint>& _locations, size_t byteOffset) {
+void VertexLayout::enable(const std::unordered_map<std::string, GLuint>& _locations,
+    size_t _byteOffset,
+    void* _ptr)
+{
     for (auto& attrib : m_attribs) {
         auto it = _locations.find(attrib.name);
 
@@ -56,9 +59,14 @@ void VertexLayout::enable(const std::unordered_map<std::string, GLuint>& _locati
 
         const GLint location = it->second;
 
+        void* data = _ptr ? _ptr : ((uchar*) attrib.offset) + _byteOffset;
         GL_CHECK(glEnableVertexAttribArray(location));
-        GL_CHECK(glVertexAttribPointer(location, attrib.size, attrib.type, attrib.normalized, m_stride,
-                                  ((uchar*)attrib.offset) + byteOffset));
+        GL_CHECK(glVertexAttribPointer(location,
+                    attrib.size,
+                    attrib.type,
+                    attrib.normalized,
+                    m_stride,
+                    data));
     }
 }
 

@@ -48,7 +48,7 @@ void QuadRenderer::render(Texture& _texture, const glm::vec2& _resolution,
 
     glm::vec2 quadSize(_quadSize * (4.0 / 3.0));
 
-    glViewport(_position.x, _position.y, quadSize.x, quadSize.y);
+    GL_CHECK(glViewport(_position.x, _position.y, quadSize.x, quadSize.y));
 
     _texture.bind(0);
 
