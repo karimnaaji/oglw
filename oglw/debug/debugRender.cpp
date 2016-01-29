@@ -1,6 +1,10 @@
 #include "debugRender.h"
 
 #include "gl/renderState.h"
+#include "gl/shader.h"
+#include "gl/vertexLayout.h"
+#include "gl/vao.h"
+#include "gl/texture.h"
 #include "core/log.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION

@@ -1,13 +1,17 @@
+#pragma once
+
 #include "debug_draw.hpp"
 #include "gl/gl.h"
-#include "gl/shader.h"
-#include "gl/vertexLayout.h"
-#include "gl/vao.h"
-#include "gl/texture.h"
-#include "core/camera.h"
+#include "glm/glm.hpp"
 #include <memory>
 
 namespace OGLW {
+
+// Forwards
+class Shader;
+class VertexLayout;
+class Texture;
+class Vao;
 
 class DebugRender : public dd::RenderInterface {
 public:
