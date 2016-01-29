@@ -22,6 +22,7 @@
 // other
 #include "app.h"
 #include "utils.h"
+#include "debugRender.h"
 
 // gamma
 #ifdef OGLW_GAMMA
