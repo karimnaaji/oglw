@@ -3,6 +3,7 @@
 #include "gl/shader.h"
 #include "gl/vertexLayout.h"
 #include "gl/vao.h"
+#include "gl/texture.h"
 #include "core/camera.h"
 #include <memory>
 
@@ -24,14 +25,17 @@ public:
     void setMVP(glm::mat4 _mvp) { m_mvp = _mvp; }
 
 private:
-    struct LineMesh {
+
+    struct Mesh {
         GLuint vertexBuffer;
+        std::unique_ptr<Texture> texture;
         std::unique_ptr<Shader> shader;
         std::unique_ptr<VertexLayout> layout;
         std::unique_ptr<Vao> vao;
     };
 
-    LineMesh m_lineMesh;
+    Mesh m_lineMesh;
+    Mesh m_textMesh;
 
     GLint m_boundBuffer;
     glm::mat4 m_mvp;
