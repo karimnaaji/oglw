@@ -18,7 +18,7 @@ private:
 OGLWMain(debugdraw);
 
 void debugdraw::init() {
-    m_camera.setPosition({0.0, 0.0, 10.0});
+    m_camera.setPosition({0.0, -1.0, 10.0});
     m_debugRenderer.init();
 }
 
@@ -28,8 +28,20 @@ void debugdraw::update(float _dt) {
 }
 
 void debugdraw::render(float _dt) {
-    ddVec3 pos;
-    pos[0] = pos[1] = pos[2] = 0;
-    dd::box(pos, pos, 1.5f, 1.5f, 1.5f);
+    static const ddVec3 col  = { 0.0f, 0.8f, 0.8f };
+    static const ddVec3 pos = { 0.0f, 0.0f, 0.0f };
+    static const ddVec3 normal = { 0.0f, 1.0f, 0.0f };
+    static const ddMat4x4 identity = {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    dd::axisTriad(identity, 0.3f, 2.0f);
+    dd::box(pos, col, 1.5f, 1.5f, 1.5f);
+    dd::sphere(pos, col, 15.0f);
+    dd::xzSquareGrid(-10.0, 10.0, 0.0, 1.0, col);
+
     dd::flush(_dt);
 }

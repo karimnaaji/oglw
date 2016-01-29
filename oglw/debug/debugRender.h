@@ -20,12 +20,12 @@ public:
     virtual void drawGlyphList(const dd::DrawVertex* _glyphs, int _count, dd::GlyphTextureHandle _glyphTex) override;
     virtual dd::GlyphTextureHandle createGlyphTexture(int _width, int _height, const void* _pixels) override;
     virtual void destroyGlyphTexture(dd::GlyphTextureHandle _glyphTex) override;
+    // Sets the model view projection matrix for the renderer
     void setMVP(glm::mat4 _mvp) { m_mvp = _mvp; }
 
 private:
     struct LineMesh {
         GLuint vertexBuffer;
-        std::unordered_map<std::string, GLuint> layoutLocations;
         std::unique_ptr<Shader> shader;
         std::unique_ptr<VertexLayout> layout;
         std::unique_ptr<Vao> vao;

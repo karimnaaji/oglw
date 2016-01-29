@@ -9,23 +9,18 @@
 namespace OGLW {
 
 void DebugRender::init() {
-    m_lineMesh.layoutLocations = {
-        {"position", 0},
-        {"colorPointSize", 1}
-    };
-
     static const std::string shaderBundle = R"END(
         #pragma begin:vertex
         #version 330
-        layout(location = 0) in vec3 position;
-        layout(location = 1) in vec4 colorPointSize;
+        in vec3 position;
+        in vec4 colorPointSize;
 
         out vec4 fColor;
         uniform mat4 mvp;
 
         void main() {
             gl_Position = mvp * vec4(position, 1.0);
-            //gl_PointSize = colorPointSize.w;
+            gl_PointSize = colorPointSize.w;
             fColor = vec4(colorPointSize.xyz, 1.0);
         }
         #pragma end:vertex
@@ -35,7 +30,7 @@ void DebugRender::init() {
         out vec4 outColor;
 
         void main() {
-            outColor = vec4(1.0);
+            outColor = fColor;
         }
         #pragma end:fragment
     )END";
@@ -44,12 +39,13 @@ void DebugRender::init() {
     m_lineMesh.shader->loadBundleSource(shaderBundle);
     m_lineMesh.layout = std::unique_ptr<VertexLayout>(new VertexLayout({
         {"position", 3, GL_FLOAT, false, 0, AttributeLocation::position},
-        {"color", 4, GL_FLOAT, false, 0, AttributeLocation::color},
+        {"colorPointSize", 4, GL_FLOAT, false, 0, AttributeLocation::color},
     }));
 
     m_lineMesh.vao = std::make_unique<Vao>();
     GL_CHECK(glGenBuffers(1, &m_lineMesh.vertexBuffer));
-    m_lineMesh.vao->init(m_lineMesh.vertexBuffer, 0, *m_lineMesh.layout, m_lineMesh.layoutLocations);
+    m_lineMesh.vao->init(m_lineMesh.vertexBuffer, 0, *m_lineMesh.layout, m_lineMesh.layout->getLocations());
+    m_lineMesh.shader->bindVertexLayout(*m_lineMesh.layout);
 
     dd::initialize(this);
 }
