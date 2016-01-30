@@ -1,4 +1,4 @@
-#include "debugRender.h"
+#include "debugRenderer.h"
 
 #include "gl/renderState.h"
 #include "gl/shader.h"
@@ -12,7 +12,7 @@
 
 namespace OGLW {
 
-void DebugRender::init() {
+void DebugRenderer::init() {
     static const std::string lineShaderBundle = R"END(
         #pragma begin:vertex
         #version 330
@@ -94,24 +94,24 @@ void DebugRender::init() {
     dd::initialize(this);
 }
 
-void DebugRender::beginDraw() {
-    INFO("DebugRender::beginDraw\n");
+void DebugRenderer::beginDraw() {
+    INFO("DebugRenderer::beginDraw\n");
     RenderState::depthTest(GL_FALSE);
     RenderState::blending(GL_FALSE);
 }
 
-void DebugRender::endDraw() {
-    INFO("DebugRender::endDraw\n");
+void DebugRenderer::endDraw() {
+    INFO("DebugRenderer::endDraw\n");
 }
 
-void DebugRender::drawPointList(const dd::DrawVertex* _points,
+void DebugRenderer::drawPointList(const dd::DrawVertex* _points,
     int _count,
     bool _depthEnabled)
 {
 
 }
 
-void DebugRender::drawLineList(const dd::DrawVertex* _lines,
+void DebugRenderer::drawLineList(const dd::DrawVertex* _lines,
     int _count,
     bool _depthEnabled)
 {
@@ -128,7 +128,7 @@ void DebugRender::drawLineList(const dd::DrawVertex* _lines,
     m_lineMesh.vao->unbind();
 }
 
-void DebugRender::drawGlyphList(const dd::DrawVertex* _glyphs,
+void DebugRenderer::drawGlyphList(const dd::DrawVertex* _glyphs,
     int _count,
     dd::GlyphTextureHandle _glyphTex)
 {
@@ -150,7 +150,7 @@ void DebugRender::drawGlyphList(const dd::DrawVertex* _glyphs,
     m_textMesh.vao->unbind();
 }
 
-dd::GlyphTextureHandle DebugRender::createGlyphTexture(int _width,
+dd::GlyphTextureHandle DebugRenderer::createGlyphTexture(int _width,
     int _height,
     const void* _pixels)
 {
@@ -164,11 +164,11 @@ dd::GlyphTextureHandle DebugRender::createGlyphTexture(int _width,
     return reinterpret_cast<dd::GlyphTextureHandle>(m_textMesh.texture->getGlHandle());
 }
 
-void DebugRender::destroyGlyphTexture(dd::GlyphTextureHandle _glyphTex) {
+void DebugRenderer::destroyGlyphTexture(dd::GlyphTextureHandle _glyphTex) {
     m_textMesh.texture.reset();
 }
 
-DebugRender::~DebugRender() {
+DebugRenderer::~DebugRenderer() {
     // No-op
 }
 

@@ -11,7 +11,7 @@ public:
     void render(float _dt) override;
     void init() override;
 private:
-    DebugRender m_debugRenderer;
+    DebugRenderer m_debugRenderer;
 };
 OGLWMain(debugdraw);
 
@@ -35,7 +35,7 @@ void debugdraw::render(float _dt) {
         0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    // TODO: wrap dd::* into DebugRender
+    // TODO: wrap dd::* into DebugRenderer
 
     dd::axisTriad(identity, 0.3f, 2.0f);
     dd::box(pos, col, 1.5f, 1.5f, 1.5f);

@@ -22,7 +22,11 @@
 // other
 #include "app.h"
 #include "utils.h"
-#include "debugRender.h"
+
+// renderer
+#include "debugRenderer.h"
+#include "spriteRenderer.h"
+#include "quadRenderer.h"
 
 // gamma
 #ifdef OGLW_GAMMA

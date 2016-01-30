@@ -13,12 +13,12 @@ class VertexLayout;
 class Texture;
 class Vao;
 
-class DebugRender : public dd::RenderInterface {
+class DebugRenderer : public dd::RenderInterface {
 public:
     void init();
     virtual void beginDraw() override;
     virtual void endDraw() override;
-    virtual ~DebugRender() override;
+    virtual ~DebugRenderer() override;
 
     virtual void drawPointList(const dd::DrawVertex* _points, int _count, bool _depthEnabled) override;
     virtual void drawLineList(const dd::DrawVertex* _lines, int _count, bool _depthEnabled) override;
