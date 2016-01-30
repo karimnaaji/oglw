@@ -36,3 +36,12 @@
 
 #include "variant.hpp"
 
+namespace OGLW {
+    typedef glm::vec3 rgb;
+    typedef glm::vec4 rgba;
+}
+
+void oglwDrawDebugCube(glm::vec3 _pos, OGLW::rgb _color, glm::vec3 _dimension);
+void oglwDrawDebugCube(glm::vec3 _pos, uint _color, glm::vec3 _dimension);
+void oglwDrawDebugFlush();
+
