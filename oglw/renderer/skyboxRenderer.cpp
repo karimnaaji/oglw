@@ -1,10 +1,12 @@
-#include "skybox.h"
+#include "skyboxRenderer.h"
 #include "geometries.h"
 #include "gl/renderState.h"
 
 namespace OGLW {
 
-Skybox::Skybox(std::string _file) : m_file(_file) {
+SkyboxRenderer::SkyboxRenderer(std::string _file) : m_file(_file) {}
+
+void SkyboxRenderer::init() {
     static const std::string shaderProgramBundle = R"END(
         #pragma begin:vertex
         #version 330
@@ -44,7 +46,7 @@ Skybox::Skybox(std::string _file) : m_file(_file) {
     m_mesh = cube();
 }
 
-void Skybox::draw(const glm::mat4& _mvp, const glm::vec3& _camPosition) {
+void SkyboxRenderer::render(const glm::mat4& _mvp, const glm::vec3& _camPosition) {
     m_texture->bind(0);
 
     m_shader->setUniform("mvp", _mvp);

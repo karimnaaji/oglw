@@ -38,7 +38,7 @@ class TestApp : public App {
         uptr<Shader> m_lightShader;
         uptr<RawMesh> m_lightMesh;
         uptr<Mesh<VoxelVert>> m_geometry;
-        uptr<Skybox> m_skybox;
+        uptr<SkyboxRenderer> m_skybox;
 };
 OGLWMain(TestApp);
 
@@ -50,7 +50,8 @@ void TestApp::init() {
     m_shader = uptr<Shader>(new Shader("default.glsl"));
     m_lightShader = uptr<Shader>(new Shader("no-shading.glsl"));
     m_lightMesh = cube(0.5);
-    m_skybox = uptr<Skybox>(new Skybox("grimmnight_large.jpg"));
+    m_skybox = uptr<SkyboxRenderer>(new SkyboxRenderer("grimmnight_large.jpg"));
+    m_skybox->init();
 
     std::vector<VoxelVert> vertices;
 
@@ -137,7 +138,7 @@ void TestApp::render(float _dt) {
     glm::mat4 mvp = m_camera.getProjectionMatrix() * m_camera.getViewMatrix();
     glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(mvp)));
 
-    m_skybox->draw(mvp, m_camera.getPosition());
+    m_skybox->render(mvp, m_camera.getPosition());
 
     RenderState::culling(GL_FALSE);
     RenderState::depthTest(GL_TRUE);

@@ -9,12 +9,13 @@
 
 namespace OGLW {
 
-class Skybox {
+class SkyboxRenderer {
 public:
-    Skybox(std::string _file);
-    ~Skybox() {}
+    SkyboxRenderer(std::string _file);
+    ~SkyboxRenderer() {}
 
-    void draw(const glm::mat4& _mvp, const glm::vec3& _camPosition);
+    void init();
+    void render(const glm::mat4& _mvp, const glm::vec3& _camPosition);
 
 private:
     std::unique_ptr<Shader> m_shader;

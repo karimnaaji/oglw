@@ -15,7 +15,6 @@
 #include "texture.h"
 #include "geometries.h"
 #include "renderState.h"
-#include "skybox.h"
 #include "renderTarget.h"
 #include "quadRenderer.h"
 
@@ -27,6 +26,7 @@
 #include "debugRenderer.h"
 #include "spriteRenderer.h"
 #include "quadRenderer.h"
+#include "skyboxRenderer.h"
 
 // gamma
 #ifdef OGLW_GAMMA
