@@ -8,6 +8,8 @@ namespace OGLW {
 
 namespace RenderState {
 
+void push();
+void pop();
 void initialize();
 GLuint getTextureUnit(GLuint _unit);
 void activeTextureUnit(GLuint _unit);
@@ -27,6 +29,11 @@ public:
             T::set(m_current);
         }
     }
+
+    inline typename T::Type get() {
+        return m_current;
+    }
+
 private:
     typename T::Type m_current;
 };

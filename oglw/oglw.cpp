@@ -31,8 +31,12 @@ void oglwDrawDebugCube(glm::vec3 _pos, uint _color, glm::vec3 _dimension) {
 
 }
 
-void oglwDrawDebugFlush() {
+void oglwDrawDebugFlush(const Camera& _camera) {
+    m_debugRenderer->setMVP(_camera.getProjectionMatrix() * _camera.getViewMatrix());
+
+    RenderState::push();
     dd::flush(0.f);
+    RenderState::pop();
 }
 
 #undef LAZY_INIT
