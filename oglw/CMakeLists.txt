@@ -123,10 +123,10 @@ find_sources_and_include_directories(core/*.h core/*.cpp)
 include_directories(${PROJECT_SOURCE_DIR}/)
 
 if (OGLW_BUILD_SHARED)
-    add_library(OGLW SHARED ${SOURCES} ${HEADERS})
+    add_library(OGLW SHARED ${SOURCES} ${HEADERS} oglw.cpp)
     target_link_libraries(OGLW ${LIBRARIES})
 else()
-    add_library(OGLW STATIC ${SOURCES} ${HEADERS})
+    add_library(OGLW STATIC ${SOURCES} ${HEADERS} oglw.cpp)
 endif()
 
 # Output variables

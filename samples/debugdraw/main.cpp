@@ -10,40 +10,21 @@ public:
     void update(float _dt) override;
     void render(float _dt) override;
     void init() override;
-private:
-    DebugRenderer m_debugRenderer;
 };
 OGLWMain(debugdraw);
 
 void debugdraw::init() {
     m_camera.setPosition({0.0, -1.0, 10.0});
-    m_debugRenderer.init();
 }
 
 void debugdraw::update(float _dt) {
     oglwUpdateFreeFlyCamera(_dt, 'S', 'W', 'A', 'D', 1e-3f, 20.f);
-    m_debugRenderer.setMVP(m_camera.getProjectionMatrix() * m_camera.getViewMatrix());
 }
 
 void debugdraw::render(float _dt) {
-    static const ddVec3 col  = { 0.0f, 0.8f, 0.8f };
-    static const ddVec3 pos = { 0.0f, 0.0f, 0.0f };
-    static const ddMat4x4 identity = {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-    };
-
-    // TODO: wrap dd::* into DebugRenderer
-
-    dd::axisTriad(identity, 0.3f, 2.0f);
-    dd::box(pos, col, 1.5f, 1.5f, 1.5f);
-    dd::sphere(pos, col, 15.0f);
-    dd::xzSquareGrid(-10.0, 10.0, 0.0, 1.0, col);
-
-    const ddVec3 textPos2D = { 10.0f, 15.0f, 0.0f };
-    dd::screenText("Debug draw demo", textPos2D, col);
-
-    dd::flush(_dt);
+    oglwDrawDebugAxisTriad(0.3, 2.0);
+    oglwDrawDebugCube(glm::vec3(0.0), OGLW::rgb(0.5, 0.7, 0.5));
+    oglwDrawDebugSphere(glm::vec3(0.0), OGLW::rgb(1.0, 0.0, 0.5), 15.0);
+    oglwDrawDebugXZSquareGrid(-10.0, 10.0, 0.0, 1.0);
+    oglwDrawDebugScreenText("Debug draw demo", glm::vec2(10.0, 15.0), OGLW::rgb(1.0), 0.5);
 }

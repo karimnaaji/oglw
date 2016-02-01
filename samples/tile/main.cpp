@@ -122,5 +122,7 @@ void TestApp::render(float _dt) {
     mvp = m_camera.getProjectionMatrix() * view * model;
     m_shadowCasterShader->setUniform("mvp", mvp);
     m_shadowCasterMesh->draw(*m_shadowCasterShader);
+
+    oglwDrawDebugCameraFrustum(*m_shadowCasterCamera, OGLW::rgb(0.5, 0.5, 0.5));
 }
 
