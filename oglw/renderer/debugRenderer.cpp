@@ -20,6 +20,7 @@ void DebugRenderer::init() {
         in vec4 colorPointSize;
         out vec4 fColor;
         uniform mat4 mvp;
+
         void main() {
             gl_Position = mvp * vec4(position, 1.0);
             gl_PointSize = colorPointSize.w;
@@ -45,6 +46,8 @@ void DebugRenderer::init() {
     }));
 
     m_lineMesh.vao = std::make_unique<Vao>();
+
+    // TODO: glDeleteBuffers
     GL_CHECK(glGenBuffers(1, &m_lineMesh.vertexBuffer));
     m_lineMesh.vao->init(m_lineMesh.vertexBuffer, 0, *m_lineMesh.layout, m_lineMesh.layout->getLocations());
     m_lineMesh.shader->bindVertexLayout(*m_lineMesh.layout);
@@ -142,6 +145,8 @@ void DebugRenderer::drawGlyphList(const dd::DrawVertex* _glyphs,
 
     // buffer orphaning
     GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_textMesh.vertexBuffer));
+
+    // TODO: use glMapBuffer instead
     GL_CHECK(glBufferData(GL_ARRAY_BUFFER, _count * sizeof(dd::DrawVertex), NULL, GL_DYNAMIC_DRAW));
     GL_CHECK(glBufferData(GL_ARRAY_BUFFER, _count * sizeof(dd::DrawVertex), _glyphs, GL_DYNAMIC_DRAW));
 

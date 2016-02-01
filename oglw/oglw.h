@@ -27,6 +27,7 @@
 #include "spriteRenderer.h"
 #include "quadRenderer.h"
 #include "skyboxRenderer.h"
+#include "guiRenderer.h"
 
 // gamma
 #ifdef OGLW_GAMMA
