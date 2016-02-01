@@ -142,9 +142,7 @@ void oglwDrawDebugFlush(const Camera& _camera) {
 
     m_debugRenderer->setMVP(_camera.getProjectionMatrix() * _camera.getViewMatrix());
 
-    RenderState::push();
     dd::flush(0.f);
-    RenderState::pop();
 }
 
 #undef LAZY_INIT

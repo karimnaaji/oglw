@@ -95,13 +95,13 @@ void DebugRenderer::init() {
 }
 
 void DebugRenderer::beginDraw() {
-    INFO("DebugRenderer::beginDraw\n");
+    RenderState::push();
     RenderState::depthTest(GL_FALSE);
     RenderState::blending(GL_FALSE);
 }
 
 void DebugRenderer::endDraw() {
-    INFO("DebugRenderer::endDraw\n");
+    RenderState::pop();
 }
 
 void DebugRenderer::drawPointList(const dd::DrawVertex* _points,

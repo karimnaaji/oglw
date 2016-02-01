@@ -102,8 +102,14 @@ void pop() {
     RenderState::blending(desc.blending.get());
     RenderState::drawBuffer(desc.drawBuffer.get<0>());
     RenderState::readBuffer(desc.readBuffer.get<0>());
-    RenderState::shaderProgram(desc.shaderProgram.get<0>());
-    RenderState::texture(desc.texture.get<0>(), desc.texture.get<1>());
+
+    if (desc.shaderProgram.get<0>() != std::numeric_limits<unsigned int>::max()) {
+        RenderState::shaderProgram(desc.shaderProgram.get<0>());
+    }
+
+    if (desc.texture.get<1>() != std::numeric_limits<unsigned int>::max()) {
+        RenderState::texture(desc.texture.get<0>(), desc.texture.get<1>());
+    }
 
     savedRenderStates.pop();
 }
