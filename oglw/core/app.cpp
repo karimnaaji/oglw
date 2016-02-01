@@ -4,6 +4,7 @@
 #include "core/types.h"
 #include "core/log.h"
 #include "gl/gl.h"
+#include "oglw.h"
 
 namespace OGLW {
 
@@ -93,6 +94,7 @@ void App::run() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         render(dt);
+        oglwDrawDebugFlush(m_camera);
 
         glfwSwapBuffers(m_window);
         glfwPollEvents();

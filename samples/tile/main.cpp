@@ -124,6 +124,5 @@ void TestApp::render(float _dt) {
     m_shadowCasterMesh->draw(*m_shadowCasterShader);
 
     oglwDrawDebugCube(glm::vec3(0.0), OGLW::rgb(0.5, 0.5, 0.5), glm::vec3(2.0));
-    oglwDrawDebugFlush(m_camera);
 }
 
