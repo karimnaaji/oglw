@@ -26,7 +26,8 @@ void gui::update(float _dt) {
 }
 
 void gui::render(float _dt) {
-
+    // TODO: wrap in oglwGuiBegin/End()
+    
     m_renderer.render();
 
     ImVec4 clear_color = ImColor(114, 144, 154);

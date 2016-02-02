@@ -43,15 +43,16 @@ void GuiRenderer::init(GLFWwindow* window, bool _installGlfwCallbacks) {
 
     m_vertexLayout = std::unique_ptr<VertexLayout>(new VertexLayout({
         {"position", 2, GL_FLOAT, false, 0, AttributeLocation::position},
-        {"color", 4, GL_FLOAT, false, 0, AttributeLocation::color},
         {"uv", 2, GL_FLOAT, false, 0, AttributeLocation::uv},
+        {"color", 4, GL_UNSIGNED_BYTE, true, 0, AttributeLocation::color},
     }));
-
-    m_vao = std::make_unique<Vao>();
 
     // TODO: glDeleteBuffers
     GL_CHECK(glGenBuffers(1, &m_vertexBuffer));
     GL_CHECK(glGenBuffers(1, &m_indexBuffer));
+
+    m_vao = std::make_unique<Vao>();
+
     m_vao->init(m_vertexBuffer, 0, *m_vertexLayout, m_vertexLayout->getLocations());
     m_shader->bindVertexLayout(*m_vertexLayout);
 
@@ -211,6 +212,14 @@ void GuiRenderer::render(ImDrawData* _drawData) {
 
     RenderState::depthTest(GL_FALSE);
     RenderState::culling(GL_FALSE);
+    RenderState::blending(GL_TRUE);
+    RenderState::blendingFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    _drawData->ScaleClipRects(ImGui::GetIO().DisplayFramebufferScale);
+
+    // TODO: add to render states
+    GL_CHECK(glBlendEquation(GL_FUNC_ADD));
+    GL_CHECK(glEnable(GL_SCISSOR_TEST));
 
     for (int n = 0; n < _drawData->CmdListsCount; n++) {
         const ImDrawList* cmdList = _drawData->CmdLists[n];
@@ -221,16 +230,12 @@ void GuiRenderer::render(ImDrawData* _drawData) {
 
         // TODO: use glMapBuffer instead
         GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, self->m_vertexBuffer));
-
-        GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vertexSize, NULL, GL_DYNAMIC_DRAW));
         GL_CHECK(glBufferData(GL_ARRAY_BUFFER, vertexSize,
-            (GLvoid*)&cmdList->VtxBuffer.front(), GL_DYNAMIC_DRAW));
+            (GLvoid*)&cmdList->VtxBuffer.front(), GL_STREAM_DRAW));
 
         GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self->m_indexBuffer));
-
-        GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, NULL, GL_DYNAMIC_DRAW));
         GL_CHECK(glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize,
-            (GLvoid*)&cmdList->IdxBuffer.front(), GL_DYNAMIC_DRAW));
+            (GLvoid*)&cmdList->IdxBuffer.front(), GL_STREAM_DRAW));
 
         for (const ImDrawCmd* pcmd = cmdList->CmdBuffer.begin(); pcmd != cmdList->CmdBuffer.end(); pcmd++) {
             if (pcmd->UserCallback) {
@@ -240,8 +245,10 @@ void GuiRenderer::render(ImDrawData* _drawData) {
                 //RenderState::texture(GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->TextureId);
 
                 // TODO: add to render states
-                GL_CHECK(glScissor((int)pcmd->ClipRect.x, (int)(height - pcmd->ClipRect.w),
-                            (int)(pcmd->ClipRect.z - pcmd->ClipRect.x), (int)(pcmd->ClipRect.w - pcmd->ClipRect.y)));
+                GL_CHECK(glScissor((int)pcmd->ClipRect.x,
+                                   (int)(height - pcmd->ClipRect.w),
+                                   (int)(pcmd->ClipRect.z - pcmd->ClipRect.x),
+                                   (int)(pcmd->ClipRect.w - pcmd->ClipRect.y)));
 
                 GL_CHECK(glDrawElements(GL_TRIANGLES, (GLsizei)pcmd->ElemCount,
                     sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, idxBufferOffset));
@@ -250,6 +257,8 @@ void GuiRenderer::render(ImDrawData* _drawData) {
             idxBufferOffset += pcmd->ElemCount;
         }
     }
+
+    self->m_vao->unbind();
 }
 
 } // OGLW
