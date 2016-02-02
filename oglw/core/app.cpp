@@ -85,8 +85,8 @@ void App::run() {
         double dt = time - lastTime;
         m_globalTime += dt;
 
-        glfwGetCursorPos(m_window, &m_cursorX, &m_cursorY);
-        glfwSetCursorPos(m_window, 0, 0);
+        //glfwGetCursorPos(m_window, &m_cursorX, &m_cursorY);
+        //glfwSetCursorPos(m_window, 0, 0);
 
         update(dt);
 

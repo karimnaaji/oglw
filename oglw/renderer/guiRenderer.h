@@ -31,6 +31,8 @@ public:
 private:
         static void render(ImDrawData* _drawData);
 
+        void loadTheme();
+
         std::unique_ptr<Shader> m_shader;
         std::unique_ptr<VertexLayout> m_vertexLayout;
         std::unique_ptr<Vao> m_vao;
