@@ -162,6 +162,7 @@ dd::GlyphTextureHandle DebugRenderer::createGlyphTexture(int _width,
     TextureOptions options;
     options.format = GL_RED;
     options.internalFormat = GL_R8;
+
     m_textMesh.texture = std::make_unique<Texture>(_width, _height, options);
     m_textMesh.texture->setData(reinterpret_cast<const GLuint*>(_pixels), _width * _height);
     m_textMesh.texture->update(0);

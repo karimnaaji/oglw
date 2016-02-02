@@ -95,8 +95,8 @@ void GuiRenderer::init(GLFWwindow* window, bool _installGlfwCallbacks) {
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 
     TextureOptions options;
-    options.format = GL_RGBA;
-    options.internalFormat = GL_UNSIGNED_BYTE;
+    options.internalFormat = GL_RGBA;
+
     m_texture = std::make_unique<Texture>(width, height, options);
     m_texture->setData(reinterpret_cast<const GLuint*>(pixels), width * height);
     m_texture->update(0);
@@ -116,6 +116,7 @@ void GuiRenderer::setClipboardText(const char *text) {
 
 void GuiRenderer::mouseButtonCallback(GLFWwindow*, int button, int action, int /*mods*/) {
     GuiRenderer* self = (GuiRenderer*)ImGui::GetIO().UserData;
+
     if (action == GLFW_PRESS && button >= 0 && button < 3) {
         self->m_mousePressed[button] = true;
     }
@@ -128,10 +129,14 @@ void GuiRenderer::scrollCallback(GLFWwindow*, double /*xoffset*/, double yoffset
 
 void GuiRenderer::keyCallback(GLFWwindow*, int key, int, int action, int mods) {
     ImGuiIO& io = ImGui::GetIO();
-    if (action == GLFW_PRESS)
+
+    if (action == GLFW_PRESS) {
         io.KeysDown[key] = true;
-    if (action == GLFW_RELEASE)
+    }
+
+    if (action == GLFW_RELEASE) {
         io.KeysDown[key] = false;
+    }
 
     (void)mods; // Modifiers are not reliable across systems
     io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
@@ -191,21 +196,22 @@ void GuiRenderer::render(ImDrawData* _drawData) {
     const float width = ImGui::GetIO().DisplaySize.x;
     const float height = ImGui::GetIO().DisplaySize.y;
 
-    const glm::mat4 mat = {
+    const glm::mat4 orthographicMatrix = {
         { 2.0f/width,   0.0f,       0.0f,   0.0f },
-        { 0.0f,     2.0f/-height,   0.0f,   0.0f },
-        { 0.0f,     0.0f,       -1.0f,  0.0f },
-        { -1.0f,    1.0f,       0.0f,   1.0f },
+        {  0.0f,    2.0f/-height,   0.0f,   0.0f },
+        {  0.0f,        0.0f,      -1.0f,   0.0f },
+        { -1.0f,        1.0f,       0.0f,   1.0f },
     };
 
     self->m_texture->bind(0);
-    self->m_shader->setUniform("mvp", mat);
+    self->m_shader->setUniform("mvp", orthographicMatrix);
     self->m_shader->setUniform("tex", 0);
 
     self->m_vao->bind();
 
     RenderState::depthTest(GL_FALSE);
     RenderState::culling(GL_FALSE);
+
     for (int n = 0; n < _drawData->CmdListsCount; n++) {
         const ImDrawList* cmdList = _drawData->CmdLists[n];
         const ImDrawIdx* idxBufferOffset = 0;
