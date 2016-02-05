@@ -45,6 +45,8 @@ namespace OGLW {
     typedef glm::vec4 rgba;
 }
 
+extern GLFWwindow* glfwWindow;
+
 void oglwDrawDebugCube(glm::vec3 _pos, OGLW::rgb _color = glm::vec3(1.0), glm::vec3 _dimension = glm::vec3(1.0));
 
 // Add a point in 3D space to the debug draw queue.
@@ -137,4 +139,7 @@ void oglwDrawDebugXZSquareGrid(float _mins,
 
 // Process debug command queue
 void oglwDrawDebugFlush(const OGLW::Camera& _camera);
+
+void oglwImGuiBegin();
+void oglwImGuiFlush();
 

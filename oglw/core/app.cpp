@@ -45,6 +45,8 @@ void App::initGLFW() {
         glfwTerminate();
     }
 
+    glfwWindow = m_window;
+
     int fbWidth, fbHeight;
     glfwGetFramebufferSize(m_window, &fbWidth, &fbHeight);
     glfwSetCursorPos(m_window, 0, 0);

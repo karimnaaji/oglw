@@ -219,7 +219,7 @@ void GuiRenderer::charCallback(GLFWwindow*, unsigned int c) {
     }
 }
 
-void GuiRenderer::render() {
+void GuiRenderer::newFrame() {
     ImGuiIO& io = ImGui::GetIO();
 
     int w, h;

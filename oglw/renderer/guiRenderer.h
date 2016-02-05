@@ -17,7 +17,7 @@ public:
         GuiRenderer();
 
         void init(GLFWwindow* window, bool _installGlfwCallbacks);
-        void render();
+        void newFrame();
 
         static void setClipboardText(const char* text);
         static const char* getClipboardText();
