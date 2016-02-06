@@ -41,7 +41,7 @@ $ cmake . -Bbuild
 $ cmake --build build
 ```
 
-Creating a sandalone app
+Creating a standalone app
 ------------------------
 
 **CMake**
