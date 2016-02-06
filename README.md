@@ -4,56 +4,134 @@
 
 
 # OGLW
-OpenGL 3.2 wrapper utilities and more
+OGLW is a graphics library that has been built in a way that makes things _easy_ to set up and start a new project for any rendering purposes or graphics experimentation / creative coding.
 
-Build the demo
-==============
+OGLW has an internal system for OpenGL state tracking to reduce redundant state changes and thus driver overhead (uniform, render states, texture/shader/uniform bindings, ...).
 
-Linux
------
+Setting up a new project
+------------------------
 
-```
-sudo apt-get install portaudio19-dev libsndfile-dev
-mkdir build && cd build
-cmake .. && make
-```
-OS X
-----
+OGLW uses _CMake_ (minimum version **3.0**), you can download it [here](http://www.cmake.org/download/) or use your favorite installation package tool like [homebrew](http://brew.sh/).
+
+
+Building the samples on different platforms
+-------------------------------------------
+**Linux**
 
 ```
-brew install cmake portaudio libsndfile
-mkdir build && cd build
-cmake .. && make
+$ sudo apt-get install cmake portaudio19-dev libsndfile-dev
+$ cmake . -Bbuild
+$ cmake --build build
+```
+**OS X**
+
+First install dependencies via homebrew:
+```
+$ brew install cmake portaudio libsndfile
+```
+Then run either this, to generate an XCode project:
+```
+$ cmake . -Bbuild -G Xcode
+$ open build/OGLW.xcodeproj
 ```
 
-Creating an app
-===============
+Or if you don't want to use XCode:
+```
+$ cmake --build build -G Xcode
+$ cmake --build build
+```
 
-Minimal cmake configuration:
+Creating a sandalone app
+------------------------
+
+**CMake**
+
+The minimal cmake configuration you need to make an application using OGLW is the following:
 
 ```cmake
 cmake_minimum_required(VERSION 2.8)
 project(OGLWApp)
-
-# c++14 flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y")
-
-# add OGLW library
-add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/)
-
-# include OGLW headers
-include_directories(${OGLW_INCLUDE_DIRS})
-
-# find resources
-file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/OGLWApp/resources/*)
-
-# create an executable bundled with resources (OS X)
-add_executable(OGLWApp MACOSX_BUNDLE OGLWApp/main.cpp ${RESOURCES})
-set_target_properties(${EXECUTABLE_NAME} PROPERTIES RESOURCE "${RESOURCES}")
+set(EXECUTABLE_NAME OGLWApp)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y") # c++14 flags
+add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/oglw) # add OGLW library
+include_directories(${OGLW_INCLUDE_DIRS}) # include OGLW headers
+set(OGLW_BUILD_WITH_GAMMA OFF CACHE BOOL "Build the OGLW with Gamma library") # don't use sound processing library
+add_definitions(-DOGLW_DEBUG) # build for debug
+file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/resources/*) # find resources
+# create an executable bundled with resources (For OS X)
+add_executable(${EXECUTABLE_NAME} MACOSX_BUNDLE main.cpp ${RESOURCES})
 target_link_libraries(${EXECUTABLE_NAME} OGLW ${OGLW_LIBRARIES})
+set_target_properties(${EXECUTABLE_NAME} PROPERTIES RESOURCE "${RESOURCES}")
 ````
 
-## Experiments
+**Code**
+
+Associated with a main.cpp that looks like this:
+
+```c++
+#include "oglw.h"
+
+using namespace OGLW;
+class OGLWApp : public App {
+    public:
+        OGLWApp() : App({"OGLWApp", false, false, 960, 720}) {}
+        void update(float _dt) override;
+        void render(float _dt) override;
+        void init() override;
+};
+OGLWMain(OGLWApp);
+
+void OGLWApp::init() {
+  /// Initialization code goes here
+}
+
+void OGLWApp::update(float _dt) {
+  /// Update code goes here
+}
+
+void OGLWApp::render(float _dt) {
+  /// Rendering code goes here
+}
+```
+
+An example of application using OGLW as a submodule can be found [here](https://github.com/karimnaaji/oglw/blob/master/template/main.txt)
+
+**Shaders**
+
+Shader are _bundled_ into one single file like this:
+
+```glsl
+#pragma begin:vertex
+#version 330
+in vec3 position;
+in vec3 normal;
+in vec2 uv;
+uniform mat4 mvp;
+out vec2 fuv;
+out vec3 fnormal;
+
+void main() {
+    gl_Position = mvp * vec4(position, 1.0);
+}
+#pragma end:vertex
+
+#pragma begin:fragment
+#version 330
+uniform sampler2D ao;
+in vec2 fuv;
+in vec3 fnormal;
+out vec4 outColour;
+
+void main(void) {
+    outColour = vec4(texture(ao, fuv).rgb, 1.0);
+}
+#pragma end:fragment
+```
+Where the `#pragma begin:` and `#pragma:end` can reference a _geometry_, _vertex_, or _fragment_ shader.
+
+Samples
+-------
+See the samples for a more detailed usage.
 
 | Screenshot  | Name |
 | ------------- | ------------- |
