@@ -100,7 +100,7 @@ void OGLWApp::render(float _dt) {
 }
 ```
 
-An example of application using OGLW as a submodule can be found [here](https://github.com/karimnaaji/oglw/blob/master/template/main.txt).
+An example of application using OGLW as a submodule can be found [here](https://github.com/karimnaaji/vectiler/tree/master/renderer).
 
 **Shaders**
 
