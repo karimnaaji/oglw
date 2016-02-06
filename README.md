@@ -55,7 +55,8 @@ set(EXECUTABLE_NAME OGLWApp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1y") # c++14 flags
 add_subdirectory(${PROJECT_SOURCE_DIR}/oglw/oglw) # add OGLW library
 include_directories(${OGLW_INCLUDE_DIRS}) # include OGLW headers
-set(OGLW_BUILD_WITH_GAMMA OFF CACHE BOOL "Build the OGLW with Gamma library") # don't use sound processing library
+# don't use sound processing library
+set(OGLW_BUILD_WITH_GAMMA OFF CACHE BOOL "Build the OGLW with Gamma library") 
 add_definitions(-DOGLW_DEBUG) # build for debug
 file(GLOB_RECURSE RESOURCES ${PROJECT_SOURCE_DIR}/resources/*) # find resources
 # create an executable bundled with resources (For OS X)
@@ -74,7 +75,12 @@ Associated with a main.cpp that looks like this:
 using namespace OGLW;
 class OGLWApp : public App {
     public:
-        OGLWApp() : App({"OGLWApp", false, false, 960, 720}) {}
+        OGLWApp() : App({"OGLWApp", 
+            false /* fullscreen */, 
+            false /* resizable */, 
+            960 /* width */, 
+            720 /* height */}) 
+        {}
         void update(float _dt) override;
         void render(float _dt) override;
         void init() override;
@@ -94,7 +100,7 @@ void OGLWApp::render(float _dt) {
 }
 ```
 
-An example of application using OGLW as a submodule can be found [here](https://github.com/karimnaaji/oglw/blob/master/template/main.txt)
+An example of application using OGLW as a submodule can be found [here](https://github.com/karimnaaji/oglw/blob/master/template/main.txt).
 
 **Shaders**
 
@@ -131,7 +137,7 @@ Where the `#pragma begin:` and `#pragma:end` can reference a _geometry_, _vertex
 
 Samples
 -------
-See the samples for a more detailed usage.
+Please see the samples for a more detailed usage.
 
 | Screenshot  | Name |
 | ------------- | ------------- |
