@@ -37,7 +37,7 @@ $ open build/OGLW.xcodeproj
 
 Or if you don't want to use XCode:
 ```
-$ cmake --build build -G Xcode
+$ cmake . -Bbuild
 $ cmake --build build
 ```
 
