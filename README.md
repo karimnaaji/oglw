@@ -4,9 +4,9 @@
 
 
 # OGLW
-OGLW is a graphics library that has been built in a way that makes things _easy_ to set up and start a new project for any rendering purposes or graphics experimentation / creative coding.
+OGLW is a graphics library made on top of OpenGL 3.3; it has been built in a way that makes things _easy_ to set up and start a new project for rendering or graphics experimentation / creative coding.
 
-OGLW has an internal system for OpenGL state tracking to reduce redundant state changes and thus driver overhead (uniform, render states, texture/shader/uniform bindings, ...).
+The library has an internal system for OpenGL state tracking to reduce redundant state changes, and thus driver overhead (uniform, render states, texture/shader/uniform bindings, ...).
 
 Setting up a new project
 ------------------------
