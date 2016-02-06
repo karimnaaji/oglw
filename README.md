@@ -107,29 +107,20 @@ An example of application using OGLW as a submodule can be found [here](https://
 Shader are _bundled_ into one single file like this:
 
 ```glsl
+// Hello World GLSL
 #pragma begin:vertex
 #version 330
 in vec3 position;
-in vec3 normal;
-in vec2 uv;
 uniform mat4 mvp;
-out vec2 fuv;
-out vec3 fnormal;
-
 void main() {
     gl_Position = mvp * vec4(position, 1.0);
 }
 #pragma end:vertex
-
 #pragma begin:fragment
 #version 330
-uniform sampler2D ao;
-in vec2 fuv;
-in vec3 fnormal;
 out vec4 outColour;
-
 void main(void) {
-    outColour = vec4(texture(ao, fuv).rgb, 1.0);
+    outColour = vec4(0.0, 1.0, 0.0, 1.0);
 }
 #pragma end:fragment
 ```
@@ -141,10 +132,10 @@ Please see the samples for a more detailed usage.
 
 | Screenshot  | Name |
 | ------------- | ------------- |
-| [![](img/capture0.png)](/blocks)| [code](https://github.com/karimnaaji/vectiler/tree/master/renderer) - |
-| [![](img/capture1.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/tile) - |
-| [![](img/capture2.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/terrain) - |
-| [![](img/capture3.png)](/blocks)| [code]() - |
-| [![](img/capture4.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/debugdraw) - |
-| [![](img/capture5.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/mesh-sem) - |
-| [![](img/capture6.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/debugdraw) - |
+| [![](img/capture0.png)](/blocks)| [code](https://github.com/karimnaaji/vectiler/tree/master/renderer) |
+| [![](img/capture1.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/tile) |
+| [![](img/capture2.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/terrain) |
+| [![](img/capture3.png)](/blocks)| [code]() |
+| [![](img/capture4.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/debugdraw) |
+| [![](img/capture5.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/mesh-sem) |
+| [![](img/capture6.png)](/blocks)| [code](https://github.com/karimnaaji/oglw/tree/master/samples/voxel) |
