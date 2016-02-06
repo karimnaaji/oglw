@@ -65,6 +65,8 @@ target_link_libraries(${EXECUTABLE_NAME} OGLW ${OGLW_LIBRARIES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES RESOURCE "${RESOURCES}")
 ````
 
+This will build a `.app` for each of the samples and output them in the `build/bin` folder.
+
 **Code**
 
 Associated with a main.cpp that looks like this:
@@ -124,7 +126,7 @@ void main(void) {
 }
 #pragma end:fragment
 ```
-Where the `#pragma begin:` and `#pragma:end` can reference a _geometry_, _vertex_, or _fragment_ shader.
+Where the `#pragma begin:` and `#pragma end:` can reference a _geometry_, _vertex_, or _fragment_ shader.
 
 Samples
 -------
