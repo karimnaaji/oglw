@@ -175,7 +175,7 @@ void DebugRenderer::destroyGlyphTexture(dd::GlyphTextureHandle _glyphTex) {
 }
 
 DebugRenderer::~DebugRenderer() {
-    // No-op
+    glDeleteBuffers(1, &m_textMesh.vertexBuffer);
 }
 
 } // OGLW

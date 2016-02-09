@@ -15,6 +15,7 @@ namespace OGLW {
 class GuiRenderer {
 public:
         GuiRenderer();
+        ~GuiRenderer();
 
         void init(GLFWwindow* window, bool _installGlfwCallbacks);
         void newFrame();
