@@ -143,3 +143,4 @@ void oglwDrawDebugFlush(const OGLW::Camera& _camera);
 void oglwImGuiBegin();
 void oglwImGuiFlush();
 
+OGLW::GuiRenderer& oglwGetGuiRenderer();

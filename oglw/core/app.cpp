@@ -8,6 +8,44 @@
 
 namespace OGLW {
 
+bool App::guiMode = false;
+
+void mouseButtonCallback(GLFWwindow* _window, int _button, int _action, int _mods) {
+    if (App::guiMode) {
+        auto& guiRenderer = oglwGetGuiRenderer();
+        guiRenderer.mouseButtonCallback(_window, _button, _action, _mods);
+    }
+}
+
+void scrollCallback(GLFWwindow* _window, double _xoffset, double _yoffset) {
+    if (App::guiMode) {
+        auto& guiRenderer = oglwGetGuiRenderer();
+        guiRenderer.scrollCallback(_window, _xoffset, _yoffset);
+    }
+}
+
+void charCallback(GLFWwindow* _window, unsigned int _c) {
+    if (App::guiMode) {
+        auto& guiRenderer = oglwGetGuiRenderer();
+        guiRenderer.charCallback(_window, _c);
+    }
+}
+
+void keyCallback(GLFWwindow* _window, int _key, int _scancode, int _action, int _mods) {
+    if (_action == GLFW_PRESS) {
+        switch (_key) {
+            case GLFW_KEY_ESCAPE:
+                App::guiMode = !App::guiMode;
+            break;
+        }
+    }
+
+    if (App::guiMode) {
+        auto& guiRenderer = oglwGetGuiRenderer();
+        guiRenderer.keyCallback(_window, _key, _scancode, _action, _mods);
+    }
+}
+
 App::App(AppConfiguration _config) {
     m_config = _config;
     m_globalTime = 0.f;
@@ -57,6 +95,11 @@ void App::initGLFW() {
 
     glewExperimental = GL_TRUE;
 
+    glfwSetKeyCallback(m_window, keyCallback);
+    glfwSetMouseButtonCallback(m_window, mouseButtonCallback);
+    glfwSetScrollCallback(m_window, scrollCallback);
+    glfwSetCharCallback(m_window, charCallback);
+
     if (glewInit() != GLEW_OK) {
         glfwTerminate();
         ERROR("glewInit failed\n");
@@ -87,8 +130,12 @@ void App::run() {
         double dt = time - lastTime;
         m_globalTime += dt;
 
-        //glfwGetCursorPos(m_window, &m_cursorX, &m_cursorY);
-        //glfwSetCursorPos(m_window, 0, 0);
+        if (!App::guiMode) {
+            glfwGetCursorPos(m_window, &m_cursorX, &m_cursorY);
+            glfwSetCursorPos(m_window, 0, 0);
+        }
+
+        glfwSetInputMode(m_window, GLFW_CURSOR, App::guiMode ?  GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 
         update(dt);
 

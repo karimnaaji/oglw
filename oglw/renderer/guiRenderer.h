@@ -19,12 +19,12 @@ public:
         void init(GLFWwindow* window, bool _installGlfwCallbacks);
         void newFrame();
 
-        static void setClipboardText(const char* text);
+        static void setClipboardText(const char* _text);
         static const char* getClipboardText();
-        static void mouseButtonCallback(GLFWwindow*, int button, int action, int /*mods*/);
-        static void scrollCallback(GLFWwindow*, double /*xoffset*/, double yoffset);
-        static void keyCallback(GLFWwindow*, int key, int, int action, int mods);
-        static void charCallback(GLFWwindow*, unsigned int c);
+        static void mouseButtonCallback(GLFWwindow*, int _button, int _action, int /*mods*/);
+        static void scrollCallback(GLFWwindow*, double /*xoffset*/, double _yoffset);
+        static void keyCallback(GLFWwindow*, int _key, int, int _action, int _mods);
+        static void charCallback(GLFWwindow*, unsigned int _c);
 
         ImFont* getFont(const std::string& _name);
 

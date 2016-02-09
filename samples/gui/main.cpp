@@ -16,6 +16,9 @@ class gui : public App {
 OGLWMain(gui);
 
 void gui::init() {
+    // Toggle gui mode by default
+    App::guiMode = true;
+
     glClearColor(0.5, 0.5, 0.7, 1.0);
 }
 

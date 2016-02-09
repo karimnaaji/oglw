@@ -21,7 +21,7 @@ void oglw__init() {
     m_debugRenderer->init();
 
     m_imguiRenderer = std::make_unique<GuiRenderer>();
-    m_imguiRenderer->init(glfwWindow, true);
+    m_imguiRenderer->init(glfwWindow, false);
 
     m_initialized = true;
 }
@@ -162,6 +162,12 @@ void oglwImGuiFlush() {
     LAZY_INIT
 
     ImGui::Render();
+}
+
+OGLW::GuiRenderer& oglwGetGuiRenderer() {
+    LAZY_INIT
+
+    return *m_imguiRenderer;
 }
 
 #undef LAZY_INIT

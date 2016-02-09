@@ -251,9 +251,6 @@ void GuiRenderer::newFrame() {
     io.MouseWheel = m_mouseWheel;
     m_mouseWheel = 0.0f;
 
-    // Hide OS mouse cursor if ImGui is drawing it
-    glfwSetInputMode(m_window, GLFW_CURSOR, io.MouseDrawCursor ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
-
     // Start the frame
     ImGui::NewFrame();
 }
