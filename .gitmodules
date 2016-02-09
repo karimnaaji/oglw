@@ -19,3 +19,6 @@
 [submodule "oglw/3rdparty/debug-draw"]
 	path = oglw/3rdparty/debug-draw
 	url = https://github.com/glampert/debug-draw
+[submodule "oglw/3rdparty/imgui"]
+	path = oglw/3rdparty/imgui
+	url = https://github.com/ocornut/imgui.git

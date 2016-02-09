@@ -55,6 +55,8 @@ class App {
 
         glm::vec2 resolution();
         glm::vec2 physicalResolution();
+        
+        static bool guiMode;
 
     protected:
         AppConfiguration m_config;

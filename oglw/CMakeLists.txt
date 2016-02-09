@@ -106,6 +106,14 @@ set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/variant)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/debug-draw)
 set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/debug-draw)
 
+# IMGUI
+set(INCLUDE_DIRS ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/3rdparty/imgui)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/imgui)
+add_library(imgui
+    ${PROJECT_SOURCE_DIR}/3rdparty/imgui/imgui.cpp
+    ${PROJECT_SOURCE_DIR}/3rdparty/imgui/imgui_draw.cpp)
+set(LIBRARIES ${LIBRARIES} imgui)
+
 # OGLW Include dirs
 set(INCLUDE_DIRS
     ${INCLUDE_DIRS}

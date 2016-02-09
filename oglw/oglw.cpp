@@ -8,14 +8,20 @@
 
 using namespace OGLW;
 
+GLFWwindow* glfwWindow = nullptr;
 
 bool m_initialized = false;
 
 std::unique_ptr<DebugRenderer> m_debugRenderer;
 
+std::unique_ptr<GuiRenderer> m_imguiRenderer;
+
 void oglw__init() {
     m_debugRenderer = std::make_unique<DebugRenderer>();
     m_debugRenderer->init();
+
+    m_imguiRenderer = std::make_unique<GuiRenderer>();
+    m_imguiRenderer->init(glfwWindow, false);
 
     m_initialized = true;
 }
@@ -143,6 +149,25 @@ void oglwDrawDebugFlush(const Camera& _camera) {
     m_debugRenderer->setMVP(_camera.getProjectionMatrix() * _camera.getViewMatrix());
 
     dd::flush(0.f);
+}
+
+void oglwImGuiBegin() {
+    LAZY_INIT
+
+    m_imguiRenderer->newFrame();
+
+}
+
+void oglwImGuiFlush() {
+    LAZY_INIT
+
+    ImGui::Render();
+}
+
+OGLW::GuiRenderer& oglwGetGuiRenderer() {
+    LAZY_INIT
+
+    return *m_imguiRenderer;
 }
 
 #undef LAZY_INIT

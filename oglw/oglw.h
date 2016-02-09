@@ -27,6 +27,7 @@
 #include "spriteRenderer.h"
 #include "quadRenderer.h"
 #include "skyboxRenderer.h"
+#include "guiRenderer.h"
 
 // gamma
 #ifdef OGLW_GAMMA
@@ -43,6 +44,8 @@ namespace OGLW {
     typedef glm::vec3 rgb;
     typedef glm::vec4 rgba;
 }
+
+extern GLFWwindow* glfwWindow;
 
 void oglwDrawDebugCube(glm::vec3 _pos, OGLW::rgb _color = glm::vec3(1.0), glm::vec3 _dimension = glm::vec3(1.0));
 
@@ -137,3 +140,7 @@ void oglwDrawDebugXZSquareGrid(float _mins,
 // Process debug command queue
 void oglwDrawDebugFlush(const OGLW::Camera& _camera);
 
+void oglwImGuiBegin();
+void oglwImGuiFlush();
+
+OGLW::GuiRenderer& oglwGetGuiRenderer();
