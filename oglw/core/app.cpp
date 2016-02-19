@@ -135,7 +135,7 @@ void App::run() {
             glfwSetCursorPos(m_window, 0, 0);
         }
 
-        //glfwSetInputMode(m_window, GLFW_CURSOR, App::guiMode ?  GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
+        glfwSetInputMode(m_window, GLFW_CURSOR, App::guiMode ?  GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 
         update(dt);
 
